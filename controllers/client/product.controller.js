@@ -1,6 +1,20 @@
-const index = (req, res) => {
+const Product = require("../../models/Product.model")
+
+const index = async (req, res) => {
+    const products = await Product.find({
+        status: 'active',
+        deleted: 'false'
+    })
+    const newProducts = products.map((item) => {
+        item.priceNew = (item.price * (100 - item.discountPercentage) / 100).toFixed(3);
+        item.price = item.price.toFixed(3);
+        return item;
+    })
+    console.log(products);
+
     res.render('client/pages/products/index', {
-        title: "Sản phẩm"
+        title: "Sản phẩm",
+        products: newProducts
     })
 }
 module.exports = {
