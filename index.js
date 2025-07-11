@@ -1,6 +1,8 @@
 const express = require('express');
 
 const route = require('./routes/client/index.routes');
+const routeAdmin = require('./routes/admin/index.routes');
+
 const database = require('./config/database');
 
 const app = express();
@@ -11,7 +13,10 @@ const port = process.env.PORT;
 app.use(express.static("public"));
 app.set("views", "./views");
 app.set("view engine", "pug");
+
+//route
 route(app);
+routeAdmin(app);
 
 
 app.listen(port, () => {

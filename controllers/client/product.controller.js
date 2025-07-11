@@ -10,7 +10,7 @@ const index = async (req, res) => {
         item.price = item.price.toFixed(3);
         return item;
     })
-    console.log(products);
+
 
     res.render('client/pages/products/index', {
         title: "Sản phẩm",
