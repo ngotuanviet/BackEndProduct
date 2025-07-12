@@ -1,0 +1,9 @@
+mixin inputSearch(keyword)
+    .input-group
+        input.form-control(
+            type="text",
+            name="keyword",
+            placeholder="Tìm kiếm sản phẩm...",
+            value=keyword || ''
+        )
+        button.btn.btn-outline-secondary(type="submit") Tìm kiếm
