@@ -5,11 +5,18 @@ block main
     .card.mb-3 
         .card-header Bộ lọc và tìm kiếm 
         .card-body 
-            each filter in filtersStatus
-                button(
-                    button-status=filter.status,
-                    class="btn btn-sm ml-1 btn-outline-success " + (filter.class === 'active' ? 'active' : ''),
-                ) #{filter.name}
+            .row
+                .col-6
+                    each filter in filtersStatus
+                        button(
+                            button-status=filter.status,
+                            class="btn btn-sm ml-1 btn-outline-success " + (filter.class === 'active' ? 'active' : ''),
+                    ) #{filter.name}
+                .col-6
+                    form(id="searchForm", action="/admin/products")
+                        .input-group.mb-3
+                            input.form-control(type="text", name="keyword", placeholder="Tìm kiếm sản phẩm")
+                            button.btn.btn-outline-secondary(type="submit") Tìm kiếm
     .card.mb-3 
     .card-header Danh sách sản phẩm
     .card-body 

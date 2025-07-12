@@ -22,6 +22,7 @@ if (buttonStatus.length > 0) {
 
             } else {
                 url.searchParams.delete("status");
+                url.searchParams.delete("keyword");
 
             }
             window.location.href = url.href;
@@ -29,3 +30,21 @@ if (buttonStatus.length > 0) {
         })
     })
 };
+// form search
+const searchParams = document.querySelector("#searchForm")
+if (searchParams) {
+    searchParams.addEventListener("submit", (e) => {
+        e.preventDefault()
+        let url = new URL(window.location.href);
+        let keyword = e.target.elements.keyword.value
+        if (keyword) {
+            url.searchParams.set("keyword", keyword.trim());
+        } else {
+            url.searchParams.delete("keyword");
+        }
+        window.location.href = url.href;
+        console.log(window.location.href);
+
+    })
+}
+

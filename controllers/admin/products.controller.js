@@ -2,7 +2,7 @@ const Product = require("../../models/Product.model")
 
 // [Get] /admin/products
 const index = async (req, res) => {
-    const { status } = req.query;
+    const { status, keyword } = req.query;
 
     let filtersStatus = [
         {
@@ -27,11 +27,16 @@ const index = async (req, res) => {
     };
     if (status) {
         find.status = status
+
         filtersStatus.forEach(filter => {
             filter.class = filter.status === status ? "active" : ""
         })
     }
-
+    if (keyword) {
+        find.title = { $regex: keyword, $options: "i" }
+    } else {
+        find.title = { $regex: "", $options: "i" }
+    }
 
     const products = await Product.find(find)
 
