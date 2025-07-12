@@ -1,7 +1,6 @@
 // Button Status
 const buttonStatus = document.querySelectorAll('[button-status]');
 const button = document.querySelectorAll('button');
-console.log(button);
 
 if (button.length > 0) {
     button.forEach(btn => {
@@ -26,17 +25,18 @@ if (buttonStatus.length > 0) {
 
             }
             window.location.href = url.href;
-            consolelog(url);
         })
     })
 };
 // form search
-const searchParams = document.querySelector("#searchForm")
-if (searchParams) {
-    searchParams.addEventListener("submit", (e) => {
+const search = document.querySelector("#searchForm")
+console.log(search);
+if (search) {
+    search.addEventListener("submit", (e) => {
         e.preventDefault()
         let url = new URL(window.location.href);
         let keyword = e.target.elements.keyword.value
+        console.log(keyword);
         if (keyword) {
             url.searchParams.set("keyword", keyword.trim());
         } else {
@@ -47,4 +47,21 @@ if (searchParams) {
 
     })
 }
+const navigationItem = document.querySelectorAll(".page-link")
+
+if (navigationItem.length > 0) {
+    navigationItem.forEach(item => {
+        item.addEventListener("click", () => {
+            let url = new URL(window.location.href);
+            let numberPage = item.getAttribute("button-pagination")
+            console.log(numberPage);
+            url.searchParams.set("page", numberPage);
+            window.location.href = url.href;
+            console.log(window.location.href);
+
+        })
+    })
+
+}
+
 

@@ -27,7 +27,7 @@ block main
             tbody
                 each product,index in products
                     tr 
-                        td #{index + 1}
+                        td #{ objectPanination.skip + index + 1 }
                         td 
                             img(src=product.thumbnail, alt="Product Image" width="100" height="auto")
                         td(style="width: 200px") #{product.title}
@@ -40,4 +40,21 @@ block main
                         td 
                             a.btn.btn-warning.btn-sm(href="#") Sửa
                             a.btn.btn-danger.btn-sm.ml-2(href="#") Xóa
-                
+
+    nav 
+        ul(class="pagination")
+            if objectPanination.currentPage > 1
+                li(class="page-item")
+                    button(class="page-link" type="button" button-pagination=objectPanination.currentPage - 1 ) Trang trước
+            else
+                li(class="page-item.disabled")
+                    button(class="page-link" type="button" disabled) Trang trước
+            - for (var i = 1; i <= objectPanination.totalPages; ++i)
+                    li(class="page-item " + (i === objectPanination.currentPage ? 'active' : ''))
+                        button(class="page-link" button-pagination=i, type="button") #{i}
+            if objectPanination.currentPage < objectPanination.totalPages
+                li(class="page-item")
+                    button(class="page-link" type="button" button-pagination=objectPanination.currentPage + 1 ) Trang sau
+            else
+                li(class="page-item.disabled")
+                    button(class="page-link" type="button" disabled) Trang sau
