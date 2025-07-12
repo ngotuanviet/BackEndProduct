@@ -1,43 +1,23 @@
 const Product = require("../../models/Product.model")
-
+const filtersStatusHelper = require("../../helper/filtersStatus")
 // [Get] /admin/products
 const index = async (req, res) => {
     const { status, keyword } = req.query;
-
-    let filtersStatus = [
-        {
-            name: "Tất cả",
-            status: "",
-            class: "active",
-        },
-        {
-            name: "Hoạt động",
-            status: "active",
-            class: "",
-        },
-        {
-            name: "Không hoạt động",
-            status: "inactive",
-            class: ""
-        }
-    ]
     let find = {
         deleted: 'false',
 
     };
-    if (status) {
-        find.status = status
 
-        filtersStatus.forEach(filter => {
-            filter.class = filter.status === status ? "active" : ""
-        })
-    }
+    // bộ lọc
+    const filtersStatus = filtersStatusHelper(status, find)
+    console.log(filtersStatus);
+
+
     if (keyword) {
         find.title = { $regex: keyword, $options: "i" }
     } else {
         find.title = { $regex: "", $options: "i" }
     }
-
     const products = await Product.find(find)
 
 
