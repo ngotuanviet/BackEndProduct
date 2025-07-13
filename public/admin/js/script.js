@@ -12,7 +12,7 @@ if (button.length > 0) {
 if (buttonStatus.length > 0) {
     let url = new URL(window.location.href);
 
-    console.log(url);
+    // console.log(url);
     buttonStatus.forEach(btn => {
         btn.addEventListener("click", () => {
             const status = btn.getAttribute("button-status");
@@ -47,11 +47,15 @@ if (search) {
 
     })
 }
-const navigationItem = document.querySelectorAll(".page-link")
+const navigationItem = document.querySelectorAll("[button-pagination]")
+console.log(navigationItem || "ko thấy");
+
 
 if (navigationItem.length > 0) {
     navigationItem.forEach(item => {
         item.addEventListener("click", () => {
+            console.log("oke");
+
             let url = new URL(window.location.href);
             let numberPage = item.getAttribute("button-pagination")
             console.log(numberPage);

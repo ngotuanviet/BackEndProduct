@@ -35,11 +35,20 @@ block main
                         td #{product.price}đ
                         td
                             if(product.status === "active")
-                                span.badge.rounded-pill.text-bg-success Hoạt động
+                                a.badge.rounded-pill.text-bg-success(href=`javascript:;` data-status=product.status data-id=product.id button-change-status) Hoạt động
                             else
-                                span.badge.rounded-pill.text-bg-warning Ngừng hoạt động
+                                a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=product.status data-id=product.id button-change-status) Ngừng hoạt động
                         td 
                             a.btn.btn-warning.btn-sm(href="#") Sửa
                             a.btn.btn-danger.btn-sm.ml-2(href="#") Xóa
 
     +pagination(objectPanination)
+    form(
+        method="POST"
+        action=""
+        class="d-none"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/products/change-status`
+    ) 
+    script(src="/admin/js/product.js") 
+    script(src="/admin/js/script.js") 

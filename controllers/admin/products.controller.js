@@ -58,6 +58,17 @@ const index = async (req, res) => {
         objectPanination
     })
 }
+// [Get] /admin/products/change-status/:status/:id
+const changeStatus = async (req, res) => {
+    const { status, id } = req.params;
+    await Product.updateOne({ _id: id }, { status: status })
+    // back list product
+    backURL = req.header('Referer') || '/admin/products';
+    res.redirect(backURL)
+
+}
+
 module.exports = {
-    index
+    index,
+    changeStatus
 }
