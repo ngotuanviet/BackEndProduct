@@ -47,7 +47,7 @@ block main
                                 a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=product.status data-id=product.id button-change-status) Ngừng hoạt động
                         td 
                             a.btn.btn-warning.btn-sm(href="#") Sửa
-                            a.btn.btn-danger.btn-sm.ml-2(href="#") Xóa
+                            a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=product.id button-delete) Xóa
 
     +pagination(objectPanination)
     form(
@@ -56,6 +56,13 @@ block main
         class="d-none"
         id="form-change-status"
         data-path=`${prefixAdmin}/products/change-status`
+    ) 
+    form(
+        method="POST"
+        action=""
+        class="d-none"
+        id="form-delete-item"
+        data-path=`${prefixAdmin}/products/delete`
     ) 
     script(src="/admin/js/product.js") 
     script(src="/admin/js/script.js") 

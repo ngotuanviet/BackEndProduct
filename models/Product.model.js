@@ -33,6 +33,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false, // Mặc định là chưa bị xóa
     },
+    deleteAt: Date
 },
     {
         // Tùy chọn này sẽ tự động thêm 2 trường createdAt và updatedAt

@@ -25,3 +25,32 @@ if (buttonChangeStatus.length > 0) {
     )
 
 }
+// delete product
+const ButtonsDelete = document.querySelectorAll('[button-delete]');
+console.log(ButtonsDelete);
+
+if (ButtonsDelete.length > 0) {
+    const formChangeItem = document.querySelector("#form-delete-item")
+    console.log(formChangeItem);
+
+    const path = formChangeItem.getAttribute("data-path")
+
+
+
+    ButtonsDelete.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const isCorfirm = confirm("Bạn có chắc muốn xoá sản phẩm này?");
+            if (isCorfirm) {
+                const id = btn.getAttribute("data-id");
+                console.log(id);
+                const action = `${path}/${id}?_method=DELETE`
+                console.log(action);
+
+                formChangeItem.action = action;
+                formChangeItem.submit();
+
+            }
+        })
+    })
+}
+
