@@ -28,6 +28,7 @@ block main
                     th Hình ảnh
                     th Tên sản phẩm
                     th Giá
+                    th Vị trí
                     th Trạng thái
                     th Thao tác
             tbody
@@ -40,6 +41,14 @@ block main
                             img(src=product.thumbnail, alt="Product Image" width="100" height="auto")
                         td(style="width: 200px") #{product.title}
                         td #{product.price}đ
+                        td 
+                            input(
+                                type="number"
+                                value=product.position
+                                style="width: 60px"
+                                min="1"
+                                name="position"
+                            )
                         td
                             if(product.status === "active")
                                 a.badge.rounded-pill.text-bg-success(href=`javascript:;` data-status=product.status data-id=product.id button-change-status) Hoạt động

@@ -9,9 +9,6 @@ const index = async (req, res) => {
         deleted: 'false',
 
     };
-
-
-
     // bộ lọc
     const filtersStatus = filtersStatusHelper(status, find)
     const keywordSearch = searchHelper(keyword)
@@ -47,7 +44,10 @@ const index = async (req, res) => {
     // const totalPages = Math.ceil(countDocuments / objectPanination.limitItems)
     // objectPanination.totalPages = totalPages
     // End pagination
-    const products = await Product.find(find).limit(objectPanination.limitItems).skip(objectPanination.skip)
+    const products = await Product.find(find)
+        .sort({ position: "desc" })
+        .limit(objectPanination.limitItems)
+        .skip(objectPanination.skip)
 
 
     res.render('admin/pages/products/index', {
@@ -70,8 +70,11 @@ const changeStatus = async (req, res) => {
 // [Patch] /admin/products/change-multi
 const changeMulti = async (req, res) => {
     const { type, ids } = req.body
+
     switch (type) {
         case "active":
+            console.log(ids);
+
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
             break;
         case "inactive":
@@ -79,6 +82,22 @@ const changeMulti = async (req, res) => {
             break;
         case "deleteAll":
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteAt: Date.now() })
+            break;
+        case "changePosition":
+            const idsArray = ids.split(", ")
+            for (const item of idsArray) {
+                let [id, position] = item.split("-")
+
+                position = parseInt(position)
+                await Product.updateMany({ _id: id }, {
+                    position: position
+                })
+
+
+            }
+
+
+            // await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteAt: Date.now() })
             break;
         default:
             break;
