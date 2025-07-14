@@ -77,6 +77,9 @@ const changeMulti = async (req, res) => {
         case "inactive":
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
             break;
+        case "deleteAll":
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteAt: Date.now() })
+            break;
         default:
             break;
     }
