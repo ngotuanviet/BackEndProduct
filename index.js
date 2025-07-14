@@ -2,6 +2,8 @@ const express = require('express');
 
 const route = require('./routes/client/index.routes');
 const routeAdmin = require('./routes/admin/index.routes');
+const bodyParser = require('body-parser');
+
 
 const database = require('./config/database');
 const system = require('./config/system');
@@ -11,6 +13,8 @@ require('dotenv').config();
 database.connect();
 const port = process.env.PORT;
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 // var locals app 
 app.locals.prefixAdmin = system.prefixAdmin;

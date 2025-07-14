@@ -30,7 +30,7 @@ if (buttonStatus.length > 0) {
 };
 // form search
 const search = document.querySelector("#searchForm")
-console.log(search);
+
 if (search) {
     search.addEventListener("submit", (e) => {
         e.preventDefault()
@@ -43,12 +43,12 @@ if (search) {
             url.searchParams.delete("keyword");
         }
         window.location.href = url.href;
-        console.log(window.location.href);
+
 
     })
 }
 const navigationItem = document.querySelectorAll("[button-pagination]")
-console.log(navigationItem || "ko thấy");
+
 
 
 if (navigationItem.length > 0) {
@@ -61,9 +61,66 @@ if (navigationItem.length > 0) {
             console.log(numberPage);
             url.searchParams.set("page", numberPage);
             window.location.href = url.href;
-            console.log(window.location.href);
+
 
         })
+    })
+
+}
+// CheckBox Multi
+const checkBoxMulti = document.querySelector("[checkbox-multi]")
+
+
+if (checkBoxMulti) {
+    const inputCheckAll = checkBoxMulti.querySelector("input[name='checkall']")
+    const inputsId = checkBoxMulti.querySelectorAll("input[name='ids']")
+    inputCheckAll.addEventListener("click", () => {
+        if (inputCheckAll.checked) {
+            inputsId.forEach(input => {
+                input.checked = true;
+            });
+
+        } else {
+            inputsId.forEach(input => {
+                input.checked = false;
+            });
+
+        }
+    })
+    inputsId.forEach(inputId => {
+        inputId.addEventListener("click", () => {
+            let checkAll = true;
+            inputsId.forEach(input => {
+                if (!input.checked) {
+                    checkAll = false;
+                }
+            });
+            inputCheckAll.checked = checkAll;
+        })
+    })
+    console.log(inputsId);
+
+}
+// form Change multi
+
+const formChangeMulti = document.querySelector("#form-change-multi")
+if (formChangeMulti) {
+
+    formChangeMulti.addEventListener("submit", (e) => {
+        e.preventDefault()
+        const checkBoxMulti = document.querySelector("[checkbox-multi]")
+        const inputChecked = document.querySelectorAll("input[name='ids']:checked")
+        if (inputChecked.length > 0) {
+            const inputIds = formChangeMulti.querySelector("input[name='ids']")
+            let ids = []
+            inputChecked.forEach(input => {
+                ids.push(input.value)
+            })
+            inputIds.value = ids.join(", ")
+            formChangeMulti.submit();
+        } else {
+            alert("Vui lòng chọn sản phẩm")
+        }
     })
 
 }

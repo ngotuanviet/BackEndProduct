@@ -24,7 +24,7 @@ const index = async (req, res) => {
     let objectPanination = await paginationHelper({
         limitItems: 4,
         currentPage: 1,
-
+        skip: 0
 
     }, page, countDocuments)
     console.log(objectPanination);
@@ -58,7 +58,7 @@ const index = async (req, res) => {
         objectPanination
     })
 }
-// [Get] /admin/products/change-status/:status/:id
+// [Patch] /admin/products/change-status/:status/:id
 const changeStatus = async (req, res) => {
     const { status, id } = req.params;
     await Product.updateOne({ _id: id }, { status: status })
@@ -67,8 +67,24 @@ const changeStatus = async (req, res) => {
     res.redirect(backURL)
 
 }
+// [Patch] /admin/products/change-multi
+const changeMulti = async (req, res) => {
+    const { type, ids } = req.body
+    switch (type) {
+        case "active":
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            break;
+        case "inactive":
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            break;
+        default:
+            break;
+    }
+    res.redirect("/admin/products")
 
+}
 module.exports = {
     index,
-    changeStatus
+    changeStatus,
+    changeMulti
 }
