@@ -1,4 +1,6 @@
 const { default: mongoose } = require("mongoose");
+const slug = require('mongoose-slug-updater');
+mongoose.plugin(slug);
 const productSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -33,7 +35,8 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false, // Mặc định là chưa bị xóa
     },
-    deleteAt: Date
+    deleteAt: Date,
+    slug: { type: String, slug: "title", unique: true }
 },
     {
         // Tùy chọn này sẽ tự động thêm 2 trường createdAt và updatedAt

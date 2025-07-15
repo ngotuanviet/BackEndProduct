@@ -1,0 +1,47 @@
+extends ../../layout/default.pug
+block main 
+    h1(class="mb-4") Thêm mới sản phẩm
+    form(action="/admin/products/create", method="post"
+    id="form-create-product")
+        .row
+            .col-md-6
+                .form-group
+                    label(for="title") Tiêu đề
+                    input(type="text" class="form-control" name="title" id="title" required)
+            .col-md-6
+                .form-group
+                    label(for="description") Mô tả
+                    textarea(class="form-control" name="description" id="description" rows="3" required)
+        .row
+            .col-md-6
+                .form-group
+                    label(for="price") Giá
+                    input(type="number" class="form-control" name="price" id="price" required value="0" min="0")
+            .col-md-6
+                .form-group
+                    label(for="discount") Giảm giá
+                    input(type="number" class="form-control" name="discountPercentage" id="discount" min="0" value="0")
+        .row
+            .col-md-6
+                .form-group
+                    label(for="quantity") Số lượng
+                    input(type="number" class="form-control" name="stock" id="quantity" required value="0" min="0")
+            .col-md-6
+                .form-group
+                    label(for="thumbnail") Ảnh sản phẩm
+                    input(type="text" class="form-control-file" name="thumbnail" id="thumbnail"  )
+        .row
+            .col-md-6
+                .form-group
+                    label(for="status") Trạng thái
+                    select(class="form-control", name="status", id="status")
+                        option(value="active") Kích hoạt
+                        option(value="inactive") Không kích hoạt
+            .col-md-6
+                .form-group
+                    label(for="position") Vị trí hiển thị
+                    input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1")
+        button(type='submit', class='btn btn-primary') Lưu sản phẩm
+  
+
+    script(src="/admin/js/product.js") 

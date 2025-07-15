@@ -2,6 +2,7 @@ const Product = require("../../models/Product.model")
 const filtersStatusHelper = require("../../helper/filtersStatus")
 const searchHelper = require("../../helper/search")
 const paginationHelper = require("../../helper/pagination")
+const systemConfig = require("../../config/system")
 // [Get] /admin/products
 const index = async (req, res) => {
     const { status, keyword, page } = req.query;
@@ -109,7 +110,7 @@ const changeMulti = async (req, res) => {
         default:
             break;
     }
-    res.redirect("/admin/products")
+    res.redirect(`${systemConfig.prefixAdmin}/products`)
 
 }
 // [Delete] /admin/products/delete/:id
@@ -119,11 +120,37 @@ const deleteProduct = async (req, res) => {
 
     await Product.updateOne({ _id: id }, { deleted: true, deleteAt: Date.now() })
     req.flash('success', 'Xoá sản phẩm thành công');
-    res.redirect("/admin/products")
+    res.redirect(`${systemConfig.prefixAdmin}/products`)
+
+}
+// [GET] /admin/products/create
+const createProduct = async (req, res) => {
+    res.render(`admin/pages/products/create`, {
+        title: "Thêm sản phẩm"
+    })
+}
+const createProductPOST = async (req, res) => {
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+
+    if (isNaN(req.body.position)) {
+        req.body.position = await Product.countDocuments() + 1
+    }
+    // } else {
+    //     req.body.position = parseInt(req.body.position)
+    // }
+    const product = new Product(req.body)
+    await product.save()
+    res.redirect(`${systemConfig.prefixAdmin}/products`)
+
 }
 module.exports = {
     index,
     changeStatus,
     changeMulti,
-    deleteProduct
+    createProduct,
+    deleteProduct,
+    createProductPOST
 }
