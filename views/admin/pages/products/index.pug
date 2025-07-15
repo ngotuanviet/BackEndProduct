@@ -3,7 +3,10 @@ include ../../mixins/filtersStatus
 include ../../mixins/search
 include ../../mixins/pagination
 include ../../mixins/formChangeMulti
+
+include ../../mixins/alert
 block main 
+    +alert-success(5000)
     h1 Danh sách sản phẩm
 
     .card.mb-3 

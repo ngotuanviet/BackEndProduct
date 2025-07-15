@@ -64,6 +64,7 @@ const changeStatus = async (req, res) => {
     await Product.updateOne({ _id: id }, { status: status })
     // back list product
     backURL = req.header('Referer') || '/admin/products';
+    req.flash('success', 'Cập nhập trạng thái thành công');
     res.redirect(backURL)
 
 }
@@ -76,12 +77,18 @@ const changeMulti = async (req, res) => {
             console.log(ids);
 
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            req.flash('success', `Cập nhập trạng thái các sản phẩm thành công`);
+
             break;
         case "inactive":
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            req.flash('success', `Cập nhập trạng thái các sản phẩm thành công`);
+
             break;
         case "deleteAll":
             await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteAt: Date.now() })
+            req.flash('success', 'Xoá tất cả sản phẩm thành công');
+
             break;
         case "changePosition":
             const idsArray = ids.split(", ")
@@ -111,6 +118,7 @@ const deleteProduct = async (req, res) => {
     console.log(id);
 
     await Product.updateOne({ _id: id }, { deleted: true, deleteAt: Date.now() })
+    req.flash('success', 'Xoá sản phẩm thành công');
     res.redirect("/admin/products")
 }
 module.exports = {
