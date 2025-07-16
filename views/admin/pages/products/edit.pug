@@ -1,0 +1,53 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+block main 
+    +alert-error(5000)
+    h1(class="mb-4") Sửa sản phẩm
+    form(action=`/admin/products/edit/${product.id}?_method=PATCH`, method="post"
+    enctype="multipart/form-data"
+    id="form-edit-product")
+        .row
+            .col-md-6
+                .form-group
+                    label(for="title") Tiêu đề
+                    input(type="text" class="form-control" name="title" id="title" value=product.title )
+            .col-md-6
+                .form-group
+                    label(for="description") Mô tả
+                    textarea(class="form-control" name="description" id="description" rows="3") #{product.description}
+        .row
+            .col-md-6
+                .form-group
+                    label(for="price") Giá
+                    input(type="number" class="form-control" name="price" id="price"  value=product.price min="0")
+            .col-md-6
+                .form-group
+                    label(for="discount") Giảm giá
+                    input(type="number" class="form-control" name="discountPercentage" id="discount" min="0" value=product.discountPercentage)
+        .row
+            .col-md-6
+                .form-group
+                    label(for="quantity") Số lượng
+                    input(type="number" class="form-control" name="stock" id="quantity"  value=product.stock min="0")
+            .col-md-6
+                .div(class="form-group" upload-image)
+                    label(for="thumbnail") Ảnh sản phẩm
+                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*"  upload-image-Input )
+                    .div( close-image) X
+                    <img with="100px" height="100px" src=#{product.thumbnail} alt="your image" class="image-Preview" upload-image-Preview />
+        .row
+            .col-md-6
+                .form-group
+                    label(for="status") Trạng thái
+                    select(class="form-control", name="status", id="status" )
+                        option(value="active" selected=(product.status === 'active')) Kích hoạt
+                        option(value="inactive" selected=(product.status === 'inactive')) Không kích hoạt
+            .col-md-6
+                .form-group
+                    label(for="position") Vị trí hiển thị
+                    input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1" value=product.position)
+        button(type='submit', class='btn btn-primary') Cập nhật sản phẩm
+  
+
+    script(src="/admin/js/product.js") 
+    script(src="/admin/js/script.js") 

@@ -151,11 +151,63 @@ const createProductPOST = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/products`)
 
 }
+// [Get] admin/products/edit/:id
+const editProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const find = {
+            deleted: 'false',
+            _id: id
+        }
+
+
+        const product = await Product.findOne(find);
+
+        res.render(`admin/pages/products/edit`, {
+            title: "Sửa sản phẩm",
+            product
+        })
+    } catch (error) {
+        req.flash('error', 'Không tìm thấy sản phẩm')
+        res.redirect(`${systemConfig.prefixAdmin}/products`)
+    }
+
+}
+// [Patch] admin/products/edit/:id
+const editProductPatch = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+
+    req.body.price = parseInt(req.body.price);
+    console.log(req.body)
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+    if (req.file) {
+        req.body.thumbnail = `/uploads/${req.file.filename}`
+    }
+    console.log(req.body);
+    try {
+        await Product.updateOne({ _id: id }, req.body)
+        req.flash('success', 'Sửa sản phẩm thành công');
+        res.redirect(`${systemConfig.prefixAdmin}/products`)
+        req.flash('success', 'Sửa sản phẩm Thành Công');
+
+    } catch (error) {
+        req.flash('success', 'Sửa sản phẩm thất bại');
+        console.log(error);
+
+    }
+
+
+}
 module.exports = {
     index,
     changeStatus,
     changeMulti,
     createProduct,
     deleteProduct,
-    createProductPOST
+    createProductPOST,
+    editProduct,
+    editProductPatch
 }
