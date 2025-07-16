@@ -1,5 +1,7 @@
 extends ../../layout/default.pug
+include ../../mixins/alert.pug
 block main 
+    +alert-error(5000)
     h1(class="mb-4") Thêm mới sản phẩm
     form(action="/admin/products/create", method="post"
     enctype="multipart/form-data"
@@ -8,16 +10,16 @@ block main
             .col-md-6
                 .form-group
                     label(for="title") Tiêu đề
-                    input(type="text" class="form-control" name="title" id="title" required)
+                    input(type="text" class="form-control" name="title" id="title" )
             .col-md-6
                 .form-group
                     label(for="description") Mô tả
-                    textarea(class="form-control" name="description" id="description" rows="3" required)
+                    textarea(class="form-control" name="description" id="description" rows="3" )
         .row
             .col-md-6
                 .form-group
                     label(for="price") Giá
-                    input(type="number" class="form-control" name="price" id="price" required value="0" min="0")
+                    input(type="number" class="form-control" name="price" id="price"  value="0" min="0")
             .col-md-6
                 .form-group
                     label(for="discount") Giảm giá
@@ -26,7 +28,7 @@ block main
             .col-md-6
                 .form-group
                     label(for="quantity") Số lượng
-                    input(type="number" class="form-control" name="stock" id="quantity" required value="0" min="0")
+                    input(type="number" class="form-control" name="stock" id="quantity"  value="0" min="0")
             .col-md-6
                 .div(class="form-group" upload-image)
                     label(for="thumbnail") Ảnh sản phẩm

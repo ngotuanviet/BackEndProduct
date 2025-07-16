@@ -132,6 +132,7 @@ const createProduct = async (req, res) => {
 const createProductPOST = async (req, res) => {
     req.body.price = parseInt(req.body.price);
     console.log(req.file, req.body)
+
     if (req.file) {
         req.body.thumbnail = `/uploads/${req.file.filename}`
     }

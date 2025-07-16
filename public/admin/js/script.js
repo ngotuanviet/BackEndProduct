@@ -143,28 +143,27 @@ if (formChangeMulti) {
     })
 
 }
+
 // alert
 const showAlert = document.querySelector("[show-alert]")
+if (alert) {
+    const time = parseInt(showAlert.getAttribute("data-time"));
+    const closeAlert = showAlert.querySelector("[close-alert]")
+    closeAlert.addEventListener("click", () => {
+        showAlert.classList.add("alert-hidden")
+    })
 
+    setTimeout(() => {
+        showAlert.classList.add("alert-hidden")
 
-// if (alert) {
-//     const time = parseInt(showAlert.getAttribute("data-time"));
-//     const closeAlert = showAlert.querySelector("[close-alert]")
-//     closeAlert.addEventListener("click", () => {
-//         showAlert.classList.add("alert-hidden")
-//     })
+    }, time)
 
-//     setTimeout(() => {
-//         showAlert.classList.add("alert-hidden")
+}
 
-//     }, time)
+// end alert
 
-// }
-
-// // end alert
+// preview img
 const uploadImage = document.querySelector("[upload-image]")
-
-
 if (uploadImage) {
     const imgInput = document.querySelector("[upload-image-Input]")
     const imgPreview = document.querySelector("[upload-image-preview]")
@@ -188,4 +187,3 @@ if (uploadImage) {
 
 }
 
-// preview img
