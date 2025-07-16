@@ -2,6 +2,7 @@ extends ../../layout/default.pug
 block main 
     h1(class="mb-4") Thêm mới sản phẩm
     form(action="/admin/products/create", method="post"
+    enctype="multipart/form-data"
     id="form-create-product")
         .row
             .col-md-6
@@ -29,7 +30,7 @@ block main
             .col-md-6
                 .form-group
                     label(for="thumbnail") Ảnh sản phẩm
-                    input(type="text" class="form-control-file" name="thumbnail" id="thumbnail"  )
+                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" )
         .row
             .col-md-6
                 .form-group
