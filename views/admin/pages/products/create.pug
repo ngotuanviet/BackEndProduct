@@ -28,9 +28,12 @@ block main
                     label(for="quantity") Số lượng
                     input(type="number" class="form-control" name="stock" id="quantity" required value="0" min="0")
             .col-md-6
-                .form-group
+                .div(class="form-group" upload-image)
                     label(for="thumbnail") Ảnh sản phẩm
-                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" )
+                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input )
+                    .div( close-image) X
+                    <img with="100px" height="100px" src="" alt="your image" class="image-Preview" upload-image-Preview />
+
         .row
             .col-md-6
                 .form-group
@@ -46,3 +49,4 @@ block main
   
 
     script(src="/admin/js/product.js") 
+    script(src="/admin/js/script.js") 

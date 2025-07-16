@@ -147,20 +147,45 @@ if (formChangeMulti) {
 const showAlert = document.querySelector("[show-alert]")
 
 
-if (alert) {
-    const time = parseInt(showAlert.getAttribute("data-time"));
-    const closeAlert = showAlert.querySelector("[close-alert]")
-    closeAlert.addEventListener("click", () => {
-        showAlert.classList.add("alert-hidden")
+// if (alert) {
+//     const time = parseInt(showAlert.getAttribute("data-time"));
+//     const closeAlert = showAlert.querySelector("[close-alert]")
+//     closeAlert.addEventListener("click", () => {
+//         showAlert.classList.add("alert-hidden")
+//     })
+
+//     setTimeout(() => {
+//         showAlert.classList.add("alert-hidden")
+
+//     }, time)
+
+// }
+
+// // end alert
+const uploadImage = document.querySelector("[upload-image]")
+
+
+if (uploadImage) {
+    const imgInput = document.querySelector("[upload-image-Input]")
+    const imgPreview = document.querySelector("[upload-image-preview]")
+    const closePreview = document.querySelector("[close-image]")
+    closePreview.addEventListener("click", () => {
+        imgInput.value = "";
+        imgPreview.src = "";
     })
+    imgInput.addEventListener("change", (e) => {
+        console.log(e);
 
-    setTimeout(() => {
-        showAlert.classList.add("alert-hidden")
+        const [file] = e.target.files
+        if (file) {
+            imgPreview.src = URL.createObjectURL(file);
+        } else {
 
-    }, time)
+            imgPreview.src = "";
+        }
+
+    })
 
 }
 
-// end alert
-
-
+// preview img
