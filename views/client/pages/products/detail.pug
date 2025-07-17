@@ -1,0 +1,30 @@
+extends ../../layout/default
+block main
+    .container.my-3
+        .row
+            .col-12
+                h1.title Thông tin sản phẩm
+        .row
+            
+            if (product.title)
+                h1(class="mb-4") #{product.title}
+            if(product.price)
+                div(class="mb-4") 
+                strong Giá: 
+                span #{product.price}đ  
+            if(product.discountPercentage)
+                div(class="mb-4") 
+                strong Giảm giá: 
+                span #{product.discountPercentage}%
+            if(product.stock)
+                div(class="mb-4") 
+                strong Số lượng: 
+                span #{product.stock}
+            if(product.thumbnail)
+                div(class="mb-4") 
+                strong Ảnh sản phẩm: 
+                img(src=product.thumbnail, alt="Product Image" width="200" height="auto")
+            if(product.description)
+                div(class="mb-4") 
+                strong Mô tả: 
+                p #{product.description}    

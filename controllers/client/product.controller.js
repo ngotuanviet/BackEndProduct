@@ -17,6 +17,24 @@ const index = async (req, res) => {
         products: newProducts
     })
 }
+const detail = async (req, res) => {
+    const { slug } = req.params;
+    const find = {
+        deleted: 'false',
+        status: 'active',
+        slug: slug
+    }
+    const product = await Product.findOne(find)
+    console.log('====================================');
+    console.log(product);
+    console.log('====================================');
+    res.render('client/pages/products/detail', {
+        title: "Sản phẩm",
+        product
+    })
+
+}
 module.exports = {
-    index
+    index,
+    detail
 }

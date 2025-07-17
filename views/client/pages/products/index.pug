@@ -10,6 +10,7 @@ block main
             each product in products 
                 .col-4.mb-3
                     .product-item 
+                    a(href=`/products/${product.slug}`) 
                         .inner-image 
                             img(
                                 src=product.thumbnail

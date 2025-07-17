@@ -146,8 +146,10 @@ if (formChangeMulti) {
 
 // alert
 const showAlert = document.querySelector("[show-alert]")
-if (alert) {
+if (showAlert) {
     const time = parseInt(showAlert.getAttribute("data-time"));
+    console.log(time);
+
     const closeAlert = showAlert.querySelector("[close-alert]")
     closeAlert.addEventListener("click", () => {
         showAlert.classList.add("alert-hidden")
@@ -177,6 +179,8 @@ if (uploadImage) {
 
         const [file] = e.target.files
         if (file) {
+            console.log(file);
+
             imgPreview.src = URL.createObjectURL(file);
         } else {
 
