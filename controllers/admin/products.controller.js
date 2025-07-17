@@ -201,6 +201,19 @@ const editProductPatch = async (req, res) => {
 
 
 }
+const detailProduct = async (req, res) => {
+    const { id } = req.params;
+    const find = {
+        deleted: 'false',
+        _id: id
+    }
+
+    const product = await Product.findOne(find);
+    res.render(`admin/pages/products/detail`, {
+        title: product.title,
+        product
+    })
+}
 module.exports = {
     index,
     changeStatus,
@@ -209,5 +222,6 @@ module.exports = {
     deleteProduct,
     createProductPOST,
     editProduct,
-    editProductPatch
+    editProductPatch,
+    detailProduct
 }

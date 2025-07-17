@@ -43,7 +43,7 @@ block main
                     th Thao tác
             tbody
                 each product,index in products
-                    tr 
+                    tr
                         td 
                             input(type="checkbox" name="ids" value=product.id)
                         td #{ objectPanination.skip + index + 1  }
@@ -66,6 +66,7 @@ block main
                                 a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=product.status data-id=product.id button-change-status) Ngừng hoạt động
                         td 
                             a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/products/edit/${product.id}`) Sửa
+                            a.btn.btn-secondary.btn-sm.ml-2(href=`${prefixAdmin}/products/detail/${product.id}`) Chi tiết
                             a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=product.id button-delete) Xóa
 
     +pagination(objectPanination)
