@@ -16,12 +16,7 @@ const port = process.env.PORT;
 // Flash
 
 app.use(cookieParser('snjiewrtgrhfgbf'));
-app.use(session({
-    secret: 'snjiewrtgrhfgbf',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000 }
-}));
+app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 // End Flash
 app.use(bodyParser.json());
