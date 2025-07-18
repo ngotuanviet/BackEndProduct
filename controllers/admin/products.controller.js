@@ -25,28 +25,18 @@ const index = async (req, res) => {
         skip: 0
 
     }, page, countDocuments)
-    console.log(objectPanination);
+    // sort
+    let sort = {}
 
+    if (req.query.sortKey && req.query.sortValue) {
+        sort[req.query.sortKey] = req.query.sortValue
+    } else {
+        sort.position = "desc"
+    }
+    // end sort
 
-    // if (page) {
-    //     let pageInt = parseInt(page)
-    //     if (isNaN(pageInt)) {
-    //         objectPanination.currentPage = 1
-    //     } else if (page < 1) {
-    //         objectPanination.currentPage = 1
-    //     } else {
-    //         objectPanination.currentPage = pageInt
-    //         // (trang hiện tại - 1) * Số lượng xuất hiện phần tử mỗi trang
-    //         objectPanination.skip = (objectPanination.currentPage - 1) * objectPanination.limitItems
-    //     }
-
-    // }
-    // const countDocuments = await Product.countDocuments(find)
-    // const totalPages = Math.ceil(countDocuments / objectPanination.limitItems)
-    // objectPanination.totalPages = totalPages
-    // End pagination
     const products = await Product.find(find)
-        .sort({ position: "desc" })
+        .sort(sort)
         .limit(objectPanination.limitItems)
         .skip(objectPanination.skip)
 

@@ -190,4 +190,35 @@ if (uploadImage) {
     })
 
 }
+const selectSort = document.querySelector("[sort-select]")
+const sortClear = document.querySelector("[sort-clear]")
+console.log(selectSort);
+// Sắp xếp
+if (selectSort) {
+    const url = new URL(window.location.href)
+    selectSort.addEventListener("change", (e) => {
 
+
+        const [key, value] = e.target.value.split("-")
+        url.searchParams.set("sortKey", key)
+        url.searchParams.set("sortValue", value)
+        window.location.href = url.href;
+
+
+    })
+    sortClear.addEventListener("click", () => {
+
+        url.searchParams.delete("sortKey")
+        url.searchParams.delete("sortValue")
+        window.location.href = url.href;
+    })
+    // thêm selected
+    const sortKey = url.searchParams.get("sortKey")
+    const sortValue = url.searchParams.get("sortValue")
+    if (sortKey && sortValue) {
+        const stringSort = `${sortKey}-${sortValue}`
+        const optionSelected = selectSort.querySelector(`option[value=${stringSort}]`)
+        optionSelected.selected = true
+
+    }
+}
