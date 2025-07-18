@@ -25,9 +25,7 @@ const detail = async (req, res) => {
         slug: slug
     }
     const product = await Product.findOne(find)
-    console.log('====================================');
-    console.log(product);
-    console.log('====================================');
+
     res.render('client/pages/products/detail', {
         title: "Sản phẩm",
         product
