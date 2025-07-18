@@ -24,8 +24,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 // var locals app 
 app.locals.prefixAdmin = system.prefixAdmin;
-app.use(express.static("public"));
-app.set("views", "./views");
+
+app.use(express.static(`${__dirname}/public`));
+
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 //route
