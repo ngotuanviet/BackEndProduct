@@ -133,9 +133,9 @@ const createProductPOST = async (req, res) => {
     req.body.price = parseInt(req.body.price);
     console.log(req.file, req.body)
 
-    if (req.file) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`
-    }
+    // if (req.file) {
+    //     req.body.thumbnail = `/uploads/${req.file.filename}`
+    // }
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
     req.body.position = parseInt(req.body.position);
@@ -183,9 +183,9 @@ const editProductPatch = async (req, res) => {
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
     req.body.position = parseInt(req.body.position);
-    if (req.file) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`
-    }
+    // if (req.file) {
+    //     req.body.thumbnail = `/uploads/${req.file.filename}`
+    // }
     console.log(req.body);
     try {
         await Product.updateOne({ _id: id }, req.body)
