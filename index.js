@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const database = require('./config/database');
 const system = require('./config/system');
-
+const path = require('path');
 const methodOverride = require('method-override')
 const app = express();
 require('dotenv').config();
@@ -26,7 +26,7 @@ app.use(methodOverride('_method'))
 app.locals.prefixAdmin = system.prefixAdmin;
 
 app.use(express.static(`${__dirname}/public`));
-
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 

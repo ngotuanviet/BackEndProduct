@@ -29,7 +29,8 @@
 .body .main {
   position: relative;
   left: 200px;
-  width: calc(100% - 160px);
+  padding: 10px;
+  width: calc(100% - 250px);
 }
 .body .sider ul {
   list-style: none;

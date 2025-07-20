@@ -171,6 +171,7 @@ if (uploadImage) {
     const imgPreview = document.querySelector("[upload-image-preview]")
     const closePreview = document.querySelector("[close-image]")
     closePreview.addEventListener("click", () => {
+        closePreview.classList.add("d-none")
         imgInput.value = "";
         imgPreview.src = "";
     })
@@ -180,7 +181,7 @@ if (uploadImage) {
         const [file] = e.target.files
         if (file) {
             console.log(file);
-
+            closePreview.classList.remove("d-none")
             imgPreview.src = URL.createObjectURL(file);
         } else {
 

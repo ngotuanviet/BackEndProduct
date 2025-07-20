@@ -34,7 +34,7 @@ block main
     if(product.description)
         div(class="mb-4") 
             strong Mô tả: 
-            p #{product.description}    
+            p !{product.description}    
     a(class="btn btn-primary" href=`${prefixAdmin}/products/edit/${product.id}`) Chỉnh sửa sản phẩm 
     script(src="/admin/js/product.js") 
     script(src="/admin/js/script.js") 

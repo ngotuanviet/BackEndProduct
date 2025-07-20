@@ -1,0 +1,37 @@
+extends ../../layout/default
+include ../../mixins/alert.pug
+block main
+    +alert-success(5000)
+    h1 Thêm mới mục sản phẩm
+
+    .card.mb-3
+        .card-header Thêm mới
+        .card-body
+            form(action=`${prefixAdmin}/categories/create` method="POST"
+            enctype="multipart/form-data"
+            )
+                .form-group
+                    label(for="title") Tên mục sản phẩm
+                    input(type="text" class="form-control" id="title" name="title" required)
+                .form-group
+                    label(for="parent_id") Danh mục cha
+                    input(class="form-control" id="parent_id" name="parent_id")
+                .form-group
+                    label(for="description") Mô tả
+                    textarea(class="form-control" id="description" name="description" rows="3" required)
+                .form-group 
+                    label(for="status") Trạng thái
+                    select(class="form-control" id="status" name="status")
+                        option(value="active") Kích hoạt
+                        option(value="inactive") Không kích hoạt
+                .form-group
+                    label(for="position") Vị trí hiển thị
+                    input(type="number" class="form-control" id="position" name="position" placeholder="Tự động tăng" min="1")
+                .div(class="form-group" upload-image)
+                    label(for="thumbnail") Ảnh mục sản phẩm
+                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input )
+                    .div(close-image class="d-none") X
+                    <img with="100px" height="100px" src="" alt="your image" class="image-Preview" upload-image-Preview />
+                button(type="submit" class="btn btn-primary") Lưu
+    script(src="/admin/js/product.js")
+    script(src="/admin/js/script.js")
