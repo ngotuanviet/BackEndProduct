@@ -1,0 +1,38 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+block main 
+    +alert-error(5000)
+    h1(class="mb-4") Chỉnh sửa danh mục
+    form(action=`/admin/categories/edit/${dataCategory.id}?_method=PATCH`, method="post"
+    enctype="multipart/form-data"
+    id="form-edit-category")
+        .form-group
+            label(for="title") Tiêu đề
+            input(type="text" class="form-control" name="title" id="title" value=dataCategory.title )
+        .form-group
+            label(for="parent_id") Danh mục cha
+            select(name="parent_id" class="form-control" id="parent_id")
+                option(value="") Chọn danh mục cha
+                +select-tree(categoryNew, 1, dataCategory.parent_id)
+        .form-group
+            label(for="description") Mô tả
+            textarea(class="form-control" name="description" id="descriptionArea" rows="3" ) #{dataCategory.description}
+        .form-group
+            .div(class="form-group" upload-image)
+                    label(for="thumbnail") Ảnh mục sản phẩm
+                    input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input )
+                    .div(close-image class="d-none") X
+                    <img with="100px" height="100px" src="" alt="your image" class="image-Preview" upload-image-Preview />
+        .form-group
+            label(for="status") Trạng thái
+            select(class="form-control", name="status", id="status" )
+                option(value="active" selected=(dataCategory.status === 'active')) Kích hoạt
+                option(value="inactive" selected=(dataCategory.status === 'inactive')) Không kích hoạt
+        .form-group
+            label(for="position") Vị trí hiển thị
+            input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1" value=dataCategory.position)
+        button(type='submit', class='btn btn-primary') Cập nhật danh mục
+
+
+    script(src="/admin/js/script.js") 

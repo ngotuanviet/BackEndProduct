@@ -53,7 +53,7 @@ block main
                     tr
                         td 
                             input(type="checkbox" name="ids" value=product.id)
-                        td #{ objectPanination.skip + index + 1  }
+                        td #{ objectPanination.limitItems * (objectPanination.currentPage - 1) + (index + 1)  }
                         td 
                             img(src=product.thumbnail, alt="Product Image" width="100" height="auto")
                         td(style="width: 200px") #{product.title}

@@ -91,9 +91,71 @@ const changeMulti = async (req, res) => {
 
     }
 }
+const edit = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const find = {
+            deleted: 'false',
+            _id: id
+        }
+        const dataCategory = await Category.findById(find)
+        const category = await Category.find({ deleted: 'false' })
+
+        const categoryNew = createTreeHelper.tree(category)
+        if (!category) {
+            req.flash('error', 'Danh mục không tồn tại');
+            return res.redirect(`${system.prefixAdmin}/categories`)
+        }
+
+
+        res.render("admin/pages/categories/edit", {
+            title: "Chỉnh sửa danh mục",
+            dataCategory,
+            categoryNew
+        })
+    } catch (error) {
+        console.log(error);
+        req.flash('error', 'Danh mục không tồn tại');
+        return res.redirect(`${system.prefixAdmin}/categories`)
+
+    }
+
+}
+// [POST] /admin/categories/edit/:id
+const editPost = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.body);
+    try {
+        if (req.body.position == "") {
+            req.body.position = await Category.countDocuments() + 1
+        } else {
+            req.body.position = parseInt(req.body.position);
+        }
+        const find = {
+            deleted: 'false',
+            _id: id
+        }
+        const category = await Category.findByIdAndUpdate(find, req.body)
+
+        if (!category) {
+            req.flash('error', 'Danh mục không tồn tại');
+            return res.redirect(`${system.prefixAdmin}/categories`)
+        }
+        req.flash('success', 'Cập nhật danh mục thành công');
+        res.redirect(`${system.prefixAdmin}/categories`)
+    } catch (error) {
+        console.log(error);
+        req.flash('error', 'Cập nhật danh mục thất bại');
+        return res.redirect(`${system.prefixAdmin}/categories`)
+
+    }
+
+
+}
+
 module.exports = {
     index,
     create,
     createPost,
-    changeStatus, changeMulti
+    changeStatus, changeMulti, edit, editPost
 }

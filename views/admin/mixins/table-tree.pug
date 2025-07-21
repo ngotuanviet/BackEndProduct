@@ -1,10 +1,10 @@
 mixin table-tree(categories, level = 1)
-    each category,index in categories
+    each category in categories
         - const prefix = Array(level + 1).join('-- ');
         tr
             td 
                 input(type="checkbox" name="ids" value=category.id)
-            td #{ index + 1 }
+            td #{ category.index }
             td 
                 img(src=category.thumbnail, alt="Category Image" width="100" height="auto")
             td(style="width: 200px") #{prefix} #{category.title}
