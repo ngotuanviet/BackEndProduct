@@ -1,5 +1,6 @@
 // [Get] /admin/categories
-const system = require("../../config/system")
+const system = require("../../config/system");
+const createTreeHelper = require("../../helper/createTree");
 const Category = require("../../models/Category.model")
 const index = async (req, res) => {
     const { keyword, status } = req.query;
@@ -29,17 +30,27 @@ const index = async (req, res) => {
             name: 'Ẩn'
         }]
 
+
     const categories = await Category.find(find)
+    const categoriesNew = createTreeHelper.tree(categories)
     res.render("admin/pages/categories/index", {
         title: "Trang quản lý danh mục",
-        categories,
+        categories: categoriesNew,
         filtersStatus
+
     })
 }
 // [Get] /admin/categories/create
-const create = (req, res) => {
+const create = async (req, res) => {
+    let find = {
+        deleted: 'false'
+    }
+    const categories = await Category.find(find).sort({ position: "asc" })
+    const categoriesNew = createTreeHelper.tree(categories)
+    console.log(categoriesNew);
     res.render("admin/pages/categories/create", {
-        title: "Thêm danh mục"
+        title: "Thêm danh mục",
+        categories: categoriesNew
     })
 }
 // [POST] /admin/categories/create

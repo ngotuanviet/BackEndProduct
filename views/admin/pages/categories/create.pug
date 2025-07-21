@@ -1,5 +1,6 @@
 extends ../../layout/default
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 block main
     +alert-success(5000)
     h1 Thêm mới mục sản phẩm
@@ -15,7 +16,9 @@ block main
                     input(type="text" class="form-control" id="title" name="title" required)
                 .form-group
                     label(for="parent_id") Danh mục cha
-                    input(class="form-control" id="parent_id" name="parent_id")
+                    select(name="parent_id" class="form-control" id="parent_id")
+                        option(value="") Chọn danh mục cha
+                        +select-tree(categories)
                 .form-group
                     label(for="description") Mô tả
                     textarea(class="form-control" id="description" name="description" rows="3" required)
