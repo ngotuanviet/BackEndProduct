@@ -3,6 +3,9 @@ const filtersStatusHelper = require("../../helper/filtersStatus")
 const searchHelper = require("../../helper/search")
 const paginationHelper = require("../../helper/pagination")
 const systemConfig = require("../../config/system")
+const createTreeHelper = require("../../helper/createTree");
+const Category = require("../../models/Category.model")
+
 // [Get] /admin/products
 const index = async (req, res) => {
     const { status, keyword, page } = req.query;
@@ -115,8 +118,11 @@ const deleteProduct = async (req, res) => {
 }
 // [GET] /admin/products/create
 const createProduct = async (req, res) => {
+    const categories = await Category.find({ deleted: 'false' })
+    const categoriesTree = await createTreeHelper.tree(categories)
     res.render(`admin/pages/products/create`, {
-        title: "Thêm sản phẩm"
+        title: "Thêm sản phẩm",
+        categories: categoriesTree
     })
 }
 const createProductPOST = async (req, res) => {

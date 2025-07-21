@@ -6,6 +6,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true, // Bắt buộc phải có
     },
+    category_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category', // Tham chiếu đến mô hình Category
+    },
     description: {
         type: String,
     },
