@@ -149,6 +149,7 @@ const createProductPOST = async (req, res) => {
 }
 // [Get] admin/products/edit/:id
 const editProduct = async (req, res) => {
+
     try {
         const { id } = req.params;
         const find = {
@@ -156,12 +157,14 @@ const editProduct = async (req, res) => {
             _id: id
         }
 
-
+        const categories = await Category.find({ deleted: 'false' })
+        const categoriesTree = await createTreeHelper.tree(categories)
         const product = await Product.findOne(find);
 
         res.render(`admin/pages/products/edit`, {
             title: "Sửa sản phẩm",
-            product
+            product,
+            categories: categoriesTree
         })
     } catch (error) {
         req.flash('error', 'Không tìm thấy sản phẩm')
