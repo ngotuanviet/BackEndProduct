@@ -1,6 +1,5 @@
 const { default: mongoose } = require("mongoose");
 
-mongoose.plugin(slug);
 const roleSchema = new mongoose.Schema({
     title: {
         type: String,
