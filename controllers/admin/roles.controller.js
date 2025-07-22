@@ -50,9 +50,37 @@ const deleteRole = async (req, res) => {
     await role.save();
     res.redirect('/admin/roles');
 }
+const permissions = async (req, res) => {
+    const find = {
+        deleted: false,
+    }
+
+    const role = await Role.find(find).sort({ title: "desc" });
+    res.render('admin/pages/roles/permissions', {
+        title: 'Phân quyền',
+        role: role,
+    });
+}
+const permissionsUpdate = async (req, res) => {
+    const permissions = JSON.parse(req.body.permissions);
+    if (permissions.length > 0) {
+        console.log(permissions);
+        for (const item of permissions) {
+            await Role.updateOne({ _id: item.id }, {
+                permissions: item.permissions
+            })
+        }
+        req.flash('success', 'Cập nhật quyền thành công');
+        res.redirect('/admin/roles/permissions');
+
+    } else {
+        req.flash('error', 'Cập nhật quyền không thành công');
+        res.redirect('/admin/roles/permissions');
+    }
+}
 module.exports = {
     index,
     create,
-    createPost, edit, editPost, deleteRole
+    createPost, edit, editPost, deleteRole, permissions, permissionsUpdate
 
 }

@@ -7,4 +7,6 @@ router.post('/create', Controller.createPost);
 router.get('/edit/:id', Controller.edit);
 router.post('/edit/:id', Controller.editPost);
 router.delete('/delete/:id', Controller.deleteRole);
+router.get('/permissions', Controller.permissions);
+router.patch('/permissions', Controller.permissionsUpdate);
 module.exports = router;
