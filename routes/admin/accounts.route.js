@@ -16,4 +16,10 @@ router.post("/create",
     uploadCloud.upload,
     controller.createPOST);
 router.patch("/changeStatus/:status/:id", controller.changeStatus);
+router.get("/edit/:id", controller.edit);
+router.patch("/edit/:id",
+    upload.single('avatar'),
+    uploadCloud.upload,
+    controller.editPatch)
+router.delete("/delete/:id", controller.deleteID);
 module.exports = router;

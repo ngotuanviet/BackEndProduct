@@ -50,9 +50,58 @@ const changeStatus = async (req, res) => {
     res.redirect("/admin/accounts");
 
 }
+const edit = async (req, res) => {
+    const { id } = req.params;
+    const find = {
+        deleted: 'false',
+        _id: id
+    }
+    const account = await Accounts.findOne(find);
+    const roles = await Role.find({ deleted: false });
+    res.render("admin/pages/accounts/edit", {
+        title: "Sửa Tài Khoản",
+        account,
+        roles
+    })
+}
+const editPatch = async (req, res) => {
+    const { id } = req.params;
+    const find = {
+        deleted: 'false',
+        _id: id
+    }
+    const emailExits = await Accounts.findOne({
+        _id: { $ne: id }, email: req.body.email, deleted: false
+    });
+    if (emailExits) {
+        req.flash("error", `Email ${req.body.email} đã tồn tại!`);
+    } else {
+        if (req.body.password) {
+            req.body.password = md5(req.body.password);
+        } else {
+            delete req.body.password;
+        }
+    }
+    await Accounts.updateOne(find, req.body);
+    req.flash("success", "Sửa Tài Khoản Thành Công!");
+    res.redirect("/admin/accounts");
+
+}
+const deleteID = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    await Accounts.updateOne({ _id: id }, { deleted: true, deleteAt: Date.now() });
+    req.flash("success", "Xoá Tài Khoản Thành Công!");
+    res.redirect("/admin/accounts");
+
+}
+
 module.exports = {
     index,
     create,
     createPOST,
-    changeStatus
+    changeStatus,
+    edit,
+    deleteID,
+    editPatch
 }

@@ -24,3 +24,13 @@ if (buttonChangeStatus.length > 0) {
     )
 
 }
+const btnDelete = document.querySelectorAll('[button-delete]');
+btnDelete.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const formDelete = document.querySelector("#form-delete")
+        const id = btn.getAttribute("data-id")
+        const path = formDelete.getAttribute("data-path")
+        formDelete.action = `${path}/${id}?_method=DELETE`
+        formDelete.submit();
+    })
+})

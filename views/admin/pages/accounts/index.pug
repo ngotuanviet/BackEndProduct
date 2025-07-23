@@ -52,5 +52,10 @@ block main
         data-path=`${prefixAdmin}/accounts/changeStatus`
         method="POST"
     ) 
+    form(action=""
+        class="d-none"
+        id="form-delete"
+        data-path=`${prefixAdmin}/accounts/delete`
+        method="POST") 
     script(src="/admin/js/account.js")
     script(src="/admin/js/script.js")
