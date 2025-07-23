@@ -64,7 +64,7 @@ const permissions = async (req, res) => {
 const permissionsUpdate = async (req, res) => {
     const permissions = JSON.parse(req.body.permissions);
     if (permissions.length > 0) {
-        console.log(permissions);
+
         for (const item of permissions) {
             await Role.updateOne({ _id: item.id }, {
                 permissions: item.permissions
