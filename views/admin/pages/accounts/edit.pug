@@ -32,7 +32,7 @@ block main
                             label(for="avatar") Ảnh đại diện
                             input(type="file" class="form-control-file" name="avatar" id="avatar" accept="image/*" upload-image-Input )
                             .div(close-image class="d-none") X
-                            <img with="100px" height="100px" src=account.avatar alt="your image" class="image-Preview" upload-image-Preview />
+                            <img with="100px" height="100px" src=#{account.avatar} alt="your image" class="image-Preview" upload-image-Preview />
                     .col-md-6
                         .mb-3
                             label(for="role") Nhóm phân quyền

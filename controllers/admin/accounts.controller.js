@@ -35,6 +35,9 @@ const createPOST = async (req, res) => {
         req.flash("error", "Email đã tồn tại!");
         return res.redirect('/admin/accounts/create');
     }
+    if (!req.body.avatar) {
+        req.body.avatar = "";
+    }
     req.body.password = md5(req.body.password);
     const account = new Accounts(req.body);
     await account.save();
@@ -82,6 +85,10 @@ const editPatch = async (req, res) => {
             delete req.body.password;
         }
     }
+    if (!req.body.avatar) {
+        req.body.avatar = "";
+    }
+
     await Accounts.updateOne(find, req.body);
     req.flash("success", "Sửa Tài Khoản Thành Công!");
     res.redirect("/admin/accounts");

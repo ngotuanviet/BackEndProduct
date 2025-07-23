@@ -1,0 +1,36 @@
+const Accounts = require('../../models/Accounts.model');
+
+const md5 = require('md5');
+const index = (req, res) => {
+    res.render("admin/pages/auth/login", {
+        title: "Đăng nhập"
+    })
+}
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    const account = await Accounts.findOne({ email: email, deleted: false });
+    if (!account) {
+        req.flash('error', 'Tài khoản không tồn tại');
+        return res.redirect('/admin/auth/login');
+    }
+
+    if (account.password !== md5(password)) {
+        req.flash('error', 'Mật khẩu không đúng');
+        return res.redirect('/admin/auth/login');
+    }
+    if (account.status === 'inactive') {
+        req.flash('error', 'Tài khoản đã bị khóa');
+        return res.redirect('/admin/auth/login');
+    }
+    res.cookie('token', account.token)
+    res.redirect('/admin/dashboard');
+}
+const logout = async (req, res) => {
+
+    res.clearCookie('token')
+    res.redirect('/admin/auth/login')
+}
+module.exports = {
+    index,
+    login, logout
+}
