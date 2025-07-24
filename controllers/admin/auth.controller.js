@@ -1,10 +1,15 @@
 const Accounts = require('../../models/Accounts.model');
 
 const md5 = require('md5');
-const index = (req, res) => {
-    res.render("admin/pages/auth/login", {
-        title: "Đăng nhập"
-    })
+const index = async (req, res) => {
+    const user = await Accounts.findOne({ token: req.cookies.token, deleted: false });
+    if (req.cookies.token && user) {
+        return res.redirect('/admin/dashboard');
+    }
+    res.render('admin/pages/auth/login', {
+        title: 'Đăng nhập'
+    });
+
 }
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -26,7 +31,6 @@ const login = async (req, res) => {
     res.redirect('/admin/dashboard');
 }
 const logout = async (req, res) => {
-
     res.clearCookie('token')
     res.redirect('/admin/auth/login')
 }
