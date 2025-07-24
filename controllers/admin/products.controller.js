@@ -5,6 +5,7 @@ const paginationHelper = require("../../helper/pagination")
 const systemConfig = require("../../config/system")
 const createTreeHelper = require("../../helper/createTree");
 const Category = require("../../models/Category.model")
+const Accounts = require("../../models/Accounts.model")
 
 // [Get] /admin/products
 const index = async (req, res) => {
@@ -42,10 +43,18 @@ const index = async (req, res) => {
         .sort(sort)
         .limit(objectPanination.limitItems)
         .skip(objectPanination.skip)
+    for (const product of products) {
+        const fullNameAccount = await Accounts.findOne({ _id: product.createdBy.account_id })
+        if (fullNameAccount) {
+            product.fullName = fullNameAccount.fullName
+        }
+    }
+
 
 
     res.render('admin/pages/products/index', {
         title: "Trang quản lý sản phẩm",
+
         products,
         filtersStatus,
         keyword: keywordSearch.keyword,
@@ -80,7 +89,7 @@ const changeMulti = async (req, res) => {
 
             break;
         case "deleteAll":
-            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteAt: Date.now() })
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteBy: { account_id: res.locals.user._id, deletedAt: Date.now() } })
             req.flash('success', 'Xoá tất cả sản phẩm thành công');
 
             break;
@@ -109,15 +118,15 @@ const changeMulti = async (req, res) => {
 // [Delete] /admin/products/delete/:id
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
-    console.log(id);
+    await Product.updateOne({ _id: id }, { deleted: true, deleteBy: { account_id: res.locals.user._id, deletedAt: Date.now() } })
 
-    await Product.updateOne({ _id: id }, { deleted: true, deleteAt: Date.now() })
     req.flash('success', 'Xoá sản phẩm thành công');
     res.redirect(`${systemConfig.prefixAdmin}/products`)
 
 }
 // [GET] /admin/products/create
 const createProduct = async (req, res) => {
+    console.log(res.locals.user);
     const categories = await Category.find({ deleted: 'false' })
     const categoriesTree = await createTreeHelper.tree(categories)
     res.render(`admin/pages/products/create`, {
@@ -125,7 +134,13 @@ const createProduct = async (req, res) => {
         categories: categoriesTree
     })
 }
+// [POST] /admin/products/create
 const createProductPOST = async (req, res) => {
+
+    req.body.createdBy = {
+        account_id: res.locals.user._id
+    };
+
     req.body.price = parseInt(req.body.price);
     console.log(req.file, req.body)
     req.body.discountPercentage = parseInt(req.body.discountPercentage);

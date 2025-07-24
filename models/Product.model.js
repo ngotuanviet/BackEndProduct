@@ -35,11 +35,22 @@ const productSchema = new mongoose.Schema({
     position: {
         type: Number,
     },
+    createdBy: {
+        account_id: String,
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        }
+
+    },
     deleted: {
         type: Boolean,
         default: false, // Mặc định là chưa bị xóa
     },
-    deleteAt: Date,
+    deleteBy: {
+        account_id: String,
+        deletedAt: Date
+    },
     slug: { type: String, slug: "title", unique: true }
 },
     {
