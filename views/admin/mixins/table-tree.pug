@@ -17,13 +17,19 @@ mixin table-tree(categories, level = 1)
                     name="position"
                 )
             td
-                if(category.status === "active")
-                    a.badge.rounded-pill.text-bg-success(href=`javascript:;` data-status=category.status data-id=category.id button-change-status) Hoạt động
+                if (rolesUser.permissions.includes("products-category_edit"))
+                    if(category.status === "active")
+                        a.badge.rounded-pill.text-bg-success(href=`javascript:;` data-status=category.status data-id=category.id button-change-status) Hoạt động
+                    else
+                        a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=category.status data-id=category.id button-change-status) Ngừng hoạt động
                 else
-                    a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=category.status data-id=category.id button-change-status) Ngừng hoạt động
+                    span #{category.status ? 'Hoạt động' : 'Ngừng hoạt động'}
             td 
-                a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/categories/edit/${category.id}`) Sửa
+                if (rolesUser.permissions.includes("products-category_edit"))
+                    a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/categories/edit/${category.id}`) Sửa
+
                 a.btn.btn-secondary.btn-sm.ml-2(href=`${prefixAdmin}/categories/detail/${category.id}`) Chi tiết
-                a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=category.id button-delete) Xóa
+                if (rolesUser.permissions.includes("products-category_delete"))
+                    a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=category.id button-delete) Xóa
         if category.children && category.children.length > 0
             +table-tree(category.children, level + 1)

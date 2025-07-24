@@ -1,44 +1,50 @@
 extends ../../layout/default.pug
 block main 
-    h1(class="mb-4") Nhóm quyền 
-    .card.mb-3 
-        .card-header Danh sách 
-        .card-body
-            .row 
-                .col-8
-                .col-4
-                    a(
-                        href=`${prefixAdmin}/roles/create`
-                        class="btn btn-success"
-                    ) Thêm mới nhóm quyền
-            table(class="table table-hover table-sm")
-                thead 
-                    tr 
-                        th STT
-                        th Tên nhóm quyền
-                        th Mô tả
-                        th Thao tác
-                tbody
-                    if(roles.length > 0)
-                        each role, index in roles
-                            tr 
-                                td #{index + 1}
-                                td #{role.title}
-                                td #{role.description}
-                                td 
-                                    a(href=`${prefixAdmin}/roles/edit/${role._id}` class="btn btn-primary btn-sm me-2") Sửa
-                                    a(href=`${prefixAdmin}/roles/detail/${role._id}` class="btn btn-danger btn-sm me-2") Chi tiết
-                                    a(href="javascript:;" data-id=role._id button-delete class="btn btn-danger btn-sm me-2") Xóa
-                    else
+    if (rolesUser.permissions.includes("roles_view"))
+        h1(class="mb-4") Nhóm quyền 
+        .card.mb-3 
+            .card-header Danh sách 
+            .card-body
+                .row 
+                    .col-8
+                    .col-4
+                        if (rolesUser.permissions.includes("roles_create"))
+                            a(
+                                href=`${prefixAdmin}/roles/create`
+                                class="btn btn-success"
+                            ) Thêm mới nhóm quyền
+                table(class="table table-hover table-sm")
+                    thead 
                         tr 
-                            td(colspan="4") Không có dữ liệu
-    form(
-        method="POST"
-        action=""
-        class="d-none"
-        id="form-delete-role"
-        data-path=`${prefixAdmin}/roles/delete`
-     
-    )
-    script(src="/admin/js/role.js")
-    script(src="/admin/js/script.js")
+                            th STT
+                            th Tên nhóm quyền
+                            th Mô tả
+                            th Thao tác
+                    tbody
+                        if(roles.length > 0)
+                            each role, index in roles
+                                tr 
+                                    td #{index + 1}
+                                    td #{role.title}
+                                    td #{role.description}
+                                    td 
+                                        if (rolesUser.permissions.includes("roles_edit"))
+                                            a(href=`${prefixAdmin}/roles/edit/${role._id}` class="btn btn-primary btn-sm me-2") Sửa
+                                        a(href=`${prefixAdmin}/roles/detail/${role._id}` class="btn btn-danger btn-sm me-2") Chi tiết
+                                        if (rolesUser.permissions.includes("roles_delete"))
+                                            a(href="javascript:;" data-id=role._id button-delete class="btn btn-danger btn-sm me-2") Xóa
+                        else
+                            tr 
+                                td(colspan="4") Không có dữ liệu
+        form(
+            method="POST"
+            action=""
+            class="d-none"
+            id="form-delete-role"
+            data-path=`${prefixAdmin}/roles/delete`
+        
+        )
+        script(src="/admin/js/role.js")
+        script(src="/admin/js/script.js")
+    else 
+        h1 Bạn không có quyền truy cập vào trang này
