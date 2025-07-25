@@ -205,11 +205,11 @@ const editProductPatch = async (req, res) => {
     const { id } = req.params;
 
     req.body.price = parseInt(req.body.price);
-    console.log(req.body)
+
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
     req.body.position = parseInt(req.body.position);
-
+    console.log("/////////////////")
     console.log(req.body);
     try {
         const updatedBy = {

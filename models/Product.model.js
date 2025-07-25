@@ -32,9 +32,13 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: 'active', // Giá trị mặc định là 'active'
     },
+    featured: {
+        type: String,
+    },
     position: {
         type: Number,
     },
+
     createdBy: {
         account_id: String,
         createdAt: {

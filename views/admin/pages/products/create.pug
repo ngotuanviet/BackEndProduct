@@ -52,6 +52,12 @@ block main
                             option(value="inactive") Không kích hoạt
                 .col-md-12
                     .form-group
+                        label(for="status") Sản phẩm nội bật 
+                        select(class="form-control", name="is_featured", id="is_featured")
+                            option(value=1 ) Có
+                            option(value=0) Không
+                .col-md-12
+                    .form-group
                         label(for="position") Vị trí hiển thị
                         input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1")
                 button(type='submit', class='btn btn-primary') Lưu sản phẩm

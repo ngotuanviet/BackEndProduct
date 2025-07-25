@@ -43,6 +43,12 @@ block main
                         select(class="form-control", name="status", id="status" )
                             option(value="active" selected=(product.status === 'active')) Kích hoạt
                             option(value="inactive" selected=(product.status === 'inactive')) Không kích hoạt
+            .col-md-12
+                    .form-group
+                        label(for="status") Sản phẩm nội bật 
+                        select(class="form-control", name="is_featured", id="is_featured")
+                            option(value=1 selected=(product.is_featured == '1')) Có
+                            option(value=0 selected=(product.is_featured == '0')) Không
                     .form-group
                         label(for="position") Vị trí hiển thị
                         input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1" value=product.position)
