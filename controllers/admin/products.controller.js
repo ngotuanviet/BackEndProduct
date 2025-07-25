@@ -44,10 +44,20 @@ const index = async (req, res) => {
         .limit(objectPanination.limitItems)
         .skip(objectPanination.skip)
     for (const product of products) {
+        // lấy data người tạo
         const fullNameAccount = await Accounts.findOne({ _id: product.createdBy.account_id })
         if (fullNameAccount) {
             product.fullName = fullNameAccount.fullName
         }
+        // lấy data người cập nhật gần nhất
+
+        const updatedBy = product.updatedBy.slice(-1)[0];
+        if (updatedBy) {
+            const UserUpdate = await Accounts.findOne({ _id: updatedBy.account_id })
+            updatedBy.fullName = UserUpdate.fullName
+
+        }
+
     }
 
 
@@ -64,7 +74,11 @@ const index = async (req, res) => {
 // [Patch] /admin/products/change-status/:status/:id
 const changeStatus = async (req, res) => {
     const { status, id } = req.params;
-    await Product.updateOne({ _id: id }, { status: status })
+    const updatedBy = {
+        account_id: res.locals.user._id,
+        updatedAt: new Date()
+    }
+    await Product.updateOne({ _id: id }, { status: status, $push: { updatedBy: updatedBy } })
     // back list product
     backURL = req.header('Referer') || '/admin/products';
     req.flash('success', 'Cập nhập trạng thái thành công');
@@ -74,17 +88,21 @@ const changeStatus = async (req, res) => {
 // [Patch] /admin/products/change-multi
 const changeMulti = async (req, res) => {
     const { type, ids } = req.body
+    const updatedBy = {
+        account_id: res.locals.user._id,
+        updatedAt: new Date()
+    }
 
     switch (type) {
         case "active":
             console.log(ids);
 
-            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type, $push: { updatedBy: updatedBy } })
             req.flash('success', `Cập nhập trạng thái các sản phẩm thành công`);
 
             break;
         case "inactive":
-            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { status: type, $push: { updatedBy: updatedBy } })
             req.flash('success', `Cập nhập trạng thái các sản phẩm thành công`);
 
             break;
@@ -100,7 +118,8 @@ const changeMulti = async (req, res) => {
 
                 position = parseInt(position)
                 await Product.updateMany({ _id: id }, {
-                    position: position
+                    position: position,
+                    $push: { updatedBy: updatedBy }
                 })
 
 
@@ -184,19 +203,25 @@ const editProduct = async (req, res) => {
 // [Patch] admin/products/edit/:id
 const editProductPatch = async (req, res) => {
     const { id } = req.params;
-    console.log(id);
 
     req.body.price = parseInt(req.body.price);
     console.log(req.body)
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
     req.body.position = parseInt(req.body.position);
-    // if (req.file) {
-    //     req.body.thumbnail = `/uploads/${req.file.filename}`
-    // }
+
     console.log(req.body);
     try {
-        await Product.updateOne({ _id: id }, req.body)
+        const updatedBy = {
+            account_id: res.locals.user._id,
+            updatedAt: new Date()
+        }
+        await Product.updateOne({ _id: id }, {
+            ...req.body,
+            $push: {
+                updatedBy: updatedBy
+            }
+        })
         req.flash('success', 'Sửa sản phẩm thành công');
         res.redirect(`${systemConfig.prefixAdmin}/products`)
         req.flash('success', 'Sửa sản phẩm Thành Công');

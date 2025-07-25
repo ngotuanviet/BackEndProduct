@@ -52,6 +52,7 @@ block main
                         th Vị trí
                         th Trạng thái
                         th Người tạo
+                        th Người cập nhật
                         th Thao tác
                 tbody
                     each product,index in products
@@ -82,6 +83,11 @@ block main
                             td 
                                 p #{product.fullName}
                                 +formatDatetime(product.createdBy.createdAt)
+                            td 
+                                - const updatedBy = product.updatedBy.slice(-1)[0];
+                                if (updatedBy)
+                                    p #{updatedBy.fullName}
+                                    +formatDatetime(updatedBy.updatedAt)
                             td 
                                 if (rolesUser.permissions.includes("products_edit"))
                                     a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/products/edit/${product.id}`) Sửa
