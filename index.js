@@ -28,6 +28,8 @@ app.locals.prefixAdmin = system.prefixAdmin;
 app.locals.moment = moment;
 
 app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/public/admin`));
+
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");

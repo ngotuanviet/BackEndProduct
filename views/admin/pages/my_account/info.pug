@@ -1,0 +1,51 @@
+extends ../../layout/default
+block main
+    .container.py-5
+        .row.justify-content-center
+            .col-sm-10.col-md-8.col-lg-6
+            //- Thẻ chính với góc bo tròn lớn và overflow-hidden
+            //- overflow-hidden là chìa khóa để bo góc của banner xanh
+            .card.shadow-sm.border-0.rounded-4.overflow-hidden
+                
+                //- Banner màu xanh ở đầu thẻ
+                //- Tôi đã dùng màu xanh dương (#1877f2) tương tự như trong ảnh
+                .div(style="background-color: #1877f2; height: 120px;")
+
+                //- Phần thân thẻ, không có padding top để avatar chồng lên
+                .card-body.text-center.pt-0.px-4.pb-4
+                //- Avatar được tạo kiểu để giống hệt trong ảnh
+                img.rounded-circle.mx-auto.d-block(
+                    src=user.avatar, 
+                    alt="Avatar",
+                    style=`
+                    width: 120px; 
+                    height: 120px; 
+                    margin-top: -60px; 
+                    border: 4px solid white; 
+                    object-fit: cover;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    `
+                )
+
+                //- Tên và email
+                h5.mt-3.mb-0.fw-bold= user.fullName
+                p #{user.role_id}
+                p.text-muted= user.email
+
+                hr.my-4
+
+                //- Khối thông tin chi tiết, căn lề trái
+                .text-start
+                    p.mb-2
+                    strong.me-2 Số điện thoại:
+                    | #{user.phone}
+                    p.mb-2
+                    strong.me-2 Trạng thái:
+                    span.badge.bg-success.rounded-pill.fw-normal active
+                    p.text-muted
+                    | Tham gia ngày: #{new Date(user.createdAt).toLocaleDateString('vi-VN')}
+                
+                //- Khối nút bấm toàn chiều rộng
+                //- d-grid và gap-2 là cách hoàn hảo để tạo các nút như trong mẫu
+                .d-grid.gap-2.mt-4
+                    a.btn.btn-primary.fw-bold(href="my-account/edit", style="background-color: #1877f2; border-color: #1877f2;") Chỉnh sửa

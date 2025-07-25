@@ -1,0 +1,46 @@
+extends ../../layout/default
+include ../../mixins/alert
+block main
+    h1 Sửa tài khoản
+    +alert-error(5000)
+    form(action=`${prefixAdmin}/my-account/edit?_method=PATCH`, 
+        method="POST" 
+        enctype="multipart/form-data"
+        class="form-edit-account")
+        .card.mb-3 
+            .card-header Thông tin tài khoản
+            .card-body 
+                .row
+                    .col-md-12
+                        .mb-3
+                            label(for="fullName") Họ và tên
+                            input(type="text" name="fullName" id="fullName" class="form-control" value=user.fullName required)
+                    .col-md-12
+                        .mb-3
+                            label(for="email") Email
+                            input(type="email" name="email" id="email" value=user.email class="form-control" required)
+                    .col-md-12
+                        .mb-3
+                            label(for="password") Mật khẩu
+                            input(type="password" name="password" id="password" value=user.password class="form-control") 
+                    .col-md-12
+                        .mb-3
+                            label(for="phone") Số điện thoại
+                            input(type="text" name="phone" id="phone" value=user.phone class="form-control")
+                    .col-md-12
+                        .div(class="form-group" upload-image)
+                            label(for="avatar") Ảnh đại diện
+                            input(type="file" class="form-control-file" name="avatar" id="avatar" accept="image/*" upload-image-Input )
+                            .div(close-image class="d-none") X
+                            <img with="100px" height="100px" src=#{user.avatar} alt="your image" class="image-Preview" upload-image-Preview />
+                    .col-md-12
+                        .mb-3
+                            label(for="role") Nhóm phân quyền
+                            P #{user.role_id}
+                    .col-md-12
+                        .mb-3
+                            label(for="status") Trạng thái
+                            p #{user.status}
+                    
+                button(type="submit" class="btn btn-success mt-3") Cập nhật tài khoản
+    script(src="/admin/js/script.js")

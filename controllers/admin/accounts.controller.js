@@ -53,6 +53,7 @@ const changeStatus = async (req, res) => {
     res.redirect("/admin/accounts");
 
 }
+
 const edit = async (req, res) => {
     const { id } = req.params;
     const find = {

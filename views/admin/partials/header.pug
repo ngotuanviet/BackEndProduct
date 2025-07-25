@@ -1,12 +1,16 @@
 header.header 
     .container-fluid 
         .row.align-items-center 
-            .col-3 
+            .col-8
                 .inner-logo 
                     a(href="/admin/dashboard") Trang quản trị
-            .col-9
-                div(class="text-right")
-                    a(
-                        href=`${prefixAdmin}/auth/logout`
-                        class="btn btn-danger btn-sm"
-                    ) Đăng xuất
+            .col-4
+                .row
+                    div(class="text-right" )
+                        a( href=`${prefixAdmin}/my-account`
+                        class="btn btn-primary btn-sm me-2"
+                        ) #{user.fullName} 
+                        a(
+                            href=`${prefixAdmin}/auth/logout`
+                            class="btn btn-danger btn-sm"
+                        ) Đăng xuất
