@@ -14,7 +14,8 @@ const index = async (req, res) => {
 
     res.render('client/pages/products/index', {
         title: "Sản phẩm",
-        products: newProducts
+        products: newProducts,
+        LayoutProductsCategory: res.locals.Categories
     })
 }
 const detail = async (req, res) => {
