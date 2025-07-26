@@ -1,5 +1,7 @@
 const Product = require("../../models/Product.model")
 const productsHelper = require("../../helper/products")
+const Category = require("../../models/Category.model")
+const productsCategoryHelper = require("../../helper/productsCategory")
 // [get] /products
 const index = async (req, res) => {
     const products = await Product.find({
@@ -29,7 +31,42 @@ const detail = async (req, res) => {
     })
 
 }
+const ProductsByCategory = async (req, res) => {
+    const { slugCategory } = req.params;
+    try {
+        const category = await Category.findOne({
+            slug: slugCategory, status: 'active',
+            deleted: false
+        })
+
+        const listSubCategory = await productsCategoryHelper.getSubCategory(category.parent_id)
+
+
+        const listSubCategoryId = listSubCategory.map(item => item.id)
+
+        const find = {
+            deleted: 'false',
+            status: 'active',
+            category_id: { $in: [category.id, ...listSubCategoryId] }
+        }
+
+
+        const product = await Product.find(find).sort({ position: "desc" })
+        const newProducts = productsHelper.priceNewProducts(product)
+        res.render('client/pages/products/productsBycategory', {
+            title: category.title,
+            LayoutProductsCategory: res.locals.Categories,
+            products: newProducts
+        })
+    } catch (error) {
+        console.log(error);
+        res.redirect('/')
+    }
+
+
+}
 module.exports = {
     index,
-    detail
+    ProductsByCategory,
+    detail,
 }
