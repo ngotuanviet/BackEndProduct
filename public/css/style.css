@@ -39,11 +39,25 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
+  height: 100%;
+  flex: 1;
 }
 .product-item .inner-image {
   width: 100%;
+  position: relative;
   aspect-ratio: 4/3;
   border-bottom: 1px solid #ddd;
+}
+.product-item .inner-featured {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px 10px;
+  background: #28a745;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
 }
 .product-item .inner-image img {
   width: 100%;
@@ -83,6 +97,7 @@
   min-width: 180px;
   display: none;
 }
+
 .sub-menu ul li {
   padding: 10px;
   border-bottom: 1px solid #ddd;

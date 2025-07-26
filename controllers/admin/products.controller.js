@@ -89,7 +89,7 @@ const changeStatus = async (req, res) => {
 const changeMulti = async (req, res) => {
     const { type, ids } = req.body
     const updatedBy = {
-        account_id: res.locals.user._id,
+        account_id: res.locals.user.id,
         updatedAt: new Date()
     }
 
@@ -107,7 +107,7 @@ const changeMulti = async (req, res) => {
 
             break;
         case "deleteAll":
-            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteBy: { account_id: res.locals.user._id, deletedAt: Date.now() } })
+            await Product.updateMany({ _id: { $in: ids.split(", ") } }, { deleted: true, deleteBy: { account_id: res.locals.user.id, deletedAt: Date.now() } })
             req.flash('success', 'Xoá tất cả sản phẩm thành công');
 
             break;
@@ -137,7 +137,7 @@ const changeMulti = async (req, res) => {
 // [Delete] /admin/products/delete/:id
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
-    await Product.updateOne({ _id: id }, { deleted: true, deleteBy: { account_id: res.locals.user._id, deletedAt: Date.now() } })
+    await Product.updateOne({ _id: id }, { deleted: true, deleteBy: { account_id: res.locals.user.id, deletedAt: Date.now() } })
 
     req.flash('success', 'Xoá sản phẩm thành công');
     res.redirect(`${systemConfig.prefixAdmin}/products`)
@@ -209,8 +209,6 @@ const editProductPatch = async (req, res) => {
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
     req.body.position = parseInt(req.body.position);
-    console.log("/////////////////")
-    console.log(req.body);
     try {
         const updatedBy = {
             account_id: res.locals.user._id,

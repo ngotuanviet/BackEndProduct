@@ -9,6 +9,10 @@
             if (rolesUser.permissions.includes("products-category_view"))
                 li 
                     a(href=`${prefixAdmin}/categories`) Danh mục sản phẩm
+            li 
+                a(href=`${prefixAdmin}/categories-Posts`) Quản lý danh mục bài viết
+            li 
+                a(href=`${prefixAdmin}/Posts`) Quản lý bài viết
             if (rolesUser.permissions.includes("roles_view"))
                 li 
                     a(href=`${prefixAdmin}/roles`) Nhóm quyền

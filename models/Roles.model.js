@@ -16,6 +16,18 @@ const roleSchema = new mongoose.Schema({
         type: Boolean,
         default: false, // Mặc định là chưa bị xóa
     },
+    deleteBy: {
+        account_id: String,
+        deletedAt: Date
+    },
+    createdBy: {
+        account_id: String,
+        createdAt: Date
+    },
+    updatedBy: [{
+        account_id: String,
+        updatedAt: Date
+    }],
     deleteAt: Date,
 
 },

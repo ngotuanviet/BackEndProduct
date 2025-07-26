@@ -4,6 +4,8 @@ const createTreeHelper = require("../../helper/createTree");
 const Category = require("../../models/Category.model")
 const index = async (req, res) => {
     const { keyword, status } = req.query;
+
+
     const find = {
         deleted: 'false'
     }
@@ -31,6 +33,7 @@ const index = async (req, res) => {
         }]
 
 
+
     const categories = await Category.find(find)
     const categoriesNew = createTreeHelper.tree(categories)
     res.render("admin/pages/categories/index", {
@@ -55,37 +58,45 @@ const create = async (req, res) => {
 }
 // [POST] /admin/categories/create
 const createPost = async (req, res) => {
-    console.log(req.body);
-
-
-    if (req.body.position == "") {
-        req.body.position = await Category.countDocuments() + 1
+    const permissions = res.locals.rolesUser.permissions
+    if (permissions.includes("products-category_create")) {
+        if (req.body.position == "") {
+            req.body.position = await Category.countDocuments() + 1
+        } else {
+            req.body.position = parseInt(req.body.position);
+        }
+        const category = new Category({
+            ...req.body,
+            createdBy: {
+                account_id: res.locals.user.id, createdAt: Date.now()
+            }
+        })
+        await category.save()
+        req.flash('success', 'Thêm danh mục thành công');
+        res.redirect(`${system.prefixAdmin}/categories`)
     } else {
-        req.body.position = parseInt(req.body.position);
+        res.status(403)
+        return
     }
-    const category = new Category(req.body)
-    await category.save()
-    req.flash('success', 'Thêm danh mục thành công');
-    res.redirect(`${system.prefixAdmin}/categories`)
 }
 // [PATCH]
 const changeStatus = async (req, res) => {
     const { status, id } = req.params;
     console.log(status, id);
 
-    await Category.updateOne({ _id: id }, { status: status })
+    await Category.updateOne({ _id: id }, { status: status, $push: { updatedBy: { account_id: res.locals.user.id, updatedAt: Date.now() } } })
     res.redirect(`${system.prefixAdmin}/categories`)
 }
 const changeMulti = async (req, res) => {
     const { type, ids } = req.body
     switch (type) {
         case "active":
-            await Category.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            await Category.updateMany({ _id: { $in: ids.split(", ") } }, { status: type, $push: { updatedBy: { account_id: res.locals.user.id, updatedAt: Date.now() } } })
             req.flash('success', `Cập nhập trạng thái các danh mục thành công`);
             res.redirect(`${system.prefixAdmin}/categories`)
 
         case "inactive":
-            await Category.updateMany({ _id: { $in: ids.split(", ") } }, { status: type })
+            await Category.updateMany({ _id: { $in: ids.split(", ") } }, { status: type, $push: { updatedBy: { account_id: res.locals.user.id, updatedAt: Date.now() } } })
             res.redirect(`${system.prefixAdmin}/categories`)
 
 
@@ -135,7 +146,10 @@ const editPost = async (req, res) => {
             deleted: 'false',
             _id: id
         }
-        const category = await Category.findByIdAndUpdate(find, req.body)
+        const category = await Category.findByIdAndUpdate(find, {
+            ...req.body
+            , $push: { updatedBy: { account_id: res.locals.user.id, updatedAt: Date.now() } }
+        })
 
         if (!category) {
             req.flash('error', 'Danh mục không tồn tại');
@@ -152,10 +166,16 @@ const editPost = async (req, res) => {
 
 
 }
-
+const deleteID = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    await Category.updateOne({ _id: id }, { deleted: true, deleteBy: { account_id: res.locals.user.id, deletedAt: Date.now() } })
+    res.redirect(`${system.prefixAdmin}/categories`)
+}
 module.exports = {
     index,
     create,
+    deleteID,
     createPost,
     changeStatus, changeMulti, edit, editPost
 }

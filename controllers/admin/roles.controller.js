@@ -22,7 +22,12 @@ const createPost = async (req, res) => {
     //     description,
     //     permissions: permissions ? permissions.split(',') : [],
     // });
-    const role = new Role(req.body);
+    const role = new Role({
+        ...req.body,
+        createdBy: {
+            account_id: res.locals.user.id, createdAt: Date.now()
+        }
+    });
     await role.save();
     res.redirect('/admin/roles');
 }
@@ -37,17 +42,23 @@ const edit = async (req, res) => {
     });
 }
 const editPost = async (req, res) => {
-    await Role.updateOne({ _id: req.params.id }, req.body);
+    await Role.updateOne({ _id: req.params.id }, {
+        ...req.body,
+        $push: { updatedBy: { account_id: res.locals.user.id, updatedAt: Date.now() } }
+    });
     res.redirect('/admin/roles');
 }
 const deleteRole = async (req, res) => {
-    const role = await Role.findById(req.params.id);
-    if (!role) {
-        return res.status(404).send('Role not found');
-    }
-    role.deleted = true;
-    role.deleteAt = new Date();
-    await role.save();
+    const role = await Role.updateOne(req.params.id, {
+        deleted: true,
+        deleteBy: { account_id: res.locals.user.id, deletedAt: Date.now() }
+    });
+    // if (!role) {
+    //     return res.status(404).send('Role not found');
+    // }
+    // role.deleted = true;
+    // role.deleteAt = new Date();
+    // await role.save();
     res.redirect('/admin/roles');
 }
 const permissions = async (req, res) => {
@@ -67,7 +78,13 @@ const permissionsUpdate = async (req, res) => {
 
         for (const item of permissions) {
             await Role.updateOne({ _id: item.id }, {
-                permissions: item.permissions
+                permissions: item.permissions,
+                $push: {
+                    updatedBy: {
+                        account_id: res.locals.user.id,
+                        updatedAt: Date.now()
+                    }
+                }
             })
         }
         req.flash('success', 'Cập nhật quyền thành công');

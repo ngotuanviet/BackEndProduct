@@ -28,6 +28,25 @@ const CategorySchema = new mongoose.Schema({
         type: Boolean,
         default: false, // Mặc định là chưa bị xóa
     },
+    createdBy: {
+        account_id: String,
+        createdAt: {
+            type: Date,
+        }
+
+    },
+    updatedBy: [{
+        account_id: String,
+        updatedAt: {
+            type: Date,
+        }
+    }],
+    deleteBy: {
+        account_id: String,
+        deletedAt: {
+            type: Date,
+        }
+    },
     deleteAt: Date,
     slug: { type: String, slug: "title", unique: true }
 },

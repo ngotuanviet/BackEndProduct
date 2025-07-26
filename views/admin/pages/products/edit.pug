@@ -46,9 +46,9 @@ block main
             .col-md-12
                     .form-group
                         label(for="status") Sản phẩm nội bật 
-                        select(class="form-control", name="is_featured", id="is_featured")
-                            option(value=1 selected=(product.is_featured == '1')) Có
-                            option(value=0 selected=(product.is_featured == '0')) Không
+                        select(class="form-control", name="featured", id="featured")
+                            option(value=1 selected=(product.featured == '1')) Có
+                            option(value=0 selected=(product.featured == '0')) Không
                     .form-group
                         label(for="position") Vị trí hiển thị
                         input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1" value=product.position)

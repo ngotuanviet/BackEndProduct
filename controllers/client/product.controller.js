@@ -1,17 +1,12 @@
 const Product = require("../../models/Product.model")
+const productsHelper = require("../../helper/products")
 // [get] /products
 const index = async (req, res) => {
     const products = await Product.find({
         status: 'active',
         deleted: 'false'
     }).sort({ position: "desc" })
-    const newProducts = products.map((item) => {
-        item.priceNew = (item.price * (100 - item.discountPercentage) / 100).toFixed(3);
-        item.price = item.price.toFixed(3);
-        return item;
-    })
-
-
+    const newProducts = productsHelper.priceNewProducts(products)
     res.render('client/pages/products/index', {
         title: "Sản phẩm",
         products: newProducts,
@@ -29,6 +24,7 @@ const detail = async (req, res) => {
 
     res.render('client/pages/products/detail', {
         title: "Sản phẩm",
+        LayoutProductsCategory: res.locals.Categories,
         product
     })
 
