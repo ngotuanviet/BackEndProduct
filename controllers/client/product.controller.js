@@ -16,20 +16,39 @@ const index = async (req, res) => {
         LayoutProductsCategory: res.locals.Categories
     })
 }
+// [GET] /products/:slugProduct
 const detail = async (req, res) => {
-    const { slug } = req.params;
-    const find = {
-        deleted: 'false',
-        status: 'active',
-        slug: slug
-    }
-    const product = await Product.findOne(find)
+    const { slugProduct } = req.params;
+    try {
+        const find = {
+            deleted: 'false',
+            status: 'active',
+            slug: slugProduct
+        }
+        const product = await Product.findOne(find)
+        if (product.category_id) {
+            const category = await Category.findOne({
+                _id: product.category_id,
+                status: 'active',
+                deleted: false
+            })
 
-    res.render('client/pages/products/detail', {
-        title: "Sản phẩm",
-        LayoutProductsCategory: res.locals.Categories,
-        product
-    })
+            product.category = category
+        }
+        product.priceNew = productsHelper.priceNewProductsOne(product)
+
+
+        res.render('client/pages/products/detail', {
+            title: "Sản phẩm",
+            LayoutProductsCategory: res.locals.Categories,
+            product
+        })
+    } catch (error) {
+        console.log(error);
+        // res.redirect('/');
+
+    }
+
 
 }
 const ProductsByCategory = async (req, res) => {

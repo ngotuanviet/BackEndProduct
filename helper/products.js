@@ -6,6 +6,10 @@ const priceNewProducts = (Products) => {
     })
     return Products
 }
+const priceNewProductsOne = (product) => {
+    const priceNew = (product.price * (100 - product.discountPercentage) / 100).toFixed(0);
+    return priceNew
+}
 module.exports = {
-    priceNewProducts
+    priceNewProducts, priceNewProductsOne
 }
