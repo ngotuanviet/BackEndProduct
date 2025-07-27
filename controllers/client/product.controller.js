@@ -5,10 +5,14 @@ const productsCategoryHelper = require("../../helper/productsCategory")
 
 // [get] /products
 const index = async (req, res) => {
-    const products = await Product.find({
+
+    const find = {
         status: 'active',
         deleted: 'false'
-    }).sort({ position: "desc" })
+    }
+
+
+    const products = await Product.find(find).sort({ position: "desc" })
     const newProducts = productsHelper.priceNewProducts(products)
     res.render('client/pages/products/index', {
         title: "Sản phẩm",

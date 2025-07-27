@@ -42,6 +42,24 @@ block main
                         th Thao tác
                 tbody
                     +table-tree(categories)
+        nav
+            ul(class="pagination")
+                if (objectPanination.currentPage > 1)
+                    li(class="page-item ")
+                        button( class="page-link" button-pagination=objectPanination.currentPage - 1) Trang trước
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang trước
+                - for (var page = 1; page <= objectPanination.totalPages; ++page)
+                    li(class="page-item")
+                        button(class="page-link" button-pagination=page) #{page}
+                if (objectPanination.currentPage < objectPanination.totalPages)
+                    li(class="page-item " + (page === objectPanination.currentPage ? 'active' : '') )
+                        button( class="page-link" button-pagination=objectPanination.currentPage + 1) Trang sau
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang sau
+                
         form(action="" 
         class="d-none" 
         id="form-change-status"

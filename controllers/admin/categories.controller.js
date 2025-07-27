@@ -3,7 +3,7 @@ const system = require("../../config/system");
 const createTreeHelper = require("../../helper/createTree");
 const Category = require("../../models/Category.model")
 const index = async (req, res) => {
-    const { keyword, status } = req.query;
+    const { keyword, status, page } = req.query;
 
 
     const find = {
@@ -32,15 +32,36 @@ const index = async (req, res) => {
             name: 'Ẩn'
         }]
 
+    const countDocuments = await Category.countDocuments(find)
+    const objectPanination = {
+        limitItems: 4,
+        currentPage: 1,
+        skip: 0
+    }
+    if (page) {
+        let pageInt = parseInt(page)
+        if (isNaN(pageInt)) {
+            pageInt = 1
+        } else if (page < 1) {
+            pageInt = 1
+        } else {
+            objectPanination.currentPage = pageInt
+            // (trang hiện tại - 1) * Số lượng xuất hiện phần tử mỗi trang
+            objectPanination.skip = (objectPanination.currentPage - 1) * objectPanination.limitItems
+        }
+    }
+    const totalPages = Math.ceil(countDocuments / objectPanination.limitItems)
+    objectPanination.totalPages = totalPages
 
 
-    const categories = await Category.find(find)
+
+    const categories = await Category.find(find).limit(objectPanination.limitItems).skip(objectPanination.skip).sort({ position: "asc" })
     const categoriesNew = createTreeHelper.tree(categories)
     res.render("admin/pages/categories/index", {
         title: "Trang quản lý danh mục",
         categories: categoriesNew,
-        filtersStatus
-
+        filtersStatus,
+        objectPanination
     })
 }
 // [Get] /admin/categories/create

@@ -48,17 +48,14 @@ if (search) {
     })
 }
 const navigationItem = document.querySelectorAll("[button-pagination]")
-
-
-
 if (navigationItem.length > 0) {
     navigationItem.forEach(item => {
         item.addEventListener("click", () => {
-            console.log("oke");
+
 
             let url = new URL(window.location.href);
             let numberPage = item.getAttribute("button-pagination")
-            console.log(numberPage);
+
             url.searchParams.set("page", numberPage);
             window.location.href = url.href;
 

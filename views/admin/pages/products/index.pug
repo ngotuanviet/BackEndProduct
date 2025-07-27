@@ -94,7 +94,6 @@ block main
                                 a.btn.btn-secondary.btn-sm.ml-2(href=`${prefixAdmin}/products/detail/${product.id}`) Chi tiết
                                 if (rolesUser.permissions.includes("products_delete"))
                                     a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=product.id button-delete) Xóa
-
         +pagination(objectPanination)
         form(
             method="POST"

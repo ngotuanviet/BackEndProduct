@@ -2,6 +2,7 @@ const Product = require("../../models/Product.model")
 const productsHelper = require("../../helper/products")
 // [GET] /
 const index = async (req, res) => {
+
     // Lấy sản phẩm HOT
     const featuredProducts = await Product.find({
         status: 'active',

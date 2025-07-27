@@ -1,6 +1,8 @@
 extends ../../layout/default
 include ../../mixins/box-head
+
 block main
+
     .product-detail
         .container.my-5
             .row
@@ -30,7 +32,7 @@ block main
                             strong Số lượng: 
                             span #{product.stock}
                     form(action=`/cart/add/${product.id}`
-                        method: "post"
+                        method="post"
                     ) 
                         input( 
                             class="form-control mb-2"
