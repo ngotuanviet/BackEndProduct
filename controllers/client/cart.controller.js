@@ -27,12 +27,13 @@ const addPost = async (req, res) => {
     const { productID } = req.params;
     const cart_ID = req.cookies.cartID;
     const quantity = req.body.quantity;
+    console.log(cart_ID);
 
     const CartProducts = await Cart.findOne({ _id: cart_ID });
+
     const existProductInCart = CartProducts.products.find(item =>
         item.product_id === productID
     );
-
     if (existProductInCart) {
         const quantityNew = parseInt(quantity) + existProductInCart.quantity
         await Cart.updateOne({ _id: cart_ID, "products.product_id": productID }, {
@@ -43,7 +44,7 @@ const addPost = async (req, res) => {
 
     } else {
         const object = { product_id: productID, quantity: quantity }
-        await Cart.updateOne({ _id: card_ID }, { $push: { products: object } })
+        await Cart.updateOne({ _id: cart_ID }, { $push: { products: object } })
     }
 
 
@@ -52,8 +53,14 @@ const addPost = async (req, res) => {
 }
 const deleteProduct = async (req, res) => {
     const { productID } = req.params;
+    // console.log(productID);
 
-
+    const cart_ID = req.cookies.cartID;
+    await Cart.updateOne({ _id: cart_ID }, {
+        $pull: { products: { product_id: productID } }
+    })
+    req.flash("success", "Xoá thành công")
+    res.redirect(req.get('Referrer') || '/')
 }
 module.exports = {
     addPost, index, deleteProduct
