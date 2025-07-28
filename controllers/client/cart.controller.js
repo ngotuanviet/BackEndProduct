@@ -1,8 +1,26 @@
 const Cart = require("../../models/Carts.model");
+const Product = require("../../models/Product.model");
+const ProductsHelper = require("../../helper/products");
+const index = async (req, res) => {
+    const cartID = req.cookies.cartID;
+    const dataCart = await Cart.findOne({ _id: cartID })
+    if (dataCart.products.length > 0) {
+        for (const item of dataCart.products) {
+            const productId = item.product_id
+            const productInfo = await Product.findOne({ _id: productId, deleted: false, status: 'active' }).select('title price thumbnail slug discountPercentage')
+            productInfo.priceNew = ProductsHelper.priceNewProductsOne(productInfo)
+            productInfo.totalPrice = item.quantity * productInfo.priceNew
+            item.productInfo = productInfo
+        }
+    }
+    dataCart.totalPrice = dataCart.products.reduce((total, item) => {
+        return total + item.productInfo.totalPrice
+    }, 0)
+    console.log(dataCart);
 
-const index = (req, res) => {
     res.render('client/pages/cart/index', {
-        title: "Giỏ hàng"
+        title: "Giỏ hàng", LayoutProductsCategory: res.locals.Categories,
+        dataCart
     })
 }
 const addPost = async (req, res) => {
@@ -32,6 +50,11 @@ const addPost = async (req, res) => {
     req.flash("success", "Thêm vào giỏ hàng thành công")
     res.redirect(req.get('Referrer') || '/')
 }
+const deleteProduct = async (req, res) => {
+    const { productID } = req.params;
+
+
+}
 module.exports = {
-    addPost, index
+    addPost, index, deleteProduct
 }
