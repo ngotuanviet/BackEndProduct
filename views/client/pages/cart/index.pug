@@ -9,7 +9,7 @@ block main
         .row
             .col-12
                 +box-head("Giỏ hàng")
-        
+                
         .row 
             .col-12 
                 table(class="table table-bordered")
@@ -37,7 +37,7 @@ block main
                                             name="quantity"
                                             value=item.quantity
                                             min="1"
-                                            item-id=item.product_id
+                                            product-id=item.product_id
                                             style="width: 60px"
                                             )
                                         td #{item.productInfo.totalPrice}
@@ -49,3 +49,4 @@ block main
                 h2(class="text-right") Tổng hoá đơn : #{dataCart.totalPrice}
                 div(class="text-right mt-3")
                     a(href="/checkout" class="btn btn-success") Thanh toán 
+    script(src="/js/cart.js")

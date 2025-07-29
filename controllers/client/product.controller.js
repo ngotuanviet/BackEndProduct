@@ -85,8 +85,10 @@ const ProductsByCategory = async (req, res) => {
 
 
 }
+
 module.exports = {
     index,
     ProductsByCategory,
     detail,
+
 }

@@ -16,8 +16,6 @@ const index = async (req, res) => {
     dataCart.totalPrice = dataCart.products.reduce((total, item) => {
         return total + item.productInfo.totalPrice
     }, 0)
-    console.log(dataCart);
-
     res.render('client/pages/cart/index', {
         title: "Giỏ hàng", LayoutProductsCategory: res.locals.Categories,
         dataCart
@@ -27,7 +25,6 @@ const addPost = async (req, res) => {
     const { productID } = req.params;
     const cart_ID = req.cookies.cartID;
     const quantity = req.body.quantity;
-    console.log(cart_ID);
 
     const CartProducts = await Cart.findOne({ _id: cart_ID });
 
@@ -53,8 +50,6 @@ const addPost = async (req, res) => {
 }
 const deleteProduct = async (req, res) => {
     const { productID } = req.params;
-    // console.log(productID);
-
     const cart_ID = req.cookies.cartID;
     await Cart.updateOne({ _id: cart_ID }, {
         $pull: { products: { product_id: productID } }
@@ -62,6 +57,17 @@ const deleteProduct = async (req, res) => {
     req.flash("success", "Xoá thành công")
     res.redirect(req.get('Referrer') || '/')
 }
+const updateQuantity = async (req, res) => {
+    const { productID, quantity } = req.params;
+    const cart_ID = req.cookies.cartID;
+    await Cart.updateOne({ _id: cart_ID, "products.product_id": productID }, {
+        $set: {
+            "products.$.quantity": quantity
+        }
+    })
+    req.flash("success", "Cập nhật số lượng thành công")
+    res.redirect(req.get('Referrer') || '/')
+}
 module.exports = {
-    addPost, index, deleteProduct
+    addPost, index, deleteProduct, updateQuantity
 }
