@@ -1,0 +1,21 @@
+extends ../../layout/default.pug
+block main
+    +alert-success(5000)
+    +alert-error(5000)
+    .container.my-5
+        .row.justify-content-center 
+            .col-8  
+                h1(class="text-center") Đăng ký tài khoản 
+                form(action="/user/register", method="post")
+                    div(class="form-group")
+                        label(for="fullName")
+                        input(type="text" class="form-control" name="fullName" placeholder="Họ và tên" required)
+                    div(class="form-group")
+                        label(for="email")
+                        input(type="email" class="form-control" name="email" placeholder="Email" required)
+                    div(class="form-group")
+                        label(for="password")
+                        input(type="password" class="form-control" name="password"
+                        placeholder="Mật khẩu" required)
+                    div(class="form-group")
+                        button(class="btn btn-primary btn-block mt-4" type="submit") Đăng ký

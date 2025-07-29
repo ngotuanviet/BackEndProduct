@@ -11,7 +11,7 @@ header.header
                     div(class="input-group d-flex mb-0")
                         input(type="text" name="keywords" class="form-control" value=keywords placeholder="Tìm kiếm sản phẩm")
                         button( type="submit" class="btn btn-primary" btn-search) Tìm kiếm
-            .col-4
+            .col-4  
                 .inner-menu 
                     ul 
                         li 
@@ -19,9 +19,14 @@ header.header
                         li(class="sub-menu")
                             -const patchProducts = "/products"
                             a(href=patchProducts) Sản phẩm
-                                +sub-menu(LayoutProductsCategory,patchProducts)
+                                +sub-menu(Categories,patchProducts)
                         li 
                             a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
-
+                        li 
+                            a(href="/user/register") Đăng ký
+                        li 
+                            a(href="/user/login") Đăng nhập
+                        li 
+                            a(href="/user/logout") 
 
 
