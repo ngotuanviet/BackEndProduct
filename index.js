@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const database = require('./config/database');
+const pay = require('./config/payos');
+
 const moment = require('moment');
 const system = require('./config/system');
 const path = require('path');
@@ -15,7 +17,6 @@ require('dotenv').config();
 database.connect();
 const port = process.env.PORT;
 // Flash
-
 app.use(cookieParser('snjiewrtgrhfgbf'));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());

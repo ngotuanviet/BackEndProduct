@@ -28,8 +28,18 @@ const validateLogin = async (req, res, next) => {
     }
     next()
 }
+const validateFogotPassword = async (req, res, next) => {
+
+    const { email, password } = req.body
+
+    if (!email) {
+        req.flash("error", "Vui lòng nhập email!")
+        res.redirect("/user/register")
+    }
+    next()
+}
 module.exports = {
     validateRegister,
-    validateLogin
-
+    validateLogin,
+    validateFogotPassword
 }

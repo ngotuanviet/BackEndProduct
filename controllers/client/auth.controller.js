@@ -1,6 +1,8 @@
 const md5 = require("md5")
 const Users = require("../../models/Users.model")
+const generate = require("../../helper/generate")
 
+const forgotPassword = require("../../models/forgotPassword.model")
 const register = (req, res) => {
     res.render("client/pages/auth/register", {
         title: "Đăng ký",
@@ -51,9 +53,45 @@ const loginPost = async (req, res) => {
         res.redirect("/user/login")
     }
 }
+const logOut = (req, res) => {
+    res.clearCookie("tokenUser")
+    res.redirect("/")
+}
+const forgotPasswordGet = (req, res) => {
+    res.render("client/pages/auth/forgotPassword", {
+        title: "Quên mật khẩu"
+    })
+}
+const forgotPasswordPost = async (req, res) => {
+    const { email } = req.body
+
+    const user = await Users.findOne({ email, deleted: false, status: 'active' })
+    if (!user) {
+        req.flash("error", "Email không tồn tại")
+        res.redirect("/user/password/forgot")
+    } else {
+        // lưu thông tin vào database
+        const objectForgotPassword = {
+            email: email,
+            otp: generate.generateRandomNumber(6),
+            expireAt: Date.now()
+        }
+
+        const forgot = new forgotPassword(objectForgotPassword)
+        await forgot.save()
+        // gửi email
+    }
+
+    // gửi otp email
+
+}
+
 module.exports = {
     register,
     registerPOST,
     login,
-    loginPost
+    loginPost,
+    logOut,
+    forgotPasswordGet,
+    forgotPasswordPost
 }   

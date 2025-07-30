@@ -14,7 +14,7 @@ const AccountSchema = new mongoose.Schema({
     },
     token: {
         type: String,
-        default: generate(100), // Tạo token mặc định
+        default: generate.generateRandomString(100), // Tạo token mặc định
     },
     phone: {
         type: String
