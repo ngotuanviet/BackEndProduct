@@ -27,7 +27,11 @@ const login = (req, res) => {
 }
 const loginPost = async (req, res) => {
     const { email, password } = req.body
-    const user = await Users.findOne({ email })
+    const user = await Users.findOne({
+        email,
+        deleted: false,
+        status: 'active'
+    })
     if (user) {
         if (user.password === md5(password)) {
             req.flash("success", "Đăng nhập thành công")
@@ -40,6 +44,10 @@ const loginPost = async (req, res) => {
         }
     } else {
         req.flash("error", "Email không tồn tại")
+        res.redirect("/user/login")
+    }
+    if (user.status === "inactive") {
+        req.flash("error", "Tài khoản đang bị khóa")
         res.redirect("/user/login")
     }
 }
