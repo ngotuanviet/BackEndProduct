@@ -3,6 +3,7 @@ const Users = require("../../models/Users.model")
 const generate = require("../../helper/generate")
 const sendMailHelper = require("../../helper/sendMail")
 const forgotPassword = require("../../models/forgotPassword.model")
+const Cart = require("../../models/Carts.model")
 const register = (req, res) => {
     res.render("client/pages/auth/register", {
         title: "Đăng ký",
@@ -38,6 +39,12 @@ const loginPost = async (req, res) => {
         if (user.password === md5(password)) {
             req.flash("success", "Đăng nhập thành công")
             res.cookie("tokenUser", user.token)
+            console.log(req.cookies.cartID);
+            const cart = await Cart.findOne({ user_id: user.id })
+            res.cookie("cartID", cart.id)
+            await Cart.updateOne({ _id: req.cookies.cartID }, { user_id: user.id })
+
+
             res.redirect("/")
         }
         else {
@@ -55,6 +62,7 @@ const loginPost = async (req, res) => {
 }
 const logOut = (req, res) => {
     res.clearCookie("tokenUser")
+    res.clearCookie("cartID")
     res.redirect("/")
 }
 const forgotPasswordGet = (req, res) => {
@@ -123,6 +131,12 @@ const resetPost = async (req, res) => {
     req.flash("success", "Đặt lại mật khẩu thành công")
     res.redirect("/")
 }
+const info = async (req, res) => {
+
+    res.render("client/pages/auth/info", {
+        title: "Thông tin tài khoản"
+    })
+}
 module.exports = {
     register,
     registerPOST,
@@ -132,5 +146,5 @@ module.exports = {
     forgotPasswordGet,
     forgotPasswordPost,
     otp,
-    otpPost, reset, resetPost
-}   
+    otpPost, reset, resetPost, info
+}
