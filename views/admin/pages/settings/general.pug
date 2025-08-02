@@ -1,0 +1,53 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+block main 
+    +alert-error(5000)
+    +alert-success(5000)
+    form(action=`${prefixAdmin}/settings/general?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+
+    )
+        div(class="form-group")
+            label(for="websiteName") Tên website 
+            input(type="text"
+                class="form-control"
+                id="websiteName"
+                value=(settingsGeneral ? settingsGeneral.websiteName : "")
+                name="websiteName")
+        div(class="form-group" upload-image)
+            label(for="logo") Logo
+            input(type="file"
+                class="form-control"
+                id="logo"
+                name="logo")
+            img(src=(settingsGeneral ? settingsGeneral.logo : ""), alt="" width="100px" height="100px" class="image-Preview" upload-image-Preview)
+        div(class="form-group")
+            label(for="phone") Số điện thoại 
+            input(type="text"
+                class="form-control"
+                value=(settingsGeneral ? settingsGeneral.phone : "")
+                id="phone"
+                name="phone")
+        div(class="form-group")
+            label(for="email") Email 
+            input(type="email"
+                class="form-control"
+                value=(settingsGeneral ? settingsGeneral.email : "")
+                id="email"
+                name="email")
+        div(class="form-group")
+            label(for="address") Địa chỉ 
+            input(type="text"
+                class="form-control"
+                value=(settingsGeneral ? settingsGeneral.address : "")
+                id="address"
+                name="address")
+        div(class="form-group")
+            label(for="copyright") Copyright
+            input(type="text"
+                class="form-control"
+                value=(settingsGeneral ? settingsGeneral.copyright : "")
+                id="copyright"
+                name="copyright")
+        button(class="btn btn-primary" type="submit") Cập nhật

@@ -155,25 +155,39 @@ const createProduct = async (req, res) => {
 }
 // [POST] /admin/products/create
 const createProductPOST = async (req, res) => {
+    try {
+        req.body.createdBy = {
+            account_id: res.locals.user._id
+        };
 
-    req.body.createdBy = {
-        account_id: res.locals.user._id
-    };
+        req.body.price = parseInt(req.body.price);
+        console.log("Request data:", req.file, req.body);
+        req.body.discountPercentage = parseInt(req.body.discountPercentage);
+        req.body.stock = parseInt(req.body.stock);
+        req.body.position = parseInt(req.body.position);
 
-    req.body.price = parseInt(req.body.price);
-    console.log(req.file, req.body)
-    req.body.discountPercentage = parseInt(req.body.discountPercentage);
-    req.body.stock = parseInt(req.body.stock);
-    req.body.position = parseInt(req.body.position);
+        if (isNaN(req.body.position)) {
+            req.body.position = await Product.countDocuments() + 1
+        }
 
-    if (isNaN(req.body.position)) {
-        req.body.position = await Product.countDocuments() + 1
+        // Kiểm tra xem có ảnh được upload không
+        if (!req.body.thumbnail) {
+            req.flash('error', 'Vui lòng chọn ảnh sản phẩm!');
+            return res.redirect('back');
+        }
+
+        console.log("Creating product with thumbnail:", req.body.thumbnail);
+        const product = new Product(req.body);
+        await product.save();
+
+        req.flash('success', 'Tạo sản phẩm thành công!');
+        res.redirect(`${systemConfig.prefixAdmin}/products`);
+
+    } catch (error) {
+        console.error("Error creating product:", error);
+        req.flash('error', 'Lỗi khi tạo sản phẩm: ' + error.message);
+        res.redirect('back');
     }
-
-    const product = new Product(req.body)
-    await product.save()
-    res.redirect(`${systemConfig.prefixAdmin}/products`)
-
 }
 // [Get] admin/products/edit/:id
 const editProduct = async (req, res) => {

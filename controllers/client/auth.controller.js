@@ -41,7 +41,10 @@ const loginPost = async (req, res) => {
             res.cookie("tokenUser", user.token)
             console.log(req.cookies.cartID);
             const cart = await Cart.findOne({ user_id: user.id })
-            res.cookie("cartID", cart.id)
+            if (cart) {
+
+                res.cookie("cartID", cart.id)
+            }
             await Cart.updateOne({ _id: req.cookies.cartID }, { user_id: user.id })
 
 

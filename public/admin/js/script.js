@@ -165,28 +165,45 @@ if (showAlert) {
 const uploadImage = document.querySelector("[upload-image]")
 if (uploadImage) {
     const imgInput = document.querySelector("[upload-image-Input]")
-    const imgPreview = document.querySelector("[upload-image-preview]")
+    const imgPreview = document.querySelector("[upload-image-Preview]") // Sửa chữ hoa
     const closePreview = document.querySelector("[close-image]")
-    closePreview.addEventListener("click", () => {
-        closePreview.classList.add("d-none")
-        imgInput.value = "";
-        imgPreview.src = "";
-    })
-    imgInput.addEventListener("change", (e) => {
-        console.log(e);
 
-        const [file] = e.target.files
-        if (file) {
-            console.log(file);
-            closePreview.classList.remove("d-none")
-            imgPreview.src = URL.createObjectURL(file);
-        } else {
-
+    if (closePreview) {
+        closePreview.addEventListener("click", () => {
+            closePreview.classList.add("d-none")
+            imgInput.value = "";
             imgPreview.src = "";
-        }
+        })
+    }
 
-    })
+    if (imgInput) {
+        imgInput.addEventListener("change", (e) => {
+            console.log("File selected:", e);
 
+            const [file] = e.target.files
+            if (file) {
+                // Kiểm tra loại file
+                if (!file.type.startsWith('image/')) {
+                    alert('Vui lòng chọn file ảnh!');
+                    imgInput.value = "";
+                    return;
+                }
+
+                // Kiểm tra kích thước file (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File ảnh quá lớn! Vui lòng chọn file nhỏ hơn 5MB.');
+                    imgInput.value = "";
+                    return;
+                }
+
+                console.log("Valid file:", file);
+                if (closePreview) closePreview.classList.remove("d-none")
+                if (imgPreview) imgPreview.src = URL.createObjectURL(file);
+            } else {
+                if (imgPreview) imgPreview.src = "";
+            }
+        })
+    }
 }
 const selectSort = document.querySelector("[sort-select]")
 const sortClear = document.querySelector("[sort-clear]")
