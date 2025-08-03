@@ -1,0 +1,41 @@
+extends ../../layout/default
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+block main
+        +alert-success(5000)
+        h1 Sửa mục bài viết
+        .card.mb-3
+            .card-header Sửa mục bài viết
+            .card-body
+                form(action=`${prefixAdmin}/categories-posts/edit/${dataCategory.id}?_method=PATCH` method="POST"
+                enctype="multipart/form-data"
+                )
+                    .form-group
+                        label(for="title") Tên mục sản phẩm
+                        input(type="text" class="form-control" value=dataCategory.title id="title" name="title" required)
+                    .form-group
+                        label(for="parent_id") Danh mục cha
+                        select(name="parent_id" class="form-control"  id="parent_id")
+                            option(value="") Chọn danh mục cha
+                            +select-tree(categories,1,dataCategory.parent_id)
+                    .form-group
+                        label(for="body") Nội dung
+                        textarea(class="form-control" name="body" id="descriptionArea" rows="3" ) #{dataCategory.body}
+                    .form-group 
+                        label(for="status") Trạng thái
+                        select(class="form-control" id="status" name="status")
+                            option(value="active" selected= dataCategory.status === "active" ) Kích hoạt
+                            option(value="inactive" selected= dataCategory.status === "inactive" ) Kích hoạt
+
+                    .form-group
+                        label(for="position") Vị trí hiển thị
+                        input(type="number" class="form-control" value=dataCategory.position id="position" name="position" placeholder="Tự động tăng" min="1")
+                    .div(class="form-group" upload-image)
+                        label(for="thumbnail") Ảnh mục sản phẩm
+                        input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input )
+                        .div(close-image class="d-none") X
+                        <img with="100px" height="100px" src=#{dataCategory.thumbnail} alt="your image" class="image-Preview" upload-image-Preview />
+                    button(type="submit" class="btn btn-primary") Cập nhật
+        script(src="/admin/js/product.js")
+        script(src="/admin/js/category_posts.js")
+        script(src="/admin/js/script.js")

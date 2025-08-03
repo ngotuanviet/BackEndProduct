@@ -18,7 +18,7 @@ block main
                     .col-6
                         +filtersStatus(filtersStatus)
                     .col-6
-                        +inputSearch(keyword)
+                        +inputSearch(keyword,"products","Tìm kiếm sản phẩm")
         .card.mb-3 
                 .card-header Sắp xếp 
                 .card-body 
@@ -36,7 +36,7 @@ block main
                     if (rolesUser.permissions.includes("products_create"))
                         a(
                             href=`${prefixAdmin}/products/create`
-                            class="btn btn-success"
+                            class="btn btn-success mb-3"
                         ) Thêm mới sản phẩm
             
             table(class= "table table-hover table-sm "

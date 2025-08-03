@@ -39,7 +39,9 @@ app.set("view engine", "pug");
 route(app);
 routeAdmin(app);
 
-
+app.use((req, res, next) => {
+    res.render('client/pages/errors/404');
+});
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

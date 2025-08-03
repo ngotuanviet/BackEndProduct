@@ -3,6 +3,15 @@ const index = (req, res) => {
         title: "Trang quản lý bài viết"
     })
 }
+const create = (req, res) => {
+    res.render('admin/pages/posts/create', {
+        title: "Thêm bài viết"
+    })
+}
+const createPost = (req, res) => {
+
+}
 module.exports = {
-    index
+    index, create, createPost
+
 };

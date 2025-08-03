@@ -120,6 +120,8 @@ const pay = async (req, res) => {
         cancelUrl: `${YOUR_DOMAIN}/checkout/cancel`,
     };
 
+
+
     try {
         const paymentLinkResponse = await payOS.createPaymentLink(body);
 

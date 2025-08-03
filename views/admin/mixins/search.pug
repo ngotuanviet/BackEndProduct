@@ -1,5 +1,5 @@
-mixin inputSearch(keyword)
-    form(id="searchForm", action="/admin/products")
+mixin inputSearch(keyword, path,placeholder)
+    form(id="searchForm", action=`/admin/${path}`)
         .input-group.mb-3
-            input.form-control(type="text", name="keyword", placeholder="Tìm kiếm sản phẩm" value=keyword) 
+            input.form-control(type="text", name="keyword", placeholder=placeholder value=keyword) 
         button.btn.btn-outline-secondary(type="submit") Tìm kiếm
