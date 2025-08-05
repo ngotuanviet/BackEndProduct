@@ -54,6 +54,9 @@ const index = async (req, res) => {
         const updatedBy = product.updatedBy.slice(-1)[0];
         if (updatedBy) {
             const UserUpdate = await Accounts.findOne({ _id: updatedBy.account_id })
+            console.log('====================================');
+            console.log(UserUpdate);
+            console.log('====================================');
             updatedBy.fullName = UserUpdate.fullName
 
         }

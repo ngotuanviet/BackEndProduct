@@ -5,6 +5,7 @@ const cartsMiddleware = require("../../Middleware/client/carts.middleware");
 const cartRoute = require("./cart.routes");
 const searchRouter = require("./search.routes");
 const authRouter = require("./auth.routes");
+const chatRouter = require("./chat.routes");
 const authMiddleware = require("../../Middleware/client/auth.middleware");
 const settingMiddleware = require("../../Middleware/client/settings.midlleware");
 
@@ -20,4 +21,5 @@ module.exports = (app) => {
     app.use('/cart', cartRoute)
     app.use('/checkout', checkoutRouter)
     app.use('/user', authRouter)
+    app.use('/chat', chatRouter)
 };

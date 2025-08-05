@@ -75,7 +75,7 @@ const createPost = async (req, res) => {
     if (isNaN(req.body.position)) {
         req.body.position = await Categories_posts.countDocuments() + 1
     }
-    const category_posts = new Categories_posts(req.body)
+    const category_posts = new Categories_posts({ ...req.body, createdBy: { account_id: res.locals.user.id, createdAt: Date.now() } })
     await category_posts.save()
     req.flash('success', 'Thêm danh mục bài viết thành công');
     res.redirect('/admin/categories-posts')
@@ -100,7 +100,13 @@ const edit = async (req, res) => {
 const editPost = async (req, res) => {
     const { id } = req.params;
 
-    await Categories_posts.updateOne({ _id: id }, req.body)
+    await Categories_posts.updateOne({ _id: id }, {
+        ...req.body,
+        updatedBy: {
+            account_id: res.locals.user.id,
+            updatedAt: new Date()
+        }
+    })
     req.flash("success", "Sửa danh mục bài viết thành công");
     res.redirect("/admin/categories-posts")
 

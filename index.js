@@ -5,6 +5,10 @@ const routeAdmin = require('./routes/admin/index.routes');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const http = require('http');
+
+const { Server } = require("socket.io");
+
 const database = require('./config/database');
 const pay = require('./config/payos');
 
@@ -30,7 +34,16 @@ app.locals.moment = moment;
 
 app.use(express.static(`${__dirname}/public`));
 app.use(express.static(`${__dirname}/public/admin`));
-
+// socker.io
+const server = http.createServer(app);
+const io = new Server(server)
+io.on('connection', (socket) => {
+    console.log(`a user connected, ${socket.id}`);
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+// end socker.io
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
@@ -42,6 +55,6 @@ routeAdmin(app);
 app.use((req, res, next) => {
     res.render('client/pages/errors/404');
 });
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

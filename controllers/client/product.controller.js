@@ -52,8 +52,6 @@ const detail = async (req, res) => {
         // res.redirect('/');
 
     }
-
-
 }
 const ProductsByCategory = async (req, res) => {
     const { slugCategory } = req.params;

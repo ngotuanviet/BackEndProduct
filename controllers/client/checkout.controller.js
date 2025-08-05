@@ -60,32 +60,93 @@ const order = async (req, res) => {
     res.redirect(`/checkout/success/${order._id}`)
 }
 const success = async (req, res) => {
-    // Get orderId from query (payment flow) or params (normal flow)
-    const orderId = req.query.orderId || req.params.orderID;
-    console.log(orderId);
+    try {
+        const cartID = req.cookies.cartID;
+        // Online payment flow
+        if (Object.keys(req.query).length > 0 && !req.params.orderID) {
+            const userInfo = {
+                fullName: req.query.fullName,
+                email: req.query.email,
+                phone: req.query.phone,
+                address: req.query.address,
+                note: req.query.note
+            };
 
-    const order = await Orders.findOne({ _id: orderId });
-    if (!order) {
-        return res.render('client/pages/checkout/success', {
-            title: "Đặt hàng thành công",
-            LayoutProductsCategory: res.locals.Categories,
-            orderDetail: null
-        });
+            const cart = await Cart.findOne({ _id: cartID });
+            const products = [];
+            for (const item of cart.products) {
+                const objectProducts = {
+                    product_id: item.product_id,
+                    price: 0,
+                    discountPercentage: 0,
+                    quantity: item.quantity
+                };
+                const productInfo = await Product.findOne({ _id: objectProducts.product_id }).select("price discountPercentage");
+                objectProducts.price = productInfo.price;
+                objectProducts.discountPercentage = productInfo.discountPercentage;
+                products.push(objectProducts);
+            }
+
+            const orderInfo = {
+                cart_id: cartID,
+                userInfo: userInfo,
+                products: products,
+                status: 'paid'
+            };
+
+            const order = new Orders(orderInfo);
+            await order.save();
+
+            await Cart.updateOne({ _id: cartID }, { products: [] });
+
+            for (const item of order.products) {
+                const products = await Product.findOne({ _id: item.product_id }).select("title thumbnail price discountPercentage");
+                item.priceNew = ProductsHelper.priceNewProductsOne(products);
+                item.productInfo = products;
+                item.totalPrice = item.priceNew * item.quantity;
+            }
+            order.totalPrice = order.products.reduce((total, item) => {
+                return total + item.totalPrice;
+            }, 0);
+
+            res.render('client/pages/checkout/success', {
+                title: "Đặt hàng thành công",
+                LayoutProductsCategory: res.locals.Categories,
+                orderDetail: order
+            });
+
+        } else { // COD flow
+            const orderId = req.params.orderID;
+            if (!orderId) {
+                return res.redirect('/');
+            }
+            const order = await Orders.findOne({ _id: orderId });
+            if (!order) {
+                return res.render('client/pages/checkout/success', {
+                    title: "Đặt hàng thành công",
+                    LayoutProductsCategory: res.locals.Categories,
+                    orderDetail: null
+                });
+            }
+            for (const item of order.products) {
+                const products = await Product.findOne({ _id: item.product_id }).select("title thumbnail price discountPercentage");
+                item.priceNew = ProductsHelper.priceNewProductsOne(products);
+                item.productInfo = products;
+                item.totalPrice = item.priceNew * item.quantity;
+            }
+            order.totalPrice = order.products.reduce((total, item) => {
+                return total + item.totalPrice;
+            }, 0);
+            res.render('client/pages/checkout/success', {
+                title: "Đặt hàng thành công",
+                LayoutProductsCategory: res.locals.Categories,
+                orderDetail: order
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
     }
-    for (const item of order.products) {
-        const products = await Product.findOne({ _id: item.product_id }).select("title thumbnail price discountPercentage");
-        item.priceNew = ProductsHelper.priceNewProductsOne(products);
-        item.productInfo = products;
-        item.totalPrice = item.priceNew * item.quantity;
-    }
-    order.totalPrice = order.products.reduce((total, item) => {
-        return total + item.totalPrice;
-    }, 0);
-    res.render('client/pages/checkout/success', {
-        title: "Đặt hàng thành công",
-        LayoutProductsCategory: res.locals.Categories,
-        orderDetail: order
-    });
 }
 const pay = async (req, res) => {
     const YOUR_DOMAIN = `http://localhost:3000`;
@@ -111,40 +172,26 @@ const pay = async (req, res) => {
         }
     })
 
+    const userInfo = req.body || {};
+    const returnUrl = new URL(`${YOUR_DOMAIN}/checkout/success`);
+    Object.keys(userInfo).forEach(key => {
+        if (userInfo[key]) {
+            returnUrl.searchParams.append(key, userInfo[key]);
+        }
+    });
+
     const body = {
         orderCode: Number(String(Date.now()).slice(-6)),
         amount: dataCart.totalPrice,
         description: "Thanh toan don hang",
         items: arrayProducts,
-        returnUrl: `${YOUR_DOMAIN}/checkout/success`,
+        returnUrl: returnUrl.toString(),
         cancelUrl: `${YOUR_DOMAIN}/checkout/cancel`,
     };
 
-
-
     try {
         const paymentLinkResponse = await payOS.createPaymentLink(body);
-
-        // Save order info to database after payment link creation
-        const products = dataCart.products.map(item => ({
-            product_id: item.product_id,
-            price: item.productInfo.price,
-            discountPercentage: item.productInfo.discountPercentage || 0,
-            quantity: item.quantity
-        }));
-        // You may want to collect user info from req.body or session
-        const userInfo = req.body || {};
-        const orderInfo = {
-            cart_id: cartID,
-            userInfo,
-            products,
-        };
-        const order = new Orders(orderInfo);
-        await order.save();
-        await Cart.updateOne({ _id: cartID }, { products: [] });
-
-        // Redirect to payment link, with order id in query for return
-        res.redirect(`${paymentLinkResponse.checkoutUrl}?orderId=${order._id}`);
+        res.redirect(paymentLinkResponse.checkoutUrl);
     } catch (error) {
         console.error(error);
         res.send("Something went error");
@@ -158,7 +205,15 @@ const cancel = async (req, res) => {
         title: "Đặt hàng thất bại"
     })
 }
+const payment = async (req, res) => {
+    const { paymentMethod } = req.body;
+    if (paymentMethod === "cod") {
+        order(req, res);
+    } else {
+        pay(req, res);
+    }
+}
 module.exports = {
     index,
-    order, success, pay, cancel
+    order, success, pay, cancel, payment
 }

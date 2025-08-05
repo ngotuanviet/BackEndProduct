@@ -40,16 +40,16 @@ block main
                 .row 
                     .col-12 
                         .card.p-4.my-4
-                            form(action="/checkout/create-payment-link" method="POST")
+                            form(action="/checkout/payment" method="POST")
                                 div(class="row")
                                     div(class="form-group col-6")
                                         div(class="form-group")
                                             label(for="fullName") Họ và tên 
-                                            input(type="text" class="form-control" name="fullName" required)
+                                            input(type="text" class="form-control" name="fullName"  value=user.fullName required)
                                     div(class="form-group col-6")
                                         div(class="form-group")
                                             label(for="email") Email
-                                            input(type="email" class="form-control" name="email" )
+                                            input(type="email" class="form-control" name="email" value=user.email  )
                                 div(class="form-group")
                                     label(for="phone") Số điện thoại 
                                     input(type="text" class="form-control" name="phone" required)
@@ -58,6 +58,11 @@ block main
                                     input(type="text" class="form-control" name="address" required)
                                 div(class="form-group")
                                     label(for="address") Ghi chú 
-                                    textarea(name="note" class="form-control" rows="3") 
+                                    textarea(name="note" class="form-control" rows="3")
+                                div(class="form-group")
+                                    label(for="paymentMethod") Phương thức thanh toán
+                                    select(name="paymentMethod" class="form-control")
+                                        option(value="cod") Thanh toán khi nhận hàng
+                                        option(value="payos") Thanh toán qua PayOS
                                 button(type="submit" class="btn btn-success mt-3") Đặt hàng
     script(src="/js/cart.js")
