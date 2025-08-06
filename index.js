@@ -37,12 +37,7 @@ app.use(express.static(`${__dirname}/public/admin`));
 // socker.io
 const server = http.createServer(app);
 const io = new Server(server)
-io.on('connection', (socket) => {
-    console.log(`a user connected, ${socket.id}`);
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-});
+global._io = io;
 // end socker.io
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 app.set("views", `${__dirname}/views`);

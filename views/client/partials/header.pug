@@ -25,6 +25,8 @@ header.header
                             a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
                         if(user)
                             li 
+                                a(href="/chat") Nhắn tin
+                            li 
                                 a(href="/user/profile") #{user.fullName}
                             li 
                                 a(href="/user/logout") Đăng xuất
