@@ -181,3 +181,14 @@ a {
   }
 }
 /* End Show Alert */
+/* emoji tool css */
+.tooltip {
+  visibility: hidden;
+}
+.tooltip.shown {
+  visibility: visible;
+  opacity: 1;
+}
+.button-icon {
+  cursor: pointer;
+}
