@@ -19,7 +19,7 @@ block main
                                     div(class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);")
                                         p #{chat.fullName}
                                         p(class="small mb-0") #{chat.content}
-                        
+                        div(class="inner-list-typing")
                     div(class="card-footer text-muted p-3")
                         form.d-flex.justify-content-start.align-items-center(action="#" form-chat) 
                             input.form-control(type="text" placeholder="Type message" name="content")

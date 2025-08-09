@@ -18,7 +18,18 @@ const index = async (req, res) => {
                 fullName: fullName,
                 content: content
             })
+
         });
+        // Typing
+        socket.on('CLIENT_SEND_TYPING', async (type) => {
+            socket.broadcast.emit('SERVER_RETURN_TYPING', {
+                userID: userID,
+                fullName: fullName,
+
+                type: type
+            })
+        });
+        // End Typing
         socket.on('disconnect', () => {
             console.log('user disconnected');
         });
