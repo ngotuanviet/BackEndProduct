@@ -1,48 +1,112 @@
 import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
+import { FileUploadWithPreview } from 'https://unpkg.com/file-upload-with-preview/dist/index.js'
+
 // CLIENT_SEND_MESSAGES
+//FileUploadWithPreview
+const upload = new FileUploadWithPreview('upload-images', {
+    multiple: true,
+    maxFileCount: 10,
+});
+
+//End FileUploadWithPreview
 const formChatData = document.querySelector('[form-chat]')
 if (formChatData) {
     formChatData.addEventListener('submit', (e) => {
         e.preventDefault()
 
         const content = e.target.elements.content.value
-        if (content) {
-            socket.emit("CLIENT_SEND_MESSAGES", content);
+        const images = upload.cachedFileArray
+        console.log(images);
+
+        if (content || images.length > 0) {
+            socket.emit("CLIENT_SEND_MESSAGES", {
+                content: content,
+                images: images
+            });
             e.target.elements.content.value = "";
+            upload.resetPreviewPanel();
+            upload.cachedFileArray = [];
             socket.emit("CLIENT_SEND_TYPING", "hidden")
         }
     })
 }
 // END CLIENT_SEND_MESSAGES
+// SERVER_RETURN_ERROR
+socket.on("SERVER_RETURN_ERROR", (data) => {
+    alert(data.message);
+});
+// END SERVER_RETURN_ERROR
 // SERVER_RETURN_MESSAGES
 socket.on("SERVER_RETURN_MESSAGES", (data) => {
     const body = document.querySelector('.chat-body');
     const userId = body.getAttribute('data-user-id');
-    const div = document.createElement('div');
-    const boxTying = document.querySelector(".inner-list-typing")
+    const boxTying = document.querySelector(".inner-list-typing");
 
-    let html = '';
-
-    if (data.userID === userId) {
-        div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-end', 'mb-4');
-        html = `
-            <div class="p-3 me-3 border" style="border-radius: 15px; background-color: #fbfbfb;">
-                <p class="small mb-0">${data.content}</p>
-            </div>
-        `;
-    } else {
-        div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-start', 'mb-4');
-        html = `
-            <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
-                <p>${data.fullName}</p>
-                <p class="small mb-0">${data.content}</p>
-            </div>
-        `;
+    // Render text message
+    if (data.content) {
+        const div = document.createElement('div');
+        let html = '';
+        if (data.userID === userId) {
+            div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-end', 'mb-4');
+            html = `
+                <div class="p-3 me-3 border" style="border-radius: 15px; background-color: #fbfbfb;">
+                    <p class="small mb-0">${data.content}</p>
+                </div>
+            `;
+        } else {
+            div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-start', 'mb-4');
+            html = `
+                <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                    <p><b>${data.fullName}</b></p>
+                    <p class="small mb-0">${data.content}</p>
+                </div>
+            `;
+        }
+        div.innerHTML = html;
+        body.insertBefore(div, boxTying);
     }
 
-    div.innerHTML = html;
-    body.insertBefore(div, boxTying);
-    body.scrollTop = body.scrollHeight;
+    // Render images
+    if (data.images && data.images.length > 0) {
+        const div = document.createElement('div');
+        let htmlImages = '<div class="inner-image">';
+        data.images.forEach(image => {
+            htmlImages += `<img src="${image}" alt="" width="100" height="100" style="margin: 5px; border-radius: 10px;">`;
+        });
+        htmlImages += '</div>';
+
+        let html = '';
+        if (data.userID === userId) {
+            div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-end', 'mb-4');
+            html = htmlImages;
+        } else {
+            div.classList.add('message', 'd-flex', 'flex-row', 'justify-content-start', 'mb-4');
+            if (data.content) {
+                html = `
+                    <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                        ${htmlImages}
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
+                        <p><b>${data.fullName}</b></p>
+                        ${htmlImages}
+                    </div>
+                `;
+            }
+        }
+        div.innerHTML = html;
+        body.insertBefore(div, boxTying);
+
+        if (data.userID === userId) {
+            upload.cachedFileArray = [];
+            upload.clearPreviewPanel();
+        }
+        body.scrollTop = body.scrollHeight;
+        const gallery = new Viewer(div);
+    }
+
 });
 const body = document.querySelector('.chat-body');
 if (body) {
@@ -55,6 +119,7 @@ if (body) {
 const button = document.querySelector('.button-icon')
 if (button) {
     const tooltip = document.querySelector('.tooltip')
+
     Popper.createPopper(button, tooltip)
 
     button.onclick = () => {
@@ -105,12 +170,12 @@ if (elementListTying) {
                 boxTyping.classList.add("box-typing")
                 boxTyping.setAttribute("user-id", data.userID)
                 boxTyping.innerHTML = `
-            <div class="inner-name">${data.fullName}</div>
-            <div class="inner-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <div class="inner-name"> ${data.fullName}</div>
+                <div class="inner-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
         `
                 elementListTying.appendChild(boxTyping)
                 body.scrollTop = body.scrollHeight;
@@ -126,3 +191,9 @@ if (elementListTying) {
 }
 
 // end SERVER_RETURN_TYPING
+// Preview Full Image
+const bodyPreviewImage = document.querySelector('.chat-body');
+if (bodyPreviewImage) {
+    const gallery = new Viewer(bodyPreviewImage);
+}
+// End Preview Full Image

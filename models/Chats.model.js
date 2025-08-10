@@ -11,9 +11,9 @@ const chatsSchema = new mongoose.Schema({
     // },
     content: {
         type: String,
-        required: true, // Bắt buộc phải có
+
     },
-    image: {
+    images: {
         type: Array,
 
     },
