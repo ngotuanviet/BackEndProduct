@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
+    requestFriends: Array, // lời mời đã gửi
+    acceptFriends: Array, // lời mời đã nhận
+    friendsList: [ // danh sách bạn bè
+        {
+            user_ID: String,
+            room_chat_id: String
+        }
+    ],
     status: {
         type: String,
         default: 'active', // Giá trị mặc định là 'active'
