@@ -6,7 +6,7 @@ if (ListBtnAddFriend.length > 0) {
             e.preventDefault()
             const userID = e.target.getAttribute("btn-add-friend")
 
-            btn.closest(".box-user").classList.toggle("add")
+            btn.closest(".box-user").classList.add("add")
             socket.emit("CLIENT_ADD-FRIEND", userID)
 
         })
@@ -14,3 +14,18 @@ if (ListBtnAddFriend.length > 0) {
     )
 }
 // Đóng Chức năng gửi yêu cầu
+// Chức năng huỷ gửi yêu cầu
+const ListBtnCancelFriend = document.querySelectorAll("[btn-cancel-friend]")
+if (ListBtnCancelFriend.length > 0) {
+    ListBtnCancelFriend.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault()
+            const userID = e.target.getAttribute("btn-cancel-friend")
+            btn.closest(".box-user").classList.remove("add")
+            socket.emit("CLIENT_CANCEL-FRIEND", userID)
+
+        })
+    }
+    )
+}
+// Đóng Chức năng huỷ gửi yêu cầu

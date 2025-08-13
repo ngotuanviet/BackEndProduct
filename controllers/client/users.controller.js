@@ -24,6 +24,25 @@ const notFriend = async (req, res) => {
         users
     })
 }
+const request = async (req, res) => {
+    const myUserID = res.locals.user.id
+    const myUser = await Users.findOne({ _id: myUserID })
+    const requestFriends = myUser.requestFriends
+    usersSocket(res)
+    arrayInfoUser = [];
+    for (const item of requestFriends) {
+        const infoUserAddFriends = await Users.findOne({ _id: item }).select("fullName avatar")
+        arrayInfoUser.push(infoUserAddFriends);
+    }
+
+
+
+    res.render("client/pages/users/request", {
+        title: "Lời mời đã gửi",
+        users: arrayInfoUser
+    })
+}
 module.exports = {
-    notFriend
+    notFriend,
+    request
 }
