@@ -113,6 +113,58 @@ module.exports = (res) => {
 
             }
         })
+        // đồng ý kết bạn
+        socket.on('CLIENT_ACCEPT-FRIEND', async (userID) => {
+            try {
+                const myUserID = res.locals.user.id //b
+                userID // a
+                console.log(userID);
+
+                const exitsUserBinA = await Users.findOne({
+                    _id: myUserID,
+                    acceptFriends: userID
+                })
+                /* 
+                    khi add friend thành công thì xoá id đấy trong acceptFriends và requestFriends
+                */
+                if (exitsUserBinA) {
+                    // xoá id của A trong acceptFriends của B
+                    await Users.updateOne({ _id: myUserID }, {
+                        $push: {
+                            friendsList: {
+                                user_ID: userID,
+                                room_chat_id: ""
+                            }
+                        },
+                        $pull: { acceptFriends: userID },
+                    })
+                }
+                const exitsUserAinB = await Users.findOne({
+                    _id: userID,
+                    requestFriends: myUserID
+                })
+                if (exitsUserAinB) {
+                    // xoá id của B trong requestFriends của A
+                    await Users.updateOne({ _id: userID }, {
+                        $push: {
+                            friendsList: {
+                                user_ID: myUserID,
+                                room_chat_id: ""
+                            }
+                        },
+                        $pull: { requestFriends: myUserID }
+
+                    })
+                }
+                /* 
+                    khi add friend thành công thì {user_id, room_chat_id} của A vào friendlist của B
+                    khi add friend thành công thì {user_id, room_chat_id} của B vào friendlist của A
+               */
+            } catch (error) {
+                console.log(error);
+
+            }
+        })
     });
     // end
 }
