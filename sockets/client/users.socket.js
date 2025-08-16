@@ -77,6 +77,42 @@ module.exports = (res) => {
 
             }
         })
+        // từ chối kết bạn 
+        socket.on('CLIENT_REFUSE-FRIEND', async (userID) => {
+            try {
+                const myUserID = res.locals.user.id
+                console.log(userID);
+
+                const exitsUserBinA = await Users.findOne({
+                    _id: myUserID,
+                    acceptFriends: userID
+                })
+                /* 
+                     huỷ xoá tất cả id đấy trong acceptFriends và requestFriends
+                */
+                if (exitsUserBinA) {
+                    // xoá id của A trong acceptFriends của B
+                    await Users.updateOne({ _id: myUserID }, {
+                        $pull: { acceptFriends: userID }
+
+                    })
+                }
+                const exitsUserAinB = await Users.findOne({
+                    _id: userID,
+                    requestFriends: myUserID
+                })
+                if (exitsUserAinB) {
+                    // xoá id của B trong requestFriends của A
+                    await Users.updateOne({ _id: userID }, {
+                        $pull: { requestFriends: myUserID }
+
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+
+            }
+        })
     });
     // end
 }

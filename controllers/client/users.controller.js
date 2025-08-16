@@ -1,5 +1,6 @@
 const Users = require("../../models/Users.model");
 const usersSocket = require("../../sockets/client/users.socket");
+// [GET] users/not-Friend
 const notFriend = async (req, res) => {
     const userID = res.locals.user.id
     const userIDFriend = req.query.userID
@@ -24,6 +25,7 @@ const notFriend = async (req, res) => {
         users
     })
 }
+// [GET] users/request
 const request = async (req, res) => {
     const myUserID = res.locals.user.id
     const myUser = await Users.findOne({ _id: myUserID })
@@ -42,7 +44,26 @@ const request = async (req, res) => {
         users: arrayInfoUser
     })
 }
+// [GET] users/accept
+const accept = async (req, res) => {
+    const myUserID = res.locals.user.id
+    const myUser = await Users.findOne({ _id: myUserID })
+    const requestFriends = myUser.acceptFriends
+    usersSocket(res)
+    arrayInfoUser = [];
+
+
+    for (const item of requestFriends) {
+        const infoUserAddFriends = await Users.findOne({ _id: item }).select("fullName avatar")
+
+        arrayInfoUser.push(infoUserAddFriends);
+    }
+    res.render('client/pages/users/accept', {
+        title: "Lời mời đã nhận",
+        users: arrayInfoUser
+    })
+}
 module.exports = {
     notFriend,
-    request
+    request, accept
 }

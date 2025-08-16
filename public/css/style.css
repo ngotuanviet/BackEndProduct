@@ -277,6 +277,7 @@ a {
 .box-user .inner-info .inner-name {
   margin-bottom: 5px;
 }
+/* btn box-user */
 .box-user [btn-cancel-friend] {
   display: none;
 }
@@ -286,3 +287,16 @@ a {
 .box-user.add [btn-cancel-friend] {
   display: inline-block;
 }
+.box-user [btn-deleted-friend] {
+  display: none;
+}
+.box-user.refuse [btn-accept-friend] {
+  display: none;
+}
+.box-user.refuse [btn-refuse-friend] {
+  display: none;
+}
+.box-user.refuse [btn-deleted-friend] {
+  display: inline-block;
+}
+/* end btn box-user */
