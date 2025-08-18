@@ -6,11 +6,11 @@ block main
         .row 
             .col-12 
                 +box-head("Danh sách lời mời đã gửi")
-        .row 
+        div(class="row"  )
             if (users)
                 each user in users
                     .col-6 
-                        div(class="box-user add" )
+                        div(class="box-user " )
                             div(class="inner-avatar")
                                 img(src=user.avatar ? user.avatar : "/img/default-avatar.jpg", alt=user.fullName)
                             div(class="inner-info")
@@ -18,5 +18,5 @@ block main
                                 div(class="inner-buttons")
                                     button(class="btn btn-sm btn-primary me-1" btn-add-friend=user.id) Kết bạn 
                                     button(class="btn btn-sm btn-secondary me-1" btn-cancel-friend=user.id) Huỷ
-block script 
-    script(src="/js/users.js")
+    block script 
+        script(src="/js/users.js")

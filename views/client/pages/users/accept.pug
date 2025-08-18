@@ -6,7 +6,7 @@ block main
         .row 
             .col-12 
                 +box-head("Danh sách lời mời đã nhận")
-        .row 
+        div(class="row" data-users-accept=user.id)
             if (users)
                 each user in users
                     .col-6 
