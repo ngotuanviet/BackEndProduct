@@ -26,28 +26,34 @@ if (ListBtnCancelFriend.length > 0) {
 }
 // Đóng Chức năng huỷ gửi yêu cầu
 // Chức năng từ chối yêu cầu kết bạn
+const refuseFriend = (btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const userID = e.target.getAttribute("btn-refuse-friend");
+    btn.closest(".box-user").classList.add("refuse");
+    socket.emit("CLIENT_REFUSE-FRIEND", userID);
+  });
+};
 const ListBtnRefuseFriend = document.querySelectorAll("[btn-refuse-friend]");
 if (ListBtnRefuseFriend.length > 0) {
   ListBtnRefuseFriend.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const userID = e.target.getAttribute("btn-refuse-friend");
-      btn.closest(".box-user").classList.add("refuse");
-      socket.emit("CLIENT_REFUSE-FRIEND", userID);
-    });
+    refuseFriend(btn);
   });
 }
 // Đóng Chức năng từ chối yêu cầu kết bạn
 // Chức năng đồng ý yêu cần kết bạn
+const acceptedFriend = (btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const userID = e.target.getAttribute("btn-accept-friend");
+    btn.closest(".box-user").classList.add("accepted");
+    socket.emit("CLIENT_ACCEPT-FRIEND", userID);
+  });
+};
 const ListBtnAcceptFriend = document.querySelectorAll("[btn-accept-friend]");
 if (ListBtnAcceptFriend.length > 0) {
   ListBtnAcceptFriend.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const userID = e.target.getAttribute("btn-accept-friend");
-      btn.closest(".box-user").classList.add("accepted");
-      socket.emit("CLIENT_ACCEPT-FRIEND", userID);
-    });
+    acceptedFriend(btn);
   });
 }
 // Đóng Chức năng đồng ý yêu cần kết bạn
@@ -73,7 +79,7 @@ socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
 
   if (data.userID == user_ID) {
     const div = document.createElement("div");
-
+    // vẽ user ra giao diện
     div.classList.add("col-6");
 
     div.innerHTML = `
@@ -92,8 +98,21 @@ socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
  
     `;
     dataUsersAccept.appendChild(div);
-    console.log("====================================");
-    console.log(dataUsersAccept);
-    console.log("====================================");
+    // end vẽ user ra giao diện
+    // huỷ lời mời kết bạn
+    const ListBtnRefuseFriend = div.querySelectorAll("[btn-refuse-friend]");
+    const ListBtnAcceptFriend = div.querySelectorAll("[btn-accept-friend]");
+    if (ListBtnRefuseFriend.length > 0) {
+      ListBtnRefuseFriend.forEach((btn) => {
+        refuseFriend(btn);
+      });
+    }
+
+    if (ListBtnAcceptFriend.length > 0) {
+      ListBtnAcceptFriend.forEach((btn) => {
+        acceptedFriend(btn);
+      });
+    }
+    // end
   }
 });
