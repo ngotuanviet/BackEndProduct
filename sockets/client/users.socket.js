@@ -101,6 +101,11 @@ module.exports = (res) => {
           userID: userID,
           lengthAcceptFriends,
         });
+        // lấy Id của A trả về cho B
+        socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
+          userIDB: userID,
+          userIDA: myUserID,
+        });
       } catch (error) {
         console.log(error);
       }
