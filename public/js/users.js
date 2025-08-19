@@ -98,33 +98,8 @@ socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
  
     `;
     dataUsersAccept.appendChild(div);
-    // end vẽ user ra giao diện
-    // huỷ lời mời kết bạn
-    const ListBtnRefuseFriend = div.querySelectorAll("[btn-refuse-friend]");
-    const ListBtnAcceptFriend = div.querySelectorAll("[btn-accept-friend]");
-    if (ListBtnRefuseFriend.length > 0) {
-      ListBtnRefuseFriend.forEach((btn) => {
-        refuseFriend(btn);
-      });
-    }
-
-    if (ListBtnAcceptFriend.length > 0) {
-      ListBtnAcceptFriend.forEach((btn) => {
-        acceptedFriend(btn);
-      });
-    }
-    // end
-  }
-});
-// SERVER_RETURN_USER_ID_CANCEL_FRIEND
-
-socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
-  const user_ID = dataUsersAccept.getAttribute("data-users-accept");
-
-  if (data.userIDB == user_ID) {
-    const boxUser = document.querySelector(`.col-6[user-id="${data.userIDA}"]`);
-    if (boxUser) {
-      boxUser.remove();
-    }
+    console.log("====================================");
+    console.log(dataUsersAccept);
+    console.log("====================================");
   }
 });
