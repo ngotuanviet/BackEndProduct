@@ -98,8 +98,31 @@ socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
  
     `;
     dataUsersAccept.appendChild(div);
-    console.log("====================================");
-    console.log(dataUsersAccept);
-    console.log("====================================");
+    // thêm sự kiện cho nút chấp nhận và từ chối
+    const ListBtnAcceptFriend = div.querySelectorAll("[btn-accept-friend]");
+    if (ListBtnAcceptFriend.length > 0) {
+      ListBtnAcceptFriend.forEach((btn) => {
+        acceptedFriend(btn);
+      });
+    }
+    const ListBtnRefuseFriend = div.querySelectorAll("[btn-refuse-friend]");
+    if (ListBtnRefuseFriend.length > 0) {
+      ListBtnRefuseFriend.forEach((btn) => {
+        refuseFriend(btn);
+      });
+    }
+  }
+});
+// SERVER_RETURN_INFO_ACCEPT_FRIENDS
+socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
+  const userIDA = data.userIDA;
+  const boxUserRemove = document.querySelector(`.col-6[user-id="${userIDA}"]`);
+
+  if (boxUserRemove) {
+    const dataUsersAccept = document.querySelector("[data-users-accept]");
+    const userIDB = badgeUsersAccept.getAttribute("user-id");
+    if (userIDB === data.userIDB) {
+      dataUsersAccept.removeChild(boxUserRemove);
+    }
   }
 });
