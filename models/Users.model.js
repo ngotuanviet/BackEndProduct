@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "active", // Giá trị mặc định là 'active'
     },
+    statusOnline: String, // online, offline, away
     deleted: {
       type: Boolean,
       default: false, // Mặc định là chưa bị xóa

@@ -5,20 +5,25 @@ block main
         include ../../partials/list-btn-users.pug
         .row 
             .col-12 
-                +box-head("Danh sách lời mời đã nhận")
+                +box-head("Danh sách bạn bè")
         div(class="row" data-users-accept=user.id)
+
             if (users)
                 each user in users
+                    
                     div(class="col-6" user-id=user.id)
                         div(class="box-user"  )
                             div(class="inner-avatar")
                                 img(src=user.avatar ? user.avatar : "/img/default-avatar.jpg", alt=user.fullName)
                             div(class="inner-info")
-                                div(class="inner-name") #{user.fullName}
+                                div(class="inner-name mb-0") 
+                                    span  #{user.fullName}
                                 div(class="inner-buttons")
-                                    button(class="btn btn-sm btn-primary me-1" btn-accept-friend=user.id) Chấp nhận
-                                    button(class="btn btn-sm btn-secondary me-1" btn-refuse-friend=user.id) Xoá
-                                    button(class="btn btn-sm btn-secondary me-1" btn-deleted-friend=user.id disabled) Đã xoá
-                                    button(class="btn btn-sm btn-primary me-1" btn-accepted-friend=user.id disabled) Đã Chấp nhận
+                                    button(class="btn btn-sm btn-primary me-1" btn-accept-friend=user.id) Nhắn tin
+                            div(class="inner-status" status=user.statusOnline) 
+                                if(user.statusOnline === "online")
+                                    svg(xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="blue" class="bi bi-circle-fill" viewBox="0 0 16 16")
+                                        circle(cx="6" cy="6" r="6")
+
 block script 
     script(src="/js/users.js")

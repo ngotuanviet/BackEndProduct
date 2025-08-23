@@ -11,6 +11,7 @@ if (ListBtnAddFriend.length > 0) {
     });
   });
 }
+
 // Đóng Chức năng gửi yêu cầu
 // Chức năng huỷ gửi yêu cầu
 const ListBtnCancelFriend = document.querySelectorAll("[btn-cancel-friend]");
@@ -86,15 +87,16 @@ if (dataUsersAccept) {
       div.classList.add("col-6");
       div.setAttribute("user-id", data.infoUserA._id);
       div.innerHTML = `
-        <div class="box-user" ">
-            <div class="inner-avatar">
-                <img src=${data.infoUserA.avatar} alt="Blackcat">
-                </div>
-            <div class="inner-info">
-                <div class="inner-name">${data.infoUserA.fullName}</div>
-            <div class="inner-buttons">
-                <button class="btn btn-sm btn-primary me-1" btn-accept-friend="${data.infoUserA._id}">Chấp nhận</button>
-                <button class="btn btn-sm btn-secondary me-1" btn-refuse-friend="${data.infoUserA._id}">Xoá</button><button class="btn btn-sm btn-secondary me-1" btn-deleted-friend="${data.infoUserA._id}" disabled="">Đã xoá</button><button class="btn btn-sm btn-primary me-1" btn-accepted-friend="${data.infoUserA._id}" disabled="">Đã Chấp nhận</button>
+          <div class="box-user" ">
+              <div class="inner-avatar">
+                  <img src=${data.infoUserA.avatar} alt="Blackcat">
+                  </div>
+              <div class="inner-info">
+                  <div class="inner-name">${data.infoUserA.fullName}</div>
+              <div class="inner-buttons">
+                  <button class="btn btn-sm btn-primary me-1" btn-accept-friend="${data.infoUserA._id}">Chấp nhận</button>
+                  <button class="btn btn-sm btn-secondary me-1" btn-refuse-friend="${data.infoUserA._id}">Xoá</button><button class="btn btn-sm btn-secondary me-1" btn-deleted-friend="${data.infoUserA._id}" disabled="">Đã xoá</button><button class="btn btn-sm btn-primary me-1" btn-accepted-friend="${data.infoUserA._id}" disabled="">Đã Chấp nhận</button>
+                  </div>
                 </div>
             </div>
         </div>

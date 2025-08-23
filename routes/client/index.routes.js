@@ -8,19 +8,20 @@ const authRouter = require("./auth.routes");
 const chatRouter = require("./chat.routes");
 const authMiddleware = require("../../Middleware/client/auth.middleware");
 const settingMiddleware = require("../../Middleware/client/settings.midlleware");
+const checkoutMiddleware = require("../../Middleware/client/checkout.validates");
 const usersRouter = require("./users.routes");
 const checkoutRouter = require("./checkout.routes");
 module.exports = (app) => {
-    app.use(categoriesMiddleware.categories)
-    app.use(cartsMiddleware.CartID)
-    app.use(authMiddleware.auth)
-    app.use(settingMiddleware.SettingGenetal)
-    app.use('/', homeRouter)
-    app.use('/products', productRouter)
-    app.use('/search', searchRouter)
-    app.use('/cart', cartRoute)
-    app.use('/checkout', checkoutRouter)
-    app.use('/user', authRouter)
-    app.use('/chat', authMiddleware.requireAuth, chatRouter)
-    app.use("/users", authMiddleware.requireAuth, usersRouter)
+  app.use(categoriesMiddleware.categories);
+  app.use(cartsMiddleware.CartID);
+  app.use(authMiddleware.auth);
+  app.use(settingMiddleware.SettingGenetal);
+  app.use("/", homeRouter);
+  app.use("/products", productRouter);
+  app.use("/search", searchRouter);
+  app.use("/cart", cartRoute);
+  app.use("/checkout", checkoutRouter);
+  app.use("/user", authRouter);
+  app.use("/chat", authMiddleware.requireAuth, chatRouter);
+  app.use("/users", authMiddleware.requireAuth, usersRouter);
 };
