@@ -1,42 +1,41 @@
 const { default: mongoose } = require("mongoose");
 
-const OrdersSchema = new mongoose.Schema({
-    // user_id: {
-    //     type: String,
-
-    // },
+const OrdersSchema = new mongoose.Schema(
+  {
+    user_id: {
+      type: String,
+    },
     cart_id: {
-        type: String,
-
+      type: String,
     },
     userInfo: {
-        fullName: String,
-        email: String,
-        phone: String,
-        address: String,
-        note: String
+      fullName: String,
+      email: String,
+      phone: String,
+      address: String,
+      note: String,
     },
     products: [
-        {
-            product_id: String,
-            price: Number,
-            discountPercentage: Number,
-            quantity: Number
-        }
-
+      {
+        product_id: String,
+        price: Number,
+        discountPercentage: Number,
+        quantity: Number,
+      },
     ],
     status: {
-        type: String,
-        default: 'initial'
+      type: String,
+      default: "initial",
     },
     deleted: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     deletedAt: Date,
-}, {
+  },
+  {
     timestamps: true,
-}
+  }
 );
-const Orders = mongoose.model('orders', OrdersSchema, "orders")
+const Orders = mongoose.model("orders", OrdersSchema, "orders");
 module.exports = Orders;

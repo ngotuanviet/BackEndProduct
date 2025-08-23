@@ -72,17 +72,20 @@ if (badgeUsersAccept) {
   });
 }
 // end SERVER_RETURN_LENGTH_ACCEPT_FRIENDS
+// SERVER_RETURN_INFO_USER_ACCEPT_FRIEND
 const dataUsersAccept = document.querySelector("[data-users-accept]");
-// trả thông tin người dùng
-socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
-  const user_ID = dataUsersAccept.getAttribute("data-users-accept");
 
-  if (data.userID == user_ID) {
-    const div = document.createElement("div");
-    // vẽ user ra giao diện
-    div.classList.add("col-6");
-    div.setAttribute("user-id", data.infoUserA._id);
-    div.innerHTML = `
+if (dataUsersAccept) {
+  socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
+    const user_ID = dataUsersAccept.getAttribute("data-users-accept");
+    // lời mời đã nhận
+
+    if (data.userID == user_ID) {
+      const div = document.createElement("div");
+      // vẽ user ra giao diện
+      div.classList.add("col-6");
+      div.setAttribute("user-id", data.infoUserA._id);
+      div.innerHTML = `
         <div class="box-user" ">
             <div class="inner-avatar">
                 <img src=${data.infoUserA.avatar} alt="Blackcat">
@@ -97,26 +100,60 @@ socket.on("SERVER_RETURN_INFO_USER_A", (data) => {
         </div>
  
     `;
-    dataUsersAccept.appendChild(div);
-    // thêm sự kiện cho nút chấp nhận và từ chối
-    const ListBtnAcceptFriend = div.querySelectorAll("[btn-accept-friend]");
-    if (ListBtnAcceptFriend.length > 0) {
-      ListBtnAcceptFriend.forEach((btn) => {
-        acceptedFriend(btn);
-      });
+      dataUsersAccept.appendChild(div);
+      // thêm sự kiện cho nút chấp nhận và từ chối
+      const ListBtnAcceptFriend = div.querySelectorAll("[btn-accept-friend]");
+      if (ListBtnAcceptFriend.length > 0) {
+        ListBtnAcceptFriend.forEach((btn) => {
+          acceptedFriend(btn);
+        });
+      }
+      const ListBtnRefuseFriend = div.querySelectorAll("[btn-refuse-friend]");
+      if (ListBtnRefuseFriend.length > 0) {
+        ListBtnRefuseFriend.forEach((btn) => {
+          refuseFriend(btn);
+        });
+      }
     }
-    const ListBtnRefuseFriend = div.querySelectorAll("[btn-refuse-friend]");
-    if (ListBtnRefuseFriend.length > 0) {
-      ListBtnRefuseFriend.forEach((btn) => {
-        refuseFriend(btn);
-      });
+    // Trang danh sách người dùng
+    const dataUserNotFriend = document.querySelector("[data-users-not-friend]");
+    if (dataUserNotFriend) {
+      const userID = dataUserNotFriend.getAttribute("data-users-not-friend");
+      if (userID === data.userID) {
+        const boxUserRemove = document.querySelector(
+          `.col-6[user-id="${data.infoUserA._id}"]`
+        );
+
+        if (boxUserRemove) {
+          dataUserNotFriend.removeChild(boxUserRemove);
+        }
+      }
+    }
+  });
+}
+
+// SERVER_RETURN_USER_ID_ADD_FRIEND
+socket.on("SERVER_RETURN_USER_ID_ADD_FRIEND", (data) => {
+  const dataUserNotFriend = document.querySelector("[data-users-not-friend]");
+  if (dataUserNotFriend) {
+    const userID = dataUserNotFriend.getAttribute("data-users-not-friend");
+    if (userID === data.userIDB) {
+      const boxUserRemove = document.querySelector(
+        `.col-6[user-id="${data.userIDA}"]`
+      );
+
+      if (boxUserRemove) {
+        dataUserNotFriend.removeChild(boxUserRemove);
+      }
     }
   }
 });
+
 // SERVER_RETURN_INFO_ACCEPT_FRIENDS
 socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
-  const userIDA = data.userIDA;
-  const boxUserRemove = document.querySelector(`.col-6[user-id="${userIDA}"]`);
+  const boxUserRemove = document.querySelector(
+    `.col-6[user-id="${data.userIDA}"]`
+  );
 
   if (boxUserRemove) {
     const dataUsersAccept = document.querySelector("[data-users-accept]");

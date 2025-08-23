@@ -1,14 +1,12 @@
-include ../../layout/default
+extends ../../layout/default
 include ../../mixins/box-head
-block main 
-    .container.my-3 
+block main
+    .container.my-3
         include ../../partials/list-btn-users.pug
-        .row 
-            .col-12 
-                +box-head("Danh sách người dùng")
-        .row 
+        +box-head("Danh sách người dùng")
+        div(class="row" data-users-not-friend=user.id )
             each user in users
-                .col-6 
+                div(class="col-6" user-id=user.id)
                     div(class="box-user" )
                         div(class="inner-avatar")
                             img(src=user.avatar || "/img/default-avatar.jpg", alt=user.fullName)

@@ -45,11 +45,11 @@ block main
                                     div(class="form-group col-6")
                                         div(class="form-group")
                                             label(for="fullName") Họ và tên 
-                                            input(type="text" class="form-control" name="fullName"  value=user.fullName required)
+                                            input(type="text" class="form-control" name="fullName"  value=user ? user.fullName : "" required)
                                     div(class="form-group col-6")
                                         div(class="form-group")
                                             label(for="email") Email
-                                            input(type="email" class="form-control" name="email" value=user.email  )
+                                            input(type="email" class="form-control" name="email" value=user ? user.fullName : ""  )
                                 div(class="form-group")
                                     label(for="phone") Số điện thoại 
                                     input(type="text" class="form-control" name="phone" required)

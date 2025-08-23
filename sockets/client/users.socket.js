@@ -58,6 +58,11 @@ module.exports = (res) => {
           userID,
           infoUserA,
         });
+        // Gửi ID của người gửi (A) và người nhận (B) để xoá khỏi danh sách chưa kết bạn của B
+        socket.broadcast.emit("SERVER_RETURN_USER_ID_ADD_FRIEND", {
+          userIDA: myUserID,
+          userIDB: userID,
+        });
       } catch (error) {
         console.log(error);
       }
