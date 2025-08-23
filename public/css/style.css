@@ -325,3 +325,11 @@ a {
 }
 
 /* end btn box-user */
+.box-user .inner-status {
+  font-size: 14px;
+  color: #00d800;
+  opacity: 0;
+}
+.box-user .inner-status[status="online"] {
+  opacity: 1;
+}

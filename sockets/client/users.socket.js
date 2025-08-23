@@ -76,7 +76,7 @@ module.exports = (res) => {
           acceptFriends: myUserID,
         });
         /* 
-                     huỷ xoá tất cả id đấy trong acceptFriends và requestFriends
+          huỷ xoá tất cả id đấy trong acceptFriends và requestFriends
                 */
         if (exitsUserAinB) {
           await Users.updateOne(

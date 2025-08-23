@@ -4,6 +4,8 @@ const generate = require("../../helper/generate");
 const sendMailHelper = require("../../helper/sendMail");
 const forgotPassword = require("../../models/forgotPassword.model");
 const Cart = require("../../models/Carts.model");
+const usersSocket = require("../../sockets/client/users.socket");
+
 const register = (req, res) => {
   res.render("client/pages/auth/register", {
     title: "Đăng ký",
