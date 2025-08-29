@@ -1,32 +1,111 @@
-extends ../../layout/default
+extends ../../layout/default.pug
 include ../../mixins/filtersStatus
-include ../../mixins/alert.pug
-include ../../mixins/search.pug
-block main
-    h1 Quản lý bài viết
+include ../../mixins/search
+include ../../mixins/pagination
+include ../../mixins/formChangeMulti
+include ../../mixins/sort
+include ../../mixins/alert
+include ../../mixins/moment
+block main 
+    if (rolesUser.permissions.includes("posts_view"))
         +alert-success(5000)
+        h1 Danh sách bài viết
 
-    .card.mb-3 
-        .card-header Bộ lọc và tìm kiếm 
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm 
+            .card-body 
+                .row
+                    .col-6
+                        +filtersStatus(filtersStatus)
+                    .col-6
+                        +inputSearch(keyword,"posts","Tìm kiếm bài viết")
+        .card.mb-3 
+                .card-header Sắp xếp 
+                .card-body 
+                    .row 
+                        .col-4
+                            +sort(sort, availableSortOptions)
+        .card.mb-3 
+        .card-header Danh sách bài viết
         .card-body 
             .row
-                .col-6
-                
-                .col-6
-                    +inputSearch(keyword)
-    .card.mb-3 
-            .card-header Sắp xếp 
-            .card-body 
-                .row 
-                    .col-4
-    .card.mb-3 
-    .card-header Danh sách bài viết
-    .card-body 
-        .row
-            .col-8
-            .col-4
-                    a(
-                        href=`${prefixAdmin}/posts/create`
-                        class="btn btn-success mb-3"
-                    ) Thêm mới bài viết
-        
+                .col-8
+                    if (rolesUser.permissions.includes("posts_edit"))
+                        +form-change-multi(`${prefixAdmin}/posts/change-multi?_method=PATCH`)
+                .col-4
+                    if (rolesUser.permissions.includes("posts_create"))
+                        a(
+                            href=`${prefixAdmin}/posts/create`
+                            class="btn btn-success mb-3"
+                        ) Thêm mới bài viết
+            
+            table(class= "table table-hover table-sm "
+            checkbox-multi)
+                thead 
+                    tr 
+                        th 
+                            input(type="checkbox" name="checkall")  
+                        th STT
+                        th Hình ảnh
+                        th Tiêu đề
+                        th Vị trí
+                        th Trạng thái
+                        th Người tạo
+                        th Người cập nhật
+                        th Thao tác
+                tbody
+                    each post,index in posts
+                        tr
+                            td 
+                                input(type="checkbox" name="ids" value=post.id)
+                            td #{ objectPanination.limitItems * (objectPanination.currentPage - 1) + (index + 1)  }
+                            td 
+                                img(src=post.thumbnail, alt="Post Image" width="100" height="auto")
+                            td(style="width: 200px") #{post.title}
+                            td 
+                                input(
+                                    type="number"
+                                    value=post.position
+                                    style="width: 60px"
+                                    min="1"
+                                    name="position"
+                                )
+                            td
+                                if (rolesUser.permissions.includes("posts_edit"))
+                                    if(post.status === "active")
+                                        a.badge.rounded-pill.text-bg-success(href=`javascript:;` data-status=post.status data-id=post.id button-change-status) Hoạt động
+                                    else
+                                        a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=post.status data-id=post.id button-change-status) Ngừng hoạt động
+                                else 
+                                    span #{post.status ? 'Hoạt động' : 'Ngừng hoạt động'}
+                            td 
+                                p #{post.fullName}
+                                +formatDatetime(post.createdBy.createdAt)
+                            td 
+                                - const updatedBy = post.updatedBy.slice(-1)[0];
+                                if (updatedBy)
+                                    p #{updatedBy.fullName}
+                                    +formatDatetime(updatedBy.updatedAt)
+                            td 
+                                if (rolesUser.permissions.includes("posts_edit"))
+                                    a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/posts/edit/${post.id}`) Sửa
+                                a.btn.btn-secondary.btn-sm.ml-2(href=`${prefixAdmin}/posts/detail/${post.id}`) Chi tiết
+                                if (rolesUser.permissions.includes("posts_delete"))
+                                    a.btn.btn-danger.btn-sm.ml-2(href="javascript:;" data-id=post.id button-delete) Xóa
+        +pagination(objectPanination)
+        form(
+            method="POST"
+            action=""
+            class="d-none"
+            id="form-change-status"
+            data-path=`${prefixAdmin}/posts/change-status`
+        ) 
+        form(
+            method="POST"
+            action=""
+            class="d-none"
+            id="form-delete-item"
+            data-path=`${prefixAdmin}/posts/delete`
+        ) 
+        script(src="/admin/js/product.js") 
+        script(src="/admin/js/script.js")

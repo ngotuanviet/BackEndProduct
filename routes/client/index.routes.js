@@ -11,11 +11,15 @@ const settingMiddleware = require("../../Middleware/client/settings.midlleware")
 const checkoutMiddleware = require("../../Middleware/client/checkout.validates");
 const usersRouter = require("./users.routes");
 const checkoutRouter = require("./checkout.routes");
+// const socketMiddleware = require("../../Middleware/client/socket.middleware"); // Removed: Socket.IO logic does not belong in Express middleware
+
 module.exports = (app) => {
   app.use(categoriesMiddleware.categories);
   app.use(cartsMiddleware.CartID);
   app.use(authMiddleware.auth);
   app.use(settingMiddleware.SettingGenetal);
+  // app.use(socketMiddleware.connect); // Removed: Socket.IO logic does not belong in Express middleware
+
   app.use("/", homeRouter);
   app.use("/products", productRouter);
   app.use("/search", searchRouter);

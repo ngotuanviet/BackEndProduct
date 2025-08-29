@@ -71,6 +71,54 @@ block main
                                 each permission in role
                                     td(class="text-center")
                                         input(type="checkbox")
+                            //- Quản lý danh mục bài viết
+                            tr 
+                                td(colspan="4")
+                                    b Quản lý danh mục bài viết
+                            tr(data-name="posts-category_view")
+                                td Xem 
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts-category_create")
+                                td Tạo mới 
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts-category_edit")
+                                td Sửa
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts-category_delete")
+                                td Xóa
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            //- Quản lý bài viết
+                            tr 
+                                td(colspan="4")
+                                    b Quản lý bài viết
+                            tr(data-name="posts_view")
+                                td Xem 
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts_create")
+                                td Tạo mới 
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts_edit")
+                                td Sửa
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
+                            tr(data-name="posts_delete")
+                                td Xóa
+                                each permission in role
+                                    td(class="text-center")
+                                        input(type="checkbox")
                             //- Quản lý tài khoản
                             tr 
                                 td(colspan="4")

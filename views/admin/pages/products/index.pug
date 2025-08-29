@@ -24,7 +24,7 @@ block main
                 .card-body 
                     .row 
                         .col-4
-                            +sort()
+                            +sort(sort, availableSortOptions)
         .card.mb-3 
         .card-header Danh sách sản phẩm
         .card-body 
@@ -110,4 +110,4 @@ block main
             data-path=`${prefixAdmin}/products/delete`
         ) 
         script(src="/admin/js/product.js") 
-        script(src="/admin/js/script.js") 
+        script(src="/admin/js/script.js")

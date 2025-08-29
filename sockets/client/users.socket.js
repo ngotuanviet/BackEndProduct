@@ -1,14 +1,27 @@
 const e = require("express");
 const Users = require("../../models/Users.model");
+const {
+  handleConnect,
+  handleDisconnect,
+} = require("../../Middleware/client/socket.middleware");
+
 module.exports = (res) => {
   //SocketIO
+  const myUserID = res.locals.user.id;
 
-  _io.once("connection", (socket) => {
-    console.log(`a user connected, ${socket.id}`);
+  _io.on("connection", (socket) => {
+    // Changed .once to .on
+    // Call middleware functions for connect/disconnect
+    handleConnect(socket, myUserID);
+
+    socket.on("disconnect", async () => {
+      handleDisconnect(socket);
+    });
+
     // gửi yêu cầu
     socket.on("CLIENT_ADD-FRIEND", async (userID) => {
       try {
-        const myUserID = res.locals.user.id;
+        // const myUserID = res.locals.user.id; // Already defined above
         const exitsUserAinB = await Users.findOne({
           _id: userID,
           acceptFriends: myUserID,
@@ -211,5 +224,6 @@ module.exports = (res) => {
       }
     });
   });
+
   // end
 };

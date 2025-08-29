@@ -165,3 +165,16 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
     }
   }
 });
+socket.on("SERVER_RETURN_USER_STATUS_ONLINE", (data) => {
+  const dataUserFriend = document.querySelector(`.row[data-users-friends]`);
+
+  if (dataUserFriend) {
+    const boxUser = dataUserFriend.querySelector(
+      `.col-6[user-id="${data.userID}"]`
+    );
+    if (boxUser) {
+      const boxStatus = boxUser.querySelector("[status]");
+      boxStatus.setAttribute("status", data.status);
+    }
+  }
+});

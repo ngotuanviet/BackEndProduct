@@ -3,6 +3,7 @@ include ../../mixins/search.pug
 include ../../mixins/filtersStatus.pug
 include ../../mixins/formChangeMulti.pug
 include ../../mixins/table-tree.pug
+include ../../mixins/sort.pug
 block main
     if (rolesUser.permissions.includes("products-category_view"))
         h1 Danh sách mục sản phẩm
@@ -17,6 +18,12 @@ block main
                     form(action="" path=`${prefixAdmin}/categories` method="GET")
                         input(type="text" name="keyword" placeholder="Tìm kiếm mục sản phẩm" class="form-control" value=keyword)
                         button(type="submit" class="btn btn-outline-secondary mt-2") Tìm kiếm
+        .card.mb-3 
+            .card-header Sắp xếp 
+            .card-body 
+                .row 
+                    .col-4
+                        +sort(sort, availableSortOptions)
         .card-header Danh sách 
         .card-body 
             .row
@@ -39,6 +46,8 @@ block main
                         th Tên sản phẩm
                         th Vị trí
                         th Trạng thái
+                        th Người tạo
+                        th Người cập nhật
                         th Thao tác
                 tbody
                     +table-tree(categories)
@@ -51,10 +60,10 @@ block main
                     li(class="page-item disabled")
                         button( class="page-link" disabled) Trang trước
                 - for (var page = 1; page <= objectPanination.totalPages; ++page)
-                    li(class="page-item")
+                    li(class="page-item " + (page === objectPanination.currentPage ? 'active' : '') )
                         button(class="page-link" button-pagination=page) #{page}
                 if (objectPanination.currentPage < objectPanination.totalPages)
-                    li(class="page-item " + (page === objectPanination.currentPage ? 'active' : '') )
+                    li(class="page-item ")
                         button( class="page-link" button-pagination=objectPanination.currentPage + 1) Trang sau
                 else 
                     li(class="page-item disabled")
@@ -71,7 +80,8 @@ block main
         data-path=`${prefixAdmin}/categories/delete` 
         method="post"
         ) 
-        script(src="/admin/js/category.js") 
-        script(src="/admin/js/script.js") 
     else 
         h1 Bạn không có quyền truy cập
+    script(src="/admin/js/category.js") 
+    script(src="/admin/js/script.js")
+include ../../mixins/moment

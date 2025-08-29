@@ -36,17 +36,24 @@ const loginPost = async (req, res) => {
     deleted: false,
     status: "active",
   });
+  console.log(user);
+
   if (user) {
     if (user.password === md5(password)) {
       req.flash("success", "Đăng nhập thành công");
       res.cookie("tokenUser", user.token);
-
       const cart = await Cart.findOne({ user_id: user.id });
       if (cart) {
         res.cookie("cartID", cart.id);
       }
       await Cart.updateOne({ _id: req.cookies.cartID }, { user_id: user.id });
       await Users.updateOne({ token: user.token }, { statusOnline: "online" });
+      _io.once("connection", (socket) => {
+        socket.broadcast.emit("SERVER_RETURN_USER_STATUS_ONLINE", {
+          userID: user.id,
+          status: "online",
+        });
+      });
       res.redirect("/");
     } else {
       req.flash("error", "Mật khẩu không đúng");
@@ -66,6 +73,12 @@ const logOut = async (req, res) => {
     { token: req.cookies.tokenUser },
     { statusOnline: "offline" }
   );
+  _io.once("connection", (socket) => {
+    socket.broadcast.emit("SERVER_RETURN_USER_STATUS_ONLINE", {
+      userID: res.locals.user.id,
+      status: "offline",
+    });
+  });
   res.clearCookie("tokenUser");
   res.clearCookie("cartID");
   res.redirect("/");

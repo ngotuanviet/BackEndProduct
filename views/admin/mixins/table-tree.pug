@@ -25,6 +25,14 @@ mixin table-tree(categories, level = 1)
                 else
                     span #{category.status ? 'Hoạt động' : 'Ngừng hoạt động'}
             td 
+                p #{category.fullName}
+                +formatDatetime(category.createdBy.createdAt)
+            td 
+                - const updatedBy = category.updatedBy.slice(-1)[0];
+                if (updatedBy)
+                    p #{updatedBy.fullName}
+                    +formatDatetime(updatedBy.updatedAt)
+            td 
                 if (rolesUser.permissions.includes("products-category_edit"))
                     a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/categories/edit/${category.id}`) Sửa
 
@@ -60,6 +68,14 @@ mixin table-tree-posts(categories, level = 1)
                         a.badge.rounded-pill.text-bg-warning(href=`javascript:;` data-status=category.status data-id=category.id button-change-status) Ngừng hoạt động
                 else
                     span  #{category.status ? 'Hoạt động' : 'Ngừng hoạt động'}
+            td 
+                p #{category.fullName}
+                +formatDatetime(category.createdBy.createdAt)
+            td 
+                - const updatedBy = category.updatedBy.slice(-1)[0];
+                if (updatedBy)
+                    p #{updatedBy.fullName}
+                    +formatDatetime(updatedBy.updatedAt)
             td 
                 if (rolesUser.permissions.includes("products-category_edit"))
                     a.btn.btn-warning.btn-sm(href=`${prefixAdmin}/categories-posts/edit/${category.id}`) Sửa

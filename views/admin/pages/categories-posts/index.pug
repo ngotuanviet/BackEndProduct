@@ -2,59 +2,90 @@ extends ../../layout/default
 include ../../mixins/filtersStatus
 include ../../mixins/alert.pug
 include ../../mixins/search.pug
+include ../../mixins/formChangeMulti.pug
 include ../../mixins/table-tree.pug
+include ../../mixins/pagination.pug
 block main
-    h1 Quản lý danh mục bài viết
-    
-    
-    .card.mb-3 
-        .card-header Bộ lọc và tìm kiếm 
+    if (rolesUser.permissions.includes("posts-category_view"))
+        h1 Quản lý danh mục bài viết
+        
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm 
+            .card-body 
+                .row
+                    .col-8
+                        +filtersStatus(filtersStatus)
+                    .col-4
+                        form(action="" path=`${prefixAdmin}/categories-posts` method="GET")
+                            input(type="text" name="keyword" placeholder="Tìm kiếm danh mục bài viết" class="form-control" value=keyword)
+                            button(type="submit" class="btn btn-outline-secondary mt-2") Tìm kiếm
+
+        .card.mb-3 
+                .card-header Sắp xếp 
+                .card-body 
+                    .row 
+                        .col-4
+                            include ../../mixins/sort.pug
+                            +sort(sort, availableSortOptions)
+        .card.mb-3 
+        .card-header Danh sách bài viết
         .card-body 
             .row
-                .col-6
-                
-                .col-6
-                    +inputSearch(keyword, "categories-posts", "Tìm kiếm danh mục bài viết")
-
-    .card.mb-3 
-            .card-header Sắp xếp 
-            .card-body 
-                .row 
-                    .col-4
-    .card.mb-3 
-    .card-header Danh sách bài viết
-    .card-body 
-        .row
-            .col-8
-            .col-4
-                    a(
-                        href=`${prefixAdmin}/categories-posts/create`
-                        class="btn btn-success mb-3"
-                    ) Thêm danh mục bài viết
-        table(class= "table table-hover table-sm "
-            checkbox-multi)
-                thead 
-                    tr 
-                        th 
-                            input(type="checkbox" name="checkall")  
-                        th STT
-                        th Hình ảnh
-                        th Tên sản phẩm
-                        th Vị trí
-                        th Trạng thái
-                        th Thao tác
-                tbody
-                    +table-tree-posts(categories)
-    
-    form(action=""
-    method="POST"
-    class="d-none"
-    form-change-Status
-    path=`${prefixAdmin}/categories-posts/changeStatus`)
-    form(action=""
-    method="POST"
-    class="d-none"
-    form-delete
-    path=`${prefixAdmin}/categories-posts/delete`)
-    script(src="/admin/js/category_posts.js")
-    script(src="/admin/js/script.js") 
+                .col-8
+                    +form-change-multi(`${prefixAdmin}/categories-posts/change-multi?_method=PATCH`)
+                .col-4
+                    if (rolesUser.permissions.includes("posts-category_create"))
+                        a(
+                            href=`${prefixAdmin}/categories-posts/create`
+                            class="btn btn-success mb-3"
+                        ) Thêm danh mục bài viết
+            table(class= "table table-hover table-sm "
+                checkbox-multi)
+                    thead 
+                        tr 
+                            th 
+                                input(type="checkbox" name="checkall")  
+                            th STT
+                            th Hình ảnh
+                            th Tên sản phẩm
+                            th Vị trí
+                            th Trạng thái
+                            th Người tạo
+                            th Người cập nhật
+                            th Thao tác
+                    tbody
+                        +table-tree-posts(categories)
+        
+        nav
+            ul(class="pagination")
+                if (objectPanination.currentPage > 1)
+                    li(class="page-item ")
+                        button( class="page-link" button-pagination=objectPanination.currentPage - 1) Trang trước
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang trước
+                - for (var page = 1; page <= objectPanination.totalPages; ++page)
+                    li(class="page-item " + (page === objectPanination.currentPage ? 'active' : '') )
+                        button(class="page-link" button-pagination=page) #{page}
+                if (objectPanination.currentPage < objectPanination.totalPages)
+                    li(class="page-item ")
+                        button( class="page-link" button-pagination=objectPanination.currentPage + 1) Trang sau
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang sau
+        
+        form(action=""
+        method="POST"
+        class="d-none"
+        form-change-Status
+        path=`${prefixAdmin}/categories-posts/changeStatus`)
+        form(action=""
+        method="POST"
+        class="d-none"
+        form-delete
+        path=`${prefixAdmin}/categories-posts/delete`)
+        script(src="/admin/js/category_posts.js")
+        script(src="/admin/js/script.js") 
+    else 
+        h1 Bạn không có quyền truy cập
+include ../../mixins/moment

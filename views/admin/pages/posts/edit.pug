@@ -2,45 +2,45 @@ extends ../../layout/default.pug
 include ../../mixins/alert.pug
 include ../../mixins/select-tree.pug
 block main 
-    if (rolesUser.permissions.includes("posts_create"))
+    if (rolesUser.permissions.includes("posts_edit"))
         +alert-success(5000)
         +alert-error(5000)
-        h1(class="mb-4") Tạo mới bài viết 
-        form(action="/admin/posts/create", method="post"
+        h1(class="mb-4") Chỉnh sửa bài viết 
+        form(action=`/admin/posts/edit/${post.id}?_method=PATCH`, method="post"
         enctype="multipart/form-data"
-        id="form-create-post")
+        id="form-edit-post")
             
                 .col-md-12
                     .form-group
                         label(for="title") Tiêu đề
-                        input(type="text" class="form-control" name="title" id="title" )
+                        input(type="text" class="form-control" name="title" id="title" value=post.title)
                 .col-md-12
                     .form-group
                         label(for="category_id") Danh mục bài viết
                         select(name="category_id" class="form-control" id="category_id")
                             option(value="") Chọn danh mục bài viết
-                            +select-tree(categories)
+                            +select-tree(categories, post.category_id)
                 .col-md-12
                     .form-group
                         label(for="description") Mô tả
-                        textarea(class="form-control" name="description" id="descriptionArea" rows="3" ) 
+                        textarea(class="form-control" name="description" id="descriptionArea" rows="3" ) #{post.description}
                 .col-md-12
                     .div(class="form-group" upload-image)
                         label(for="thumbnail") Ảnh bài viết
-                        input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input required)
+                        input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input )
                         .div(close-image class="d-none") X
-                        img(width="100px" height="100px" src="" alt="Preview image" class="image-Preview" upload-image-Preview style="display: none;")
+                        img(width="100px" height="100px" src=post.thumbnail alt="Preview image" class="image-Preview" upload-image-Preview style="display: block;")
                 .col-md-12
                     .form-group
                         label(for="status") Trạng thái
                         select(class="form-control", name="status", id="status")
-                            option(value="active") Kích hoạt
-                            option(value="inactive") Không kích hoạt
+                            option(value="active" selected=(post.status == "active" ? true : false)) Kích hoạt
+                            option(value="inactive" selected=(post.status == "inactive" ? true : false)) Không kích hoạt
                 .col-md-12
                     .form-group
                         label(for="position") Vị trí hiển thị
-                        input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1")
-                button(type='submit', class='btn btn-primary') Lưu bài viết
+                        input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1" value=post.position)
+                button(type='submit', class='btn btn-primary') Cập nhật bài viết
     
 
         script(src="/admin/js/product.js") 

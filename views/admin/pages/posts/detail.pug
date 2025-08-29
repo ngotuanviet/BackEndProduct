@@ -1,0 +1,31 @@
+extends ../../layout/default.pug
+include ../../mixins/moment
+block main 
+    h1 #{post.title}
+    .card.mb-3 
+        .card-header Chi tiết bài viết
+        .card-body 
+            .form-group
+                label(for="title") Tiêu đề
+                input(type="text" class="form-control" id="title" value=post.title disabled)
+            .form-group
+                label(for="description") Mô tả
+                textarea(class="form-control" id="description" rows="5" disabled) #{post.description}
+            .form-group
+                label(for="thumbnail") Ảnh bài viết
+                br
+                img(src=post.thumbnail, alt="Post Image" width="200" height="auto")
+            .form-group
+                label(for="status") Trạng thái
+                input(type="text" class="form-control" id="status" value=(post.status == "active" ? "Hoạt động" : "Không hoạt động") disabled)
+            .form-group
+                label(for="position") Vị trí hiển thị
+                input(type="number" class="form-control" id="position" value=post.position disabled)
+            .form-group
+                label(for="createdAt") Ngày tạo
+                input(type="text" class="form-control" id="createdAt" value=moment(post.createdAt).format("DD-MM-YYYY HH:mm:ss") disabled)
+            .form-group
+                label(for="updatedAt") Ngày cập nhật
+                input(type="text" class="form-control" id="updatedAt" value=(post.updatedBy.length > 0 ? moment(post.updatedBy[post.updatedBy.length - 1].updatedAt).format("DD-MM-YYYY HH:mm:ss") : "") disabled)
+            .form-group
+                a(href=`${prefixAdmin}/posts/edit/${post.id}` class="btn btn-warning") Chỉnh sửa
