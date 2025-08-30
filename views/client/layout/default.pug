@@ -17,6 +17,13 @@ html
         
             script(src="/js/script.js") 
             script(src="/socket.io/socket.io.js")
+            //- Expose current user id for Socket auth
+            if (user)
+                script.
+                    window.CURRENT_USER_ID = "#{user.id}";
+            else
+                script.
+                    window.CURRENT_USER_ID = "";
             script(src="/js/socket.js")
             script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js")
             script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js")

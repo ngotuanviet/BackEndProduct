@@ -38,6 +38,7 @@ app.use(express.static(`${__dirname}/public/admin`));
 const server = http.createServer(app);
 const io = new Server(server);
 global._io = io;
+
 // end socker.io
 app.use(
   "/tinymce",
@@ -47,6 +48,14 @@ app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 //route
+// Socket handlers
+try {
+  const usersSocket = require("./sockets/client/users.socket");
+  usersSocket(io);
+} catch (e) {
+  console.error("Failed to initialize users socket:", e.message);
+}
+
 route(app);
 routeAdmin(app);
 

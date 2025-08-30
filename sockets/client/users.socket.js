@@ -62,27 +62,28 @@ module.exports = (io) => {
         // lấy ra độ dài của acceptFriends của B và trả về cho B
         const infoUserB = await Users.findOne({ _id: userID });
         const lengthAcceptFriends = infoUserB.acceptFriends.length;
-        //socket.broadcast loại trừ người gửi tất cả đều nhận được
-        socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
-          userID: userID,
-          lengthAcceptFriends,
-        });
-        // lấy info của A và trả về cho b
-        const infoUserA = await Users.findOne({ _id: myUserID }).select(
-          "id avatar fullName"
-        );
         const receiverSocketId = usersOnline[userID]; // Get receiver's socket ID
+
         if (receiverSocketId) {
+          // Gửi độ dài lời mời cho B
+          io.to(receiverSocketId).emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
+            userID: userID,
+            lengthAcceptFriends,
+          });
+
+          // Gửi thông tin của A cho B
+          const infoUserA = await Users.findOne({ _id: myUserID }).select(
+            "id avatar fullName"
+          );
           io.to(receiverSocketId).emit("SERVER_RETURN_INFO_USER_A", {
             userID,
             infoUserA,
           });
+          io.to(receiverSocketId).emit("SERVER_RETURN_USER_ID_ADD_FRIEND", {
+            userIDB: userID,
+            userIDA: myUserID,
+          });
         }
-        // Gửi ID của người gửi (A) và người nhận (B) để xoá khỏi danh sách chưa kết bạn của B
-        socket.broadcast.emit("SERVER_RETURN_USER_ID_ADD_FRIEND", {
-          userIDA: myUserID,
-          userIDB: userID,
-        });
       } catch (error) {
         console.log(error);
       }
@@ -120,16 +121,20 @@ module.exports = (io) => {
         // lấy ra độ dài của acceptFriends của B và trả về cho B
         const infoUser = await Users.findOne({ _id: userID });
         const lengthAcceptFriends = infoUser.acceptFriends.length;
-        //socket.broadcast loại trừ người gửi tất cả đều nhận được
-        socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
-          userID: userID,
-          lengthAcceptFriends,
-        });
-        // lấy Id của A trả về cho B
-        socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
-          userIDB: userID,
-          userIDA: myUserID,
-        });
+        const receiverSocketId = usersOnline[userID];
+
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
+            userID: userID,
+            lengthAcceptFriends,
+          });
+
+          // Gửi ID của A (người hủy) cho B
+          io.to(receiverSocketId).emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
+            userIDB: userID,
+            userIDA: myUserID,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -167,19 +172,17 @@ module.exports = (io) => {
           );
         }
 
-        // Emit event to update UI for the refuser (myUserID)
+        // Gửi thông báo cho người gửi (A) rằng yêu cầu đã bị từ chối
+        // Notify B (current user) to update accept list UI after refusing
         socket.emit("SERVER_RETURN_USER_ID_REFUSE_FRIEND", {
-          userID: userID, // The user who sent the request (A)
-          myUserID: myUserID, // The user who refused (B)
+          userID: userID,
         });
-
-        // Update length of acceptFriends for myUserID (B)
-        const infoUserB = await Users.findOne({ _id: myUserID });
-        const lengthAcceptFriends = infoUserB.acceptFriends.length;
-        socket.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
-          userID: myUserID,
-          lengthAcceptFriends,
-        });
+        const senderSocketId = usersOnline[userID];
+        if (senderSocketId) {
+          io.to(senderSocketId).emit("SERVER_RETURN_REFUSE_FRIEND_TO_SENDER", {
+            userID: myUserID, // ID của người từ chối (B)
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -247,19 +250,21 @@ module.exports = (io) => {
           }
         );
 
-        // Emit event to update UI for the acceptor (myUserID)
+        // Gửi thông báo cho người gửi (A) rằng yêu cầu đã được chấp nhận
+        const senderSocketId = usersOnline[senderID];
+        // Notify B (current user) to update accept list UI
         socket.emit("SERVER_RETURN_USER_ID_ACCEPT_FRIEND", {
-          userID: userID, // The user who sent the request (A)
-          myUserID: myUserID, // The user who accepted (B)
+          userID: senderID,
         });
-
-        // Update length of acceptFriends for myUserID (B)
-        const infoUserB = await Users.findOne({ _id: myUserID });
-        const lengthAcceptFriends = infoUserB.acceptFriends.length;
-        socket.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
-          userID: myUserID,
-          lengthAcceptFriends,
-        });
+        if (senderSocketId) {
+          const infoUserB = await Users.findOne({ _id: myUserID }).select(
+            "id avatar fullName"
+          );
+          io.to(senderSocketId).emit("SERVER_RETURN_ACCEPT_FRIEND_TO_SENDER", {
+            userID: myUserID, // ID của người chấp nhận (B)
+            infoUserB: infoUserB,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
