@@ -1,27 +1,31 @@
-const e = require("express");
 const Users = require("../../models/Users.model");
 const {
   handleConnect,
   handleDisconnect,
 } = require("../../Middleware/client/socket.middleware");
+const RoomChat = require("../../models/rooms-chat.model");
 
-module.exports = (res) => {
-  //SocketIO
-  const myUserID = res.locals.user.id;
-
-  _io.on("connection", (socket) => {
-    // Changed .once to .on
-    // Call middleware functions for connect/disconnect
+module.exports = (io) => {
+  const usersOnline = {};
+  io.on("connection", (socket) => {
+    const myUserID = socket.handshake.auth.token;
+    if (myUserID) {
+      usersOnline[myUserID] = socket.id;
+    }
     handleConnect(socket, myUserID);
-
-    socket.on("disconnect", async () => {
+    socket.on("disconnect", () => {
       handleDisconnect(socket);
+      delete usersOnline[myUserID];
     });
-
     // gửi yêu cầu
     socket.on("CLIENT_ADD-FRIEND", async (userID) => {
       try {
-        // const myUserID = res.locals.user.id; // Already defined above
+        // Prevent user from adding themselves
+        if (userID === myUserID) {
+          console.log("User cannot send friend request to themselves.");
+          return;
+        }
+
         const exitsUserAinB = await Users.findOne({
           _id: userID,
           acceptFriends: myUserID,
@@ -39,7 +43,7 @@ module.exports = (res) => {
           await Users.updateOne(
             { _id: userID },
             {
-              $push: { acceptFriends: myUserID },
+              $addToSet: { acceptFriends: myUserID },
             }
           );
         }
@@ -51,7 +55,7 @@ module.exports = (res) => {
           await Users.updateOne(
             { _id: myUserID },
             {
-              $push: { requestFriends: userID },
+              $addToSet: { requestFriends: userID },
             }
           );
         }
@@ -67,10 +71,13 @@ module.exports = (res) => {
         const infoUserA = await Users.findOne({ _id: myUserID }).select(
           "id avatar fullName"
         );
-        socket.broadcast.emit("SERVER_RETURN_INFO_USER_A", {
-          userID,
-          infoUserA,
-        });
+        const receiverSocketId = usersOnline[userID]; // Get receiver's socket ID
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("SERVER_RETURN_INFO_USER_A", {
+            userID,
+            infoUserA,
+          });
+        }
         // Gửi ID của người gửi (A) và người nhận (B) để xoá khỏi danh sách chưa kết bạn của B
         socket.broadcast.emit("SERVER_RETURN_USER_ID_ADD_FRIEND", {
           userIDA: myUserID,
@@ -83,7 +90,6 @@ module.exports = (res) => {
     // huỷ gửi yêu cầu
     socket.on("CLIENT_CANCEL-FRIEND", async (userID) => {
       try {
-        const myUserID = res.locals.user.id;
         const exitsUserAinB = await Users.findOne({
           _id: userID,
           acceptFriends: myUserID,
@@ -131,9 +137,6 @@ module.exports = (res) => {
     // từ chối kết bạn
     socket.on("CLIENT_REFUSE-FRIEND", async (userID) => {
       try {
-        const myUserID = res.locals.user.id;
-        console.log(userID);
-
         const exitsUserBinA = await Users.findOne({
           _id: myUserID,
           acceptFriends: userID,
@@ -163,6 +166,20 @@ module.exports = (res) => {
             }
           );
         }
+
+        // Emit event to update UI for the refuser (myUserID)
+        socket.emit("SERVER_RETURN_USER_ID_REFUSE_FRIEND", {
+          userID: userID, // The user who sent the request (A)
+          myUserID: myUserID, // The user who refused (B)
+        });
+
+        // Update length of acceptFriends for myUserID (B)
+        const infoUserB = await Users.findOne({ _id: myUserID });
+        const lengthAcceptFriends = infoUserB.acceptFriends.length;
+        socket.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
+          userID: myUserID,
+          lengthAcceptFriends,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -170,60 +187,82 @@ module.exports = (res) => {
     // đồng ý kết bạn
     socket.on("CLIENT_ACCEPT-FRIEND", async (userID) => {
       try {
-        const myUserID = res.locals.user.id; //b
-        userID; // a
-        console.log(userID);
+        const senderID = userID; // a (sender)
 
-        const exitsUserBinA = await Users.findOne({
-          _id: myUserID,
-          acceptFriends: userID,
-        });
-        /* 
-                    khi add friend thành công thì xoá id đấy trong acceptFriends và requestFriends
-                */
-        if (exitsUserBinA) {
-          // xoá id của A trong acceptFriends của B
-          await Users.updateOne(
-            { _id: myUserID },
-            {
-              $push: {
-                friendsList: {
-                  user_ID: userID,
-                  room_chat_id: "",
-                },
-              },
-              $pull: { acceptFriends: userID },
-            }
-          );
+        // Prevent user from accepting their own request (should be caught by CLIENT_ADD-FRIEND, but as a safeguard)
+        if (senderID === myUserID) {
+          console.log("User cannot accept their own friend request.");
+          return;
         }
-        const exitsUserAinB = await Users.findOne({
-          _id: userID,
-          requestFriends: myUserID,
+
+        // Find existing chat room or create a new one
+        let roomChat = await RoomChat.findOne({
+          typeRoom: "friend",
+          "users.user_ID": { $all: [myUserID, senderID] },
         });
-        if (exitsUserAinB) {
-          // xoá id của B trong requestFriends của A
-          await Users.updateOne(
-            { _id: userID },
-            {
-              $push: {
-                friendsList: {
-                  user_ID: myUserID,
-                  room_chat_id: "",
-                },
+
+        if (!roomChat) {
+          const dataRoom = {
+            typeRoom: "friend",
+            users: [
+              {
+                user_ID: myUserID,
+                role: "superadmin",
               },
-              $pull: { requestFriends: myUserID },
-            }
-          );
+              {
+                user_ID: senderID,
+                role: "superadmin",
+              },
+            ],
+          };
+          roomChat = new RoomChat(dataRoom);
+          await roomChat.save();
         }
-        /* 
-                    khi add friend thành công thì {user_id, room_chat_id} của A vào friendlist của B
-                    khi add friend thành công thì {user_id, room_chat_id} của B vào friendlist của A
-               */
+
+        // Update for myUserID (the acceptor)
+        await Users.updateOne(
+          { _id: myUserID },
+          {
+            $addToSet: {
+              friendsList: {
+                user_ID: senderID,
+                room_chat_id: roomChat.id,
+              },
+            },
+            $pull: { acceptFriends: senderID },
+          }
+        );
+
+        // Update for senderID (the sender)
+        await Users.updateOne(
+          { _id: senderID },
+          {
+            $addToSet: {
+              friendsList: {
+                user_ID: myUserID,
+                room_chat_id: roomChat.id,
+              },
+            },
+            $pull: { requestFriends: myUserID },
+          }
+        );
+
+        // Emit event to update UI for the acceptor (myUserID)
+        socket.emit("SERVER_RETURN_USER_ID_ACCEPT_FRIEND", {
+          userID: userID, // The user who sent the request (A)
+          myUserID: myUserID, // The user who accepted (B)
+        });
+
+        // Update length of acceptFriends for myUserID (B)
+        const infoUserB = await Users.findOne({ _id: myUserID });
+        const lengthAcceptFriends = infoUserB.acceptFriends.length;
+        socket.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIENDS", {
+          userID: myUserID,
+          lengthAcceptFriends,
+        });
       } catch (error) {
         console.log(error);
       }
     });
   });
-
-  // end
 };

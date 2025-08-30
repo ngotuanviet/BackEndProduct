@@ -82,6 +82,15 @@ if (dataUsersAccept) {
     // lời mời đã nhận
 
     if (data.userID == user_ID) {
+      // Check if the user already exists in the list
+      const existingUserBox = dataUsersAccept.querySelector(
+        `.col-6[user-id="${data.infoUserA._id}"]`
+      );
+      if (existingUserBox) {
+        // If exists, remove it to prevent duplicates
+        dataUsersAccept.removeChild(existingUserBox);
+      }
+
       const div = document.createElement("div");
       // vẽ user ra giao diện
       div.classList.add("col-6");
@@ -89,13 +98,25 @@ if (dataUsersAccept) {
       div.innerHTML = `
           <div class="box-user" ">
               <div class="inner-avatar">
-                  <img src=${data.infoUserA.avatar} alt="Blackcat">
+                  <img src=${
+                    data.infoUserA.avatar
+                      ? data.infoUserA.avatar
+                      : "/img/default-avatar.jpg"
+                  } alt="Blackcat">
                   </div>
               <div class="inner-info">
                   <div class="inner-name">${data.infoUserA.fullName}</div>
               <div class="inner-buttons">
-                  <button class="btn btn-sm btn-primary me-1" btn-accept-friend="${data.infoUserA._id}">Chấp nhận</button>
-                  <button class="btn btn-sm btn-secondary me-1" btn-refuse-friend="${data.infoUserA._id}">Xoá</button><button class="btn btn-sm btn-secondary me-1" btn-deleted-friend="${data.infoUserA._id}" disabled="">Đã xoá</button><button class="btn btn-sm btn-primary me-1" btn-accepted-friend="${data.infoUserA._id}" disabled="">Đã Chấp nhận</button>
+                  <button class="btn btn-sm btn-primary me-1" btn-accept-friend="${
+                    data.infoUserA._id
+                  }">Chấp nhận</button>
+                  <button class="btn btn-sm btn-secondary me-1" btn-refuse-friend="${
+                    data.infoUserA._id
+                  }">Xoá</button><button class="btn btn-sm btn-secondary me-1" btn-deleted-friend="${
+        data.infoUserA._id
+      }" disabled="">Đã xoá</button><button class="btn btn-sm btn-primary me-1" btn-accepted-friend="${
+        data.infoUserA._id
+      }" disabled="">Đã Chấp nhận</button>
                   </div>
                 </div>
             </div>
@@ -147,6 +168,32 @@ socket.on("SERVER_RETURN_USER_ID_ADD_FRIEND", (data) => {
       if (boxUserRemove) {
         dataUserNotFriend.removeChild(boxUserRemove);
       }
+    }
+  }
+});
+
+// SERVER_RETURN_USER_ID_ACCEPT_FRIEND
+socket.on("SERVER_RETURN_USER_ID_ACCEPT_FRIEND", (data) => {
+  const dataUsersAccept = document.querySelector("[data-users-accept]");
+  if (dataUsersAccept) {
+    const boxUserRemove = document.querySelector(
+      `.col-6[user-id="${data.userID}"]`
+    );
+    if (boxUserRemove) {
+      dataUsersAccept.removeChild(boxUserRemove);
+    }
+  }
+});
+
+// SERVER_RETURN_USER_ID_REFUSE_FRIEND
+socket.on("SERVER_RETURN_USER_ID_REFUSE_FRIEND", (data) => {
+  const dataUsersAccept = document.querySelector("[data-users-accept]");
+  if (dataUsersAccept) {
+    const boxUserRemove = document.querySelector(
+      `.col-6[user-id="${data.userID}"]`
+    );
+    if (boxUserRemove) {
+      dataUsersAccept.removeChild(boxUserRemove);
     }
   }
 });
