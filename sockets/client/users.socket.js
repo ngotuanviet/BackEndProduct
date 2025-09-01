@@ -191,6 +191,7 @@ module.exports = (io) => {
     socket.on("CLIENT_ACCEPT-FRIEND", async (userID) => {
       try {
         const senderID = userID; // a (sender)
+        console.log(senderID);
 
         // Prevent user from accepting their own request (should be caught by CLIENT_ADD-FRIEND, but as a safeguard)
         if (senderID === myUserID) {
@@ -209,15 +210,16 @@ module.exports = (io) => {
             typeRoom: "friend",
             users: [
               {
-                user_ID: myUserID,
+                userID: myUserID,
                 role: "superadmin",
               },
               {
-                user_ID: senderID,
+                userID: senderID,
                 role: "superadmin",
               },
             ],
           };
+
           roomChat = new RoomChat(dataRoom);
           await roomChat.save();
         }

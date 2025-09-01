@@ -10,6 +10,13 @@ const upload = new FileUploadWithPreview("upload-images", {
 
 //End FileUploadWithPreview
 const formChatData = document.querySelector("[form-chat]");
+const chatBodyEl = document.querySelector(".chat-body");
+if (chatBodyEl) {
+  const roomId = chatBodyEl.getAttribute("data-room-id");
+  if (roomId) {
+    socket.emit("CLIENT_JOIN_ROOM", roomId);
+  }
+}
 if (formChatData) {
   formChatData.addEventListener("submit", (e) => {
     e.preventDefault();

@@ -9,14 +9,14 @@ block main
         div(class="row")
             div(class="col-12")
                 div(class="card chat")
-                    div(class="card-body chat-body" style="height: 400px; overflow-y: auto;" data-user-id=user.id)
+                    div(class="card-body chat-body" style="height: 400px; overflow-y: auto;" data-user-id=user.id data-room-id=roomChatID)
                         each chat, index in chats
                             - const previousChat = chats[index - 1]
                             if (chat.user_id == user.id)
-                                div(class="message d-flex flex-row justify-content-end")
-                                    div
-                                        if (chat.content)
-                                            div(class="p-3")
+                                div(class="message d-flex flex-row justify-content-end mb-4")
+                                    if (chat.content)
+                                        div(class="p-3 me-3 border" style="border-radius: 15px; background-color: #fbfbfb;")
+                                            p(class="small mb-0") #{chat.content}
                                 if (chat.images && chat.images.length > 0)
                                     div(class="message d-flex flex-row justify-content-end mb-4")
                                         div(class="inner-image")

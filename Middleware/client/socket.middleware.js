@@ -1,16 +1,18 @@
 const Users = require("../../models/Users.model");
-
+const mongoose = require("mongoose");
 const handleConnect = (socket, myUserID) => {
   socket.myUserID = myUserID; // Store userID on the socket object
 
   console.log(`a user connected, ${socket.id} (User ID: ${myUserID})`);
-
+  if (!socket.myUserID || !mongoose.Types.ObjectId.isValid(socket.myUserID)) {
+    return;
+  }
   // Update user status to online in DB
-  Users.updateOne({ _id: myUserID }, { statusOnline: "online" })
+  Users.updateOne({ _id: socket.myUserID }, { statusOnline: "online" })
     .then(() => {
       // Emit status to all clients (except sender)
       socket.broadcast.emit("SERVER_RETURN_USER_STATUS_ONLINE", {
-        userID: myUserID,
+        userID: socket.myUserID,
         status: "online",
       });
     })
@@ -20,6 +22,11 @@ const handleConnect = (socket, myUserID) => {
 const handleDisconnect = async (socket) => {
   console.log(`User disconnected: ${socket.myUserID}`);
   // Update user status to offline in DB
+
+  // Guard: only update DB when user id is valid
+  if (!socket.myUserID || !mongoose.Types.ObjectId.isValid(socket.myUserID)) {
+    return;
+  }
   await Users.updateOne({ _id: socket.myUserID }, { statusOnline: "offline" })
     .then(() => {
       // Emit status to all clients (except sender)

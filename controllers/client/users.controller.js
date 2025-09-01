@@ -69,9 +69,13 @@ const friends = async (req, res) => {
 
   const infoUserFriends = await Users.find({
     _id: friendListID,
-  }).select("fullName avatar statusOnline");
+  }).select("id fullName avatar statusOnline");
+  for (const user of infoUserFriends) {
+    const infoFriend = friendList.find((friend) => friend.user_ID == user.id);
+    console.log(infoFriend);
+    user.infoFriend = infoFriend;
+  }
 
-  console.log(infoUserFriends);
   res.render("client/pages/users/friends", {
     title: "Danh sách bạn bè",
     users: infoUserFriends,
