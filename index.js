@@ -56,6 +56,13 @@ try {
   console.error("Failed to initialize users socket:", e.message);
 }
 
+try {
+  const chatSocket = require("./sockets/client/chat.socket");
+  chatSocket(io);
+} catch (e) {
+  console.error("Failed to initialize chat socket:", e.message);
+}
+
 route(app);
 routeAdmin(app);
 
