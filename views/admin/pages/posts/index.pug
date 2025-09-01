@@ -1,0 +1,32 @@
+extends ../../layout/default
+include ../../mixins/filtersStatus
+include ../../mixins/alert.pug
+include ../../mixins/search.pug
+block main
+    h1 Quản lý bài viết
+        +alert-success(5000)
+
+    .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm 
+        .card-body 
+            .row
+                .col-6
+                
+                .col-6
+                    +inputSearch(keyword)
+    .card.mb-3 
+            .card-header Sắp xếp 
+            .card-body 
+                .row 
+                    .col-4
+    .card.mb-3 
+    .card-header Danh sách bài viết
+    .card-body 
+        .row
+            .col-8
+            .col-4
+                    a(
+                        href=`${prefixAdmin}/posts/create`
+                        class="btn btn-success mb-3"
+                    ) Thêm mới bài viết
+        

@@ -1,0 +1,77 @@
+extends ../../layout/default
+include ../../mixins/search.pug
+include ../../mixins/filtersStatus.pug
+include ../../mixins/formChangeMulti.pug
+include ../../mixins/table-tree.pug
+block main
+    if (rolesUser.permissions.includes("products-category_view"))
+        h1 Danh sách mục sản phẩm
+
+        .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm
+        .card-body 
+            .row
+                .col-8
+                    +filtersStatus(filtersStatus)
+                .col-4
+                    form(action="" path=`${prefixAdmin}/categories` method="GET")
+                        input(type="text" name="keyword" placeholder="Tìm kiếm mục sản phẩm" class="form-control" value=keyword)
+                        button(type="submit" class="btn btn-outline-secondary mt-2") Tìm kiếm
+        .card-header Danh sách 
+        .card-body 
+            .row
+                .col-8
+                    +form-change-multi(`${prefixAdmin}/categories/change-multi?_method=PATCH`)
+                .col-4
+                    if (rolesUser.permissions.includes("products-category_create"))
+                        a(
+                            href=`${prefixAdmin}/categories/create`
+                            class="btn btn-success"
+                        ) Thêm mới mục sản phẩm
+            table(class= "table table-hover table-sm "
+            checkbox-multi)
+                thead 
+                    tr 
+                        th 
+                            input(type="checkbox" name="checkall")  
+                        th STT
+                        th Hình ảnh
+                        th Tên sản phẩm
+                        th Vị trí
+                        th Trạng thái
+                        th Thao tác
+                tbody
+                    +table-tree(categories)
+        nav
+            ul(class="pagination")
+                if (objectPanination.currentPage > 1)
+                    li(class="page-item ")
+                        button( class="page-link" button-pagination=objectPanination.currentPage - 1) Trang trước
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang trước
+                - for (var page = 1; page <= objectPanination.totalPages; ++page)
+                    li(class="page-item")
+                        button(class="page-link" button-pagination=page) #{page}
+                if (objectPanination.currentPage < objectPanination.totalPages)
+                    li(class="page-item " + (page === objectPanination.currentPage ? 'active' : '') )
+                        button( class="page-link" button-pagination=objectPanination.currentPage + 1) Trang sau
+                else 
+                    li(class="page-item disabled")
+                        button( class="page-link" disabled) Trang sau
+                
+        form(action="" 
+        class="d-none" 
+        id="form-change-status"
+        data-path=`${prefixAdmin}/categories/change-status` 
+        method="post") 
+        form(action=""
+        class="d-none" 
+        id="form-delete"
+        data-path=`${prefixAdmin}/categories/delete` 
+        method="post"
+        ) 
+        script(src="/admin/js/category.js") 
+        script(src="/admin/js/script.js") 
+    else 
+        h1 Bạn không có quyền truy cập

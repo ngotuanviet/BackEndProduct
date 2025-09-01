@@ -1,0 +1,60 @@
+extends ../../layout/default
+include ../../mixins/filtersStatus
+include ../../mixins/alert.pug
+include ../../mixins/search.pug
+include ../../mixins/table-tree.pug
+block main
+    h1 Quản lý danh mục bài viết
+    
+    
+    .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm 
+        .card-body 
+            .row
+                .col-6
+                
+                .col-6
+                    +inputSearch(keyword, "categories-posts", "Tìm kiếm danh mục bài viết")
+
+    .card.mb-3 
+            .card-header Sắp xếp 
+            .card-body 
+                .row 
+                    .col-4
+    .card.mb-3 
+    .card-header Danh sách bài viết
+    .card-body 
+        .row
+            .col-8
+            .col-4
+                    a(
+                        href=`${prefixAdmin}/categories-posts/create`
+                        class="btn btn-success mb-3"
+                    ) Thêm danh mục bài viết
+        table(class= "table table-hover table-sm "
+            checkbox-multi)
+                thead 
+                    tr 
+                        th 
+                            input(type="checkbox" name="checkall")  
+                        th STT
+                        th Hình ảnh
+                        th Tên sản phẩm
+                        th Vị trí
+                        th Trạng thái
+                        th Thao tác
+                tbody
+                    +table-tree-posts(categories)
+    
+    form(action=""
+    method="POST"
+    class="d-none"
+    form-change-Status
+    path=`${prefixAdmin}/categories-posts/changeStatus`)
+    form(action=""
+    method="POST"
+    class="d-none"
+    form-delete
+    path=`${prefixAdmin}/categories-posts/delete`)
+    script(src="/admin/js/category_posts.js")
+    script(src="/admin/js/script.js") 

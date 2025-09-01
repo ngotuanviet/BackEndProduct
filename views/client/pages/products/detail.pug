@@ -1,0 +1,56 @@
+extends ../../layout/default
+include ../../mixins/box-head
+
+block main
+
+    .product-detail
+        .container.my-5
+            .row
+                .col-6 
+                    .inner-thumb 
+                        img(src=product.thumbnail, alt="Product Image" )
+                .col-6
+                    if (product.title)
+                        h1(class="mb-4") #{product.title}
+                    if (product.category.title)
+                        div(class="inner-category")
+                            span Danh mục:
+                            span(class="text-warning ms-2 fs-5") #{product.category.title}
+                    if (product.priceNew)
+                        div(class="inner-price-New") 
+                            span #{product.priceNew}đ 
+                    if (product.price)
+                        div(class="inner-price-Old") 
+                            span #{product.price}đ  
+                
+                    if (product.discountPercentage)
+                        div(class="inner-discount") 
+                            strong Giảm giá: 
+                            span #{product.discountPercentage}%
+                    if (product.stock)
+                        div(class="inner-quantity") 
+                            strong Số lượng: 
+                            span #{product.stock}
+                    form(action=`/cart/add/${product.id}`
+                        method="post"
+                    ) 
+                        input( 
+                            class="form-control mb-2"
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            max=product.stock
+                        )
+                        button(
+                            type="submit"
+                            
+                            class="btn btn-primary"
+                        ) Thêm vào giỏ hàng
+                        
+        hr
+        .container.my-5 
+            .row 
+                .col-12 
+                    +box-head("Mô tả sản phẩm")
+                    .inner-desc !{product.description}   

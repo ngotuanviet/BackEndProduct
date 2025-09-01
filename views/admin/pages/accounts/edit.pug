@@ -1,0 +1,54 @@
+extends ../../layout/default
+include ../../mixins/alert
+block main
+    h1 Sửa tài khoản
+    +alert-error(5000)
+    form(action=`${prefixAdmin}/accounts/edit/${account._id}?_method=PATCH`, 
+        method="POST" 
+        enctype="multipart/form-data"
+        class="form-create-account")
+        .card.mb-3 
+            .card-header Thông tin tài khoản
+            .card-body 
+                .row
+                    .col-md-6
+                        .mb-3
+                            label(for="fullName") Họ và tên
+                            input(type="text" name="fullName" id="fullName" class="form-control" value=account.fullName required)
+                    .col-md-6
+                        .mb-3
+                            label(for="password") Mật khẩu
+                            input(type="password" name="password" id="password" value=account.password class="form-control")
+                    .col-md-6
+                        .mb-3
+                            label(for="email") Email
+                            input(type="email" name="email" id="email" value=account.email class="form-control" required)
+                    .col-md-6
+                        .mb-3
+                            label(for="phone") Số điện thoại
+                            input(type="text" name="phone" id="phone" value=account.phone class="form-control")
+                    .col-md-6
+                        .div(class="form-group" upload-image)
+                            label(for="avatar") Ảnh đại diện
+                            input(type="file" class="form-control-file" name="avatar" id="avatar" accept="image/*" upload-image-Input )
+                            .div(close-image class="d-none") X
+                            <img with="100px" height="100px" src=#{account.avatar} alt="your image" class="image-Preview" upload-image-Preview />
+                    .col-md-6
+                        .mb-3
+                            label(for="role") Nhóm phân quyền
+                            select(name="role_id" id="role" class="form-control")
+                                option(value="" disabled selected) Chọn nhóm quyền
+                                each role in roles
+                                    if (role._id == account.role_id)
+                                        option( selected value=role._id) #{role.title}
+                                    else 
+                                        option( value=role._id) #{role.title}
+                    .col-md-6
+                        .mb-3
+                            label(for="status") Trạng thái
+                            select(name="status" id="status" class="form-control")
+                                option( selected=account.status == "active" value="active") Hoạt động
+                                option( selected=account.status == "inactive" value="inactive") Không hoạt động
+                    
+                button(type="submit" class="btn btn-success mt-3") Cập nhật tài khoản
+    script(src="/admin/js/script.js")

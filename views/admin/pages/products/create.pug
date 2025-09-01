@@ -1,0 +1,67 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+include ../../mixins/select-tree.pug
+block main 
+    if (rolesUser.permissions.includes("products_create"))
+        +alert-success(5000)
+        +alert-error(5000)
+        h1(class="mb-4") Tạo mới sản phẩm 
+        form(action="/admin/products/create", method="post"
+        enctype="multipart/form-data"
+        id="form-create-product")
+            
+                .col-md-12
+                    .form-group
+                        label(for="title") Tiêu đề
+                        input(type="text" class="form-control" name="title" id="title" )
+                .col-md-12
+                    .form-group
+                        label(for="category_id") Danh mục 
+                        select(name="category_id" class="form-control" id="category_id")
+                            option(value="") Chọn danh mục 
+                            +select-tree(categories)
+                .col-md-12
+                    .form-group
+                        label(for="description") Mô tả
+                        textarea(class="form-control" name="description" id="descriptionArea" rows="3" ) 
+                .col-md-12
+                    .form-group
+                        label(for="price") Giá
+                        input(type="number" class="form-control" name="price" id="price"  value="0" min="0")
+                .col-md-12
+                    .form-group
+                        label(for="discount") Giảm giá
+                        input(type="number" class="form-control" name="discountPercentage" id="discount" min="0" value="0")
+            
+                .col-md-12
+                    .form-group
+                        label(for="quantity") Số lượng
+                        input(type="number" class="form-control" name="stock" id="quantity"  value="0" min="0")
+                .col-md-12
+                    .div(class="form-group" upload-image)
+                        label(for="thumbnail") Ảnh sản phẩm
+                        input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input required)
+                        .div(close-image class="d-none") X
+                        img(width="100px" height="100px" src="" alt="Preview image" class="image-Preview" upload-image-Preview style="display: none;")
+                .col-md-12
+                    .form-group
+                        label(for="status") Trạng thái
+                        select(class="form-control", name="status", id="status")
+                            option(value="active") Kích hoạt
+                            option(value="inactive") Không kích hoạt
+                .col-md-12
+                    .form-group
+                        label(for="status") Sản phẩm nội bật 
+                        select(class="form-control", name="featured", id="featured")
+                            option(value=1 ) Có
+                            option(value=0) Không
+                .col-md-12
+                    .form-group
+                        label(for="position") Vị trí hiển thị
+                        input(type="number" class="form-control" name="position" id="position" placeholder="Tự động tăng" min="1")
+                button(type='submit', class='btn btn-primary') Lưu sản phẩm
+    
+
+        script(src="/admin/js/product.js") 
+        script(src="/admin/js/script.js")

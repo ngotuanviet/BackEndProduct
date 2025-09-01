@@ -1,0 +1,19 @@
+extends ../../layout/default
+include ../../mixins/box-head.pug
+block main
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6
+                .card
+                    .card-header.bg-secondary-color.text-white.text-center
+                        +box-head("Thông tin tài khoản")
+                    .card-body
+                        .mb-3
+                        label.form-label.text-muted Họ tên:
+                        h5 #{user.fullName}
+                        .mb-3
+                        label.form-label.text-muted Email:
+                        h5 #{user.email}
+                        .mb-3
+                        label.form-label.text-muted Ngày tạo:
+                        h5 #{user.createdAt.toLocaleString()}

@@ -1,0 +1,21 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+block main
+    +alert-success(5000)
+    +alert-error(5000)
+    .container.my-5
+        .row.justify-content-center 
+            .col-8  
+                h1(class="text-center") Đăng nhập tài khoản 
+                form(action="/user/login", method="post")
+                    div(class="form-group")
+                        label(for="email")
+                        input(type="email" class="form-control" name="email" placeholder="Email" required)
+                    div(class="form-group")
+                        label(for="password")
+                        input(type="password" class="form-control" name="password"
+                        placeholder="Mật khẩu" required)
+                    div(class="form-group")
+                        button(class="btn btn-primary btn-block mt-4" type="submit") Đăng nhập
+                a(href="/user/password/forgot") Quên mật khẩu?
+

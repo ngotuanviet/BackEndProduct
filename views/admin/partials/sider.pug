@@ -1,0 +1,27 @@
+.sider
+    .inner-menu 
+        ul 
+            li 
+                a(href=`${prefixAdmin}/dashboard`) Trang tổng quan
+            if (rolesUser.permissions.includes("products_view"))
+                li 
+                    a(href=`${prefixAdmin}/products`) Danh sách sản phẩm
+            if (rolesUser.permissions.includes("products-category_view"))
+                li 
+                    a(href=`${prefixAdmin}/categories`) Danh mục sản phẩm
+            li 
+                a(href=`${prefixAdmin}/categories-posts`) Quản lý danh mục bài viết
+            li 
+                a(href=`${prefixAdmin}/posts`) Quản lý bài viết
+            if (rolesUser.permissions.includes("roles_view"))
+                li 
+                    a(href=`${prefixAdmin}/roles`) Nhóm quyền
+            if (rolesUser.permissions.includes("roles_permissions"))
+                li 
+                    a(href=`${prefixAdmin}/roles/permissions`) Phân quyền
+            if (rolesUser.permissions.includes("accounts_view"))
+                li 
+                    a(href=`${prefixAdmin}/accounts`) Quản lý tài khoản
+            if (rolesUser.permissions.includes("settings-general"))
+                li 
+                    a(href=`${prefixAdmin}/settings/general`) Cài đặt chung

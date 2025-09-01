@@ -1,0 +1,18 @@
+extends ../../layout/default.pug
+block main
+    if (rolesUser.permissions.includes("roles_edit"))
+        h1(class="mb-4") Sửa phân quyền mới
+        .card.mb-3
+            .card-header Thông tin phân quyền
+            .card-body
+                form(action=`${prefixAdmin}/roles/edit/${role._id}` method="POST")
+                    .form-group
+                        label(for="title") Tên phân quyền
+                        input(type="text" id="title" name="title" class="form-control" value=role.title required)
+                    .form-group
+                        label(for="description") Mô tả
+                        textarea(id="description" name="description" class="form-control" rows="3") #{role.description}
+                    
+                    button(type="submit" class="btn btn-primary") Cập nhật phân quyền
+    else 
+        h1 Bạn không có quyền truy cập vào trang này

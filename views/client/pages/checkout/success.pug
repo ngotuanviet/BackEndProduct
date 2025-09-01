@@ -1,0 +1,15 @@
+extends ../../layout/default
+include ../../mixins/box-head
+block main 
+    +alert-success(5000)
+    +alert-error(5000)
+    .container.my-3 
+        .row    
+            .col-12 
+                +box-head("Đặt hàng thành công")
+        .row 
+            .col-12 
+                div(class="alert alert-success")
+                    | Chúc mừng bạn đã đặt hàng thành công! Chúng tôi 
+                    | sẽ xử lý đơn hàng trong thời gian sớm nhất.
+        script(src="/js/cart.js")

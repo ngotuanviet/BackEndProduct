@@ -1,0 +1,18 @@
+extends ../../layout/default.pug
+block main
+    if (rolesUser.permissions.includes("roles_create"))
+        h1(class="mb-4") Tạo phần quyền mới
+        .card.mb-3
+            .card-header Thông tin phần quyền
+            .card-body
+                form(action=`${prefixAdmin}/roles/create` method="POST")
+                    .form-group
+                        label(for="title") Tên phần quyền
+                        input(type="text" id="title" name="title" class="form-control" required)
+                    .form-group
+                        label(for="description") Mô tả
+                        textarea(id="description" name="description" class="form-control" rows="3")
+                    
+                    button(type="submit" class="btn btn-primary") Lưu phần quyền
+    else 
+        h1 Bạn không có quyền truy cập vào trang này

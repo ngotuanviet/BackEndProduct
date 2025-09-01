@@ -1,0 +1,40 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+block main 
+    if (product.title)
+        h1(class="mb-4") #{product.title}
+    
+    if(product.price)
+        div(class="mb-4") 
+            strong Giá: 
+            span #{product.price}đ  
+    if(product.discountPercentage)
+        div(class="mb-4") 
+            strong Giảm giá: 
+            span #{product.discountPercentage}%
+    if(product.stock)
+        div(class="mb-4") 
+            strong Số lượng: 
+            span #{product.stock}
+    if(product.thumbnail)
+        div(class="mb-4") 
+            strong Ảnh sản phẩm: 
+            img(src=product.thumbnail, alt="Product Image" width="200" height="auto")
+    if(product.status)
+        div(class="mb-4") 
+            strong Trạng thái: 
+            if(product.status === 'active')
+                span(class="badge bg-success") Hoạt động
+            else if(product.status === 'inactive')
+                span(class="badge bg-warning") Không hoạt động
+    if(product.position)
+        div(class="mb-4") 
+            strong Vị trí hiển thị: 
+            span #{product.position}
+    if(product.description)
+        div(class="mb-4") 
+            strong Mô tả: 
+            p !{product.description}    
+    a(class="btn btn-primary" href=`${prefixAdmin}/products/edit/${product.id}`) Chỉnh sửa sản phẩm 
+    script(src="/admin/js/product.js") 
+    script(src="/admin/js/script.js") 

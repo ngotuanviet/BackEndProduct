@@ -1,0 +1,49 @@
+extends ../../layout/default.pug
+block main
+    h1 Trang tổng quan
+    p Đây là trang tổng quan của quản trị viên.
+
+    .row.mt-4 
+        .col-12 
+            .card.mb-4
+                .card-header Thông tin tài khoản 
+                .card-body
+                    if (user.avatar)
+                        img(src=user.avatar
+                        style="height: 100px; margin-bottom: 10px;", alt="")
+                    if (user.fullName)
+                        p Họ tên <b>#{user.fullName}</b>
+                    if (user.email)
+                        p Email <b>#{user.email}</b>
+                    if (user.phone)
+                        p Số điện thoại <b>#{user.phone}</b>
+                    if (rolesUser.title)
+                        p Chức vụ <b>#{rolesUser.title}</b>
+        .col-6 
+            .card.mb-4
+                .card-header Danh mục sản phẩm
+                .card-body
+                    p Số lượng: <b>#{static.categoryProduct.total}</b>
+                    p Hoạt động: <b>#{static.categoryProduct.active}</b>
+                    p Dừng hoạt động: <b>#{static.categoryProduct.inactive}</b>
+        .col-6 
+            .card.mb-4
+                .card-header Sản phẩm
+                .card-body
+                    p Số lượng: <b>#{static.product.total}</b>
+                    p Hoạt động: <b>#{static.product.active}</b>
+                    p Dừng hoạt động: <b>#{static.product.inactive}</b>
+        .col-6 
+            .card.mb-4
+                .card-header Tài khoản admin
+                .card-body
+                    p Số lượng: <b>#{static.accountAdmin.total}</b>
+                    p Hoạt động: <b>#{static.accountAdmin.active}</b>
+                    p Dừng hoạt động: <b>#{static.accountAdmin.inactive}</b>
+        .col-6 
+            .card.mb-4
+                .card-header Tai khản client
+                .card-body
+                    p Số lượng: <b>#{static.accountClient.total}</b>
+                    p Hoạt động: <b>#{static.accountClient.active}</b>
+                    p Dừng hoạt động: <b>#{static.accountClient.inactive}</b>

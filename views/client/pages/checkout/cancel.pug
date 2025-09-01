@@ -1,0 +1,13 @@
+extends ../../layout/default
+include ../../mixins/box-head
+block main 
+    +alert-success(5000)
+    +alert-error(5000)
+    .container.my-3 
+        .row    
+            .col-12 
+                +box-head("Huỷ đơn hàng thành công")
+        .row 
+            .col-12 
+                div(class="alert alert-warning")
+                    | Đơn hàng đã huỷ thành công
