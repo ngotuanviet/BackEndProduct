@@ -7,7 +7,9 @@ const notFriend = async (req, res) => {
   const myUser = await Users.findOne({ _id: userID });
   const requestFriends = myUser.requestFriends;
   const acceptFriends = myUser.acceptFriends;
-
+  const friendList = myUser.friendsList;
+  const friendListID = friendList.map((item) => item.user_ID);
+  // nin loại trừ
   const users = await Users.find({
     $and: [
       {
@@ -15,6 +17,7 @@ const notFriend = async (req, res) => {
       },
       { _id: { $nin: requestFriends } },
       { _id: { $nin: acceptFriends } },
+      { _id: { $nin: friendListID } },
     ],
     deleted: false,
     status: "active",
