@@ -1,0 +1,27 @@
+extends ../../layout/default
+include ../../mixins/box-head
+block main
+    .container.my-3 
+        .row    
+            .col-12 
+                +box-head("Tạo phòng")
+
+        .row 
+            .col-12 
+                form(action="/rooms-chat/create" method="POST")
+                    div(class="form-group ")
+                        label(for="title") Tiêu đề
+                        input(type="text" class="form-control"
+                        id="title" name="title" required)
+                    div(class="form-group ")
+                        label(for="") Thêm thành viên
+                        each infoFriends in friends
+                            div(class="form-check")
+                                input(type="checkbox" class="form-check-input"
+                                value=infoFriends.id id=`user_${infoFriends.id}` name="usersId")
+                                label(
+                                    class="form-check-label"
+                                    for=`user_${infoFriends.id}`
+                                ) #{infoFriends.fullName}
+                    div(class="form-group")
+                        button(type="submit" class="btn btn-primary") Tạo phòng
