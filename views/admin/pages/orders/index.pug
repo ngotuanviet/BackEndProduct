@@ -1,0 +1,66 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/pagination.pug
+
+block main
+
+    +alert-success(5000)
+    +alert-error(5000)
+
+    h1(class="mb-4") Quản lý đơn hàng
+    if(rolesUser.permissions.includes("orders_view"))
+        .card.mb-3
+            .card-header Danh sách
+            .card-body
+                .row
+                .col-12
+                    table.table.table-hover.table-sm
+                        thead
+                            tr
+                            th STT
+                            th Mã đơn hàng
+                            th Khách hàng
+                            th Số điện thoại
+                            th Tổng tiền
+                            th Trạng thái
+                            th Thời gian đặt
+                            th Hành động
+                        tbody
+                            if orders.length > 0
+                                each item, index in orders
+                                    tr
+                                    td #{index + 1}
+                                    td
+                                        b #{item.id}
+                                    td #{item.userInfo.fullName}
+                                    td #{item.userInfo.phone}
+                                    td
+                                        b #{item.totalPrice.toLocaleString()}đ
+                                    td
+                                        case item.status
+                                            when "initial"
+                                                span(class="p-1  fs-7 rounded bg-warning text-dark") Chờ xác nhận
+                                            when "paid"
+                                                span(class="p-1  fs-7 rounded bg-success-subtle text-dark") Đã xác nhận
+                                            when "shipping"
+                                                span(class="p-1  fs-7 rounded bg-primary text-dark") Đang giao
+                                            when "delivered"
+                                                span(class="p-1  fs-7 rounded bg-success text-dark ") Hoàn thành
+                                            when "cancelled"
+                                                span(class="p-1  fs-7 rounded bg-danger text-dark") Đã hủy
+                                            default
+                                                span(class='p-1  fs-7 rounded bg-secondary text-dark') #{item.status}
+                                    td #{moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+                                    td
+                                        a(
+                                        href=`/admin/orders/detail/${item.id}`
+                                        class="btn btn-info btn-sm"
+                                        ) Chi tiết
+                            else
+                                tr
+                                    td(colspan="8" class="text-center") Chưa có đơn hàng nào.
+
+        +pagination(pagination)
+    else 
+        h1 Bạn không có quyền truy cập vào trang này.
+    script(src="/admin/js/script.js")

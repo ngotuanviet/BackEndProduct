@@ -1,11 +1,11 @@
-const SettingsGeneral = require("../../models/settings-general.model")
+const SettingsGeneral = require("../../models/settings-general.model");
 
 const SettingGenetal = async (req, res, next) => {
-    const settingGenetal = await SettingsGeneral.findOne({})
-    res.locals.settingGenetal = settingGenetal
+  const settingGeneral = await SettingsGeneral.findOne({});
+  res.locals.settingGeneral = settingGeneral;
 
-    next()
-}
+  next();
+};
 module.exports = {
-    SettingGenetal
-}
+  SettingGenetal,
+};
