@@ -1,40 +1,39 @@
 include ../mixins/sub-menu.pug
-header.header 
-    .container 
-        .row.align-items-center
-            .col-3 
-                .inner-logo 
-                    a(href="/")
-                        img(src=settingGenetal.logo, alt=settingGenetal.websiteName)
-            .col-5
-                form(action="/search", method="get" ) 
-                    div(class="input-group d-flex mb-0")
-                        input(type="text" name="keywords" class="form-control" value=keywords placeholder="Tìm kiếm sản phẩm")
-                        button( type="submit" class="btn btn-primary" btn-search) Tìm kiếm
-            .col-4  
-                .inner-menu 
-                    ul 
-                        li 
-                            a(href="/") Trang chủ
-                        li(class="sub-menu")
-                            -const patchProducts = "/products"
-                            a(href=patchProducts) Sản phẩm
-                                +sub-menu(Categories,patchProducts)
-                        li 
-                            a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
-                        if(user)
-                            li 
-                                a(href="/users/friends") Bạn bè
-                            li
-                                a(href="/rooms-chat") Phòng chat
-                            li 
-                                a(href="/user/profile") #{user.fullName}
-                            li 
-                                a(href="/user/logout") Đăng xuất
-                        else
-                            li 
-                                a(href="/user/register") Đăng ký
-                            li 
-                                a(href="/user/login") Đăng nhập
-                        
+header.header
+  .container
+    .inner-main
+      .inner-logo
+        a(href="/")
+          img(src=settingGenetal.logo, alt=settingGenetal.websiteName)
+      
+      .inner-search
+        form(action="/search", method="get")
+          .input-group
+            input(type="text", name="keywords", class="form-control", value=keywords, placeholder="Tìm kiếm sản phẩm")
+            button(type="submit", class="btn btn-primary") Tìm kiếm
 
+      .inner-menu
+        ul
+          li
+            a(href="/") Trang chủ
+          li.sub-menu
+            - const patchProducts = "/products"
+            a(href=patchProducts class="dropdown-toggle") Sản phẩm
+            +sub-menu(Categories, patchProducts)
+          li
+            a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
+          if user
+            li(class="sub-menu")
+              a(href="/user/profile" class="dropdown-toggle") #{user.fullName}
+              ul(class="sub-child")
+                li
+                  a(href="/users/friends") Bạn bè
+                li
+                  a(href="/rooms-chat") Phòng chat
+                li
+                  a(href="/user/logout") Đăng xuất
+          else
+            li
+              a(href="/user/register") Đăng ký
+            li
+              a(href="/user/login") Đăng nhập

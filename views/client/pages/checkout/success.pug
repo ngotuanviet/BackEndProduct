@@ -1,15 +1,58 @@
-extends ../../layout/default
-include ../../mixins/box-head
-block main 
-    +alert-success(5000)
-    +alert-error(5000)
-    .container.my-3 
-        .row    
-            .col-12 
-                +box-head("Đặt hàng thành công")
-        .row 
-            .col-12 
-                div(class="alert alert-success")
-                    | Chúc mừng bạn đã đặt hàng thành công! Chúng tôi 
-                    | sẽ xử lý đơn hàng trong thời gian sớm nhất.
-        script(src="/js/cart.js")
+extends ../../layout/default.pug
+
+block main
+    link(rel="stylesheet", href="/css/success.css")
+    .container.my-5
+        .row.justify-content-center
+            .col-8
+                .order-success
+                    h1 Đặt hàng thành công!
+                    if order
+                        .order-id
+                            | Mã đơn hàng của bạn là: 
+                            span #{order.id}
+
+                        .order-details
+                            h2 Thông tin người nhận
+                            .user-info
+                                p
+                                    strong Họ và tên:
+                                    | #{order.userInfo.fullName}
+                                p
+                                    strong Số điện thoại:
+                                    | #{order.userInfo.phone}
+                                p
+                                    strong Địa chỉ:
+                                    | #{order.userInfo.address}
+                                if order.userInfo.note
+                                    p
+                                        strong Ghi chú:
+                                        | #{order.userInfo.note}
+
+                        .order-details
+                            h2 Chi tiết đơn hàng
+                            .product-list
+                                each item in order.products
+                                    .product-item
+                                        div
+                                            strong Sản phẩm:
+                                            | #{item.title}
+                                        div
+                                            strong Giá:
+                                            | #{item.price.toLocaleString()}đ
+                                        div
+                                            strong Giảm giá:
+                                            | #{item.discountPercentage}%
+                                        div
+                                            strong Số lượng:
+                                            | #{item.quantity}
+                                        div
+                                            strong Thành tiền:
+                                            - const totalPrice = item.price * item.quantity * (1 - item.discountPercentage / 100)
+                                            | #{totalPrice.toLocaleString()}đ
+                            
+                            - const totalOrderPrice = order.products.reduce((sum, item) => sum + (item.price * item.quantity * (1 - item.discountPercentage / 100)), 0)
+                            .total-price
+                                | Tổng cộng: #{totalOrderPrice.toLocaleString()}đ
+                    else
+                        p Không tìm thấy thông tin đơn hàng.

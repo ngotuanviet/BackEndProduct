@@ -1,4 +1,5 @@
 const Chats = require("../../models/Chats.model");
+const RoomChat = require("../../models/rooms-chat.model");
 const Users = require("../../models/Users.model");
 const chatSocket = require("../../sockets/client/chat.socket");
 
@@ -11,6 +12,11 @@ const index = async (req, res) => {
     room_chat_id: roomChatID,
     deleted: false,
   });
+  chats.titleRoom = await RoomChat.findOne({
+    deleted: false,
+    _id: roomChatID,
+  }).select("title");
+
   for (const chat of chats) {
     const infoUser = await Users.findOne({ _id: chat.user_id }).select(
       "fullName"
@@ -20,7 +26,9 @@ const index = async (req, res) => {
     }
   }
   // end
-
+  console.log("====================================");
+  console.log(chats);
+  console.log("====================================");
   res.render("client/pages/chat/index", {
     title: "Chat",
     chats,

@@ -39,11 +39,11 @@ block main
                         label(for="quantity") Số lượng
                         input(type="number" class="form-control" name="stock" id="quantity"  value="0" min="0")
                 .col-md-12
-                    .div(class="form-group" upload-image)
+                    div(class="form-group" upload-image)
                         label(for="thumbnail") Ảnh sản phẩm
                         input(type="file" class="form-control-file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-Input required)
-                        .div(close-image class="d-none") X
-                        img(width="100px" height="100px" src="" alt="Preview image" class="image-Preview" upload-image-Preview style="display: none;")
+                        div(close-image class="d-none") X
+                            img(width="100px" height="100px" src="" alt="Preview image" class="image-Preview" upload-image-Preview style="display: none;")
                 .col-md-12
                     .form-group
                         label(for="status") Trạng thái

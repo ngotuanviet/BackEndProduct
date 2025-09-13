@@ -33,7 +33,6 @@ const order = async (req, res) => {
   const cartID = req.cookies.cartID;
   const userOrder = req.body;
   const cart = await Cart.findOne({ _id: cartID });
-  console.log(cart);
 
   const products = [];
   for (const item of cart.products) {
@@ -65,10 +64,12 @@ const order = async (req, res) => {
     }
   );
   req.flash("success", "Đặt hàng thành công");
-  res.redirect(`/checkout/success/${order._id}`);
+  res.redirect(`/checkout/success/${order.id}`);
 };
 const success = async (req, res) => {
   try {
+    const { orderID } = req.params;
+
     const cartID = req.cookies.cartID;
     // Online payment flow
     if (Object.keys(req.query).length > 0 && !req.params.orderID) {
@@ -82,6 +83,7 @@ const success = async (req, res) => {
 
       const cart = await Cart.findOne({ _id: cartID });
       const products = [];
+
       for (const item of cart.products) {
         const objectProducts = {
           product_id: item.product_id,
@@ -98,6 +100,7 @@ const success = async (req, res) => {
       }
 
       const orderInfo = {
+        // _id: req.params.orderID,
         cart_id: cartID,
         userInfo: userInfo,
         products: products,
@@ -124,7 +127,7 @@ const success = async (req, res) => {
       res.render("client/pages/checkout/success", {
         title: "Đặt hàng thành công",
         LayoutProductsCategory: res.locals.Categories,
-        orderDetail: order,
+        order: order,
       });
     } else {
       // COD flow
@@ -137,13 +140,15 @@ const success = async (req, res) => {
         return res.render("client/pages/checkout/success", {
           title: "Đặt hàng thành công",
           LayoutProductsCategory: res.locals.Categories,
-          orderDetail: null,
+          order: null,
         });
       }
       for (const item of order.products) {
         const products = await Product.findOne({ _id: item.product_id }).select(
           "title thumbnail price discountPercentage"
         );
+        item.title = products.title;
+        item.thumbnail = products.thumbnail;
         item.priceNew = ProductsHelper.priceNewProductsOne(products);
         item.productInfo = products;
         item.totalPrice = item.priceNew * item.quantity;
@@ -151,10 +156,12 @@ const success = async (req, res) => {
       order.totalPrice = order.products.reduce((total, item) => {
         return total + item.totalPrice;
       }, 0);
+      console.log(order);
+
       res.render("client/pages/checkout/success", {
         title: "Đặt hàng thành công",
         LayoutProductsCategory: res.locals.Categories,
-        orderDetail: order,
+        order: order,
       });
     }
   } catch (error) {

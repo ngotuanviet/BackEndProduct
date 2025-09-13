@@ -165,23 +165,11 @@ if (uploadImage) {
 
       const [file] = e.target.files;
       if (file) {
-        // Kiểm tra loại file
-        if (!file.type.startsWith("image/")) {
-          alert("Vui lòng chọn file ảnh!");
-          imgInput.value = "";
-          return;
+        if (imgPreview) {
+          closePreview.classList.remove("d-none");
+          imgPreview.style.display = "block";
+          imgPreview.src = URL.createObjectURL(file);
         }
-
-        // Kiểm tra kích thước file (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          alert("File ảnh quá lớn! Vui lòng chọn file nhỏ hơn 5MB.");
-          imgInput.value = "";
-          return;
-        }
-
-        console.log("Valid file:", file);
-        if (closePreview) closePreview.classList.remove("d-none");
-        if (imgPreview) imgPreview.src = URL.createObjectURL(file);
       } else {
         if (imgPreview) imgPreview.src = "";
       }

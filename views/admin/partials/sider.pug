@@ -22,6 +22,8 @@
             if (rolesUser.permissions.includes("accounts_view"))
                 li 
                     a(href=`${prefixAdmin}/accounts`) Quản lý tài khoản
+            li 
+                a(href=`${prefixAdmin}/orders`) Quản lý đơn hàng
             if (rolesUser.permissions.includes("settings-general"))
                 li 
                     a(href=`${prefixAdmin}/settings/general`) Cài đặt chung

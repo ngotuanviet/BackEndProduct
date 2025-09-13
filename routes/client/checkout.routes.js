@@ -6,7 +6,6 @@ router.post("/order", controller.order);
 router.post("/payment", controller.payment);
 router.post("/create-payment-link", controller.pay);
 router.get("/success/:orderID", controller.success);
-router.get("/success", controller.success);
 router.get("/cancel", controller.cancel);
 
 module.exports = router;
