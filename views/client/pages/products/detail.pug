@@ -18,19 +18,23 @@ block main
                             span(class="text-warning ms-2 fs-5") #{product.category.title}
                     if (product.priceNew)
                         div(class="inner-price-New") 
-                            span #{product.priceNew}đ 
+                            span #{product.priceNew.toLocaleString()}đ 
                     if (product.price)
                         div(class="inner-price-Old") 
-                            span #{product.price}đ  
+                            span #{product.price.toLocaleString()}đ  
                 
                     if (product.discountPercentage)
                         div(class="inner-discount") 
                             strong Giảm giá: 
                             span #{product.discountPercentage}%
-                    if (product.stock)
+                    if (product.stock >= 1)
                         div(class="inner-quantity") 
                             strong Số lượng: 
                             span #{product.stock}
+                    else 
+                        div(class="inner-quantity") 
+                            strong Số lượng: 
+                            span Liên hệ
                     form(action=`/cart/add/${product.id}`
                         method="post"
                     ) 
@@ -42,15 +46,25 @@ block main
                             min="1"
                             max=product.stock
                         )
-                        button(
-                            type="submit"
-                            
-                            class="btn btn-primary"
-                        ) Thêm vào giỏ hàng
-                        
+                        if(product.stock >= 1)
+                            button(
+                                type="submit"
+                                
+                                class="btn btn-primary "
+                            ) Thêm vào giỏ hàng
+                        else 
+                            button(
+                                type="submit"
+                             
+                                disabled
+                                class="btn btn-primary "
+                            ) Thêm vào giỏ hàng
         hr
         .container.my-5 
             .row 
                 .col-12 
                     +box-head("Mô tả sản phẩm")
-                    .inner-desc !{product.description}   
+                    if (product.description.length > 0)
+                        .inner-desc !{product.description}
+                    else 
+                        .inner-desc Không có mô tả sản phẩm này   

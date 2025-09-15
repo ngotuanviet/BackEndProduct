@@ -31,6 +31,7 @@ const index = async (req, res) => {
 // [POST] /checkout/order
 const order = async (req, res) => {
   const cartID = req.cookies.cartID;
+
   const userOrder = req.body;
   const cart = await Cart.findOne({ _id: cartID });
 
@@ -47,6 +48,7 @@ const order = async (req, res) => {
     }).select("price discountPercentage");
     objectProducts.price = productInfo.price;
     objectProducts.discountPercentage = productInfo.discountPercentage;
+
     products.push(objectProducts);
   }
   const orderInfo = {
@@ -91,6 +93,10 @@ const success = async (req, res) => {
           discountPercentage: 0,
           quantity: item.quantity,
         };
+        await Product.updateOne(
+          { _id: objectProducts.product_id },
+          { $inc: { stock: -objectProducts.quantity } }
+        );
         const productInfo = await Product.findOne({
           _id: objectProducts.product_id,
         }).select("price discountPercentage");
@@ -143,9 +149,14 @@ const success = async (req, res) => {
           order: null,
         });
       }
+
       for (const item of order.products) {
         const products = await Product.findOne({ _id: item.product_id }).select(
-          "title thumbnail price discountPercentage"
+          "id title thumbnail price discountPercentage"
+        );
+        await Product.updateOne(
+          { _id: products._id },
+          { $inc: { stock: -item.quantity } }
         );
         item.title = products.title;
         item.thumbnail = products.thumbnail;
@@ -156,7 +167,6 @@ const success = async (req, res) => {
       order.totalPrice = order.products.reduce((total, item) => {
         return total + item.totalPrice;
       }, 0);
-      console.log(order);
 
       res.render("client/pages/checkout/success", {
         title: "Đặt hàng thành công",

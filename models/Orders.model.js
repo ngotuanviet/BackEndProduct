@@ -27,6 +27,12 @@ const OrdersSchema = new mongoose.Schema(
       type: String,
       default: "initial",
     },
+    statusHistory: [
+      {
+        status: String,
+        timestamp: Date,
+      },
+    ],
     deleted: {
       type: Boolean,
       default: false,

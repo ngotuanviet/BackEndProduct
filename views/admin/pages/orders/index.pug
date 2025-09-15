@@ -1,6 +1,7 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
 include ../../mixins/pagination.pug
+include ../../mixins/filtersStatus.pug
 
 block main
 
@@ -9,14 +10,86 @@ block main
 
     h1(class="mb-4") Quản lý đơn hàng
     if(rolesUser.permissions.includes("orders_view"))
+        .card.mb-3 
+            .card-header Bộ lọc và tìm kiếm
+            .card-body
+                form(action="/admin/orders", method="GET")
+                    .row
+                        .col-4 
+                            .form-group
+                                label(for="keyword") Từ khóa
+                                input(
+                                    type="text",
+                                    name="keyword",
+                                    id="keyword",
+                                    class="form-control",
+                                    placeholder="Mã đơn hàng, SĐT, Tên khách hàng",
+                                    value=keyword
+                                )
+                        .col-4
+                            .form-group
+                                label(for="time") Lọc theo thời gian
+                                select(name="time", id="time", class="form-control")
+                                    option(value="") -- Chọn --
+                                    option(value="today", selected=(time === 'today')) Hôm nay
+                                    option(value="thisWeek", selected=(time === 'thisWeek')) Tuần này
+                                    option(value="thisMonth", selected=(time === 'thisMonth')) Tháng này
+                                .form-group.mt-2
+                                    .row 
+                                        .col-6
+                                            label(for="startDate") Từ ngày
+                                            input(
+                                                type="date",
+                                                name="startDate",
+                                                id="startDate",
+                                                class="form-control",
+                                                value=startDate
+                                            )
+                                        .col-6
+                                            label(for="endDate") Đến ngày
+                                            input(
+                                                type="date",
+                                                name="endDate",
+                                                id="endDate",
+                                                class="form-control",
+                                                value=endDate
+                                            )
+                        .col-4
+                            .form-group
+                                label(for="price") Lọc theo giá
+                                .row 
+                                    .col-6
+                                        input(
+                                            type="number",
+                                            name="minPrice",
+                                            class="form-control",
+                                            placeholder="Giá từ",
+                                            value=minPrice
+                                        )
+                                    .col-6
+                                        input(
+                                            type="number",
+                                            name="maxPrice",
+                                            class="form-control",
+                                            placeholder="Giá đến",
+                                            value=maxPrice
+                                        )
+                        .col-12.mt-3
+                            button(type="submit", class="btn btn-primary") Lọc
+                            a(href="/admin/orders", class="btn btn-secondary ml-2") Bỏ lọc
+        .card.mb-3 
+            .card-header Lọc trạng thái
+            .card-body
+                .row 
+                    .col-6 
+                        +filtersStatus(filtersStatus)
         .card.mb-3
             .card-header Danh sách
             .card-body
                 .row
                 .col-12
-                    table.table.table-hover.table-sm
+                    table(class="table table-hover table-sm" checkbox-multi)
                         thead
-                            tr
                             th STT
                             th Mã đơn hàng
                             th Khách hàng
@@ -29,33 +102,35 @@ block main
                             if orders.length > 0
                                 each item, index in orders
                                     tr
-                                    td #{index + 1}
-                                    td
-                                        b #{item.id}
-                                    td #{item.userInfo.fullName}
-                                    td #{item.userInfo.phone}
-                                    td
-                                        b #{item.totalPrice.toLocaleString()}đ
-                                    td
-                                        case item.status
-                                            when "initial"
-                                                span(class="p-1  fs-7 rounded bg-warning text-dark") Chờ xác nhận
-                                            when "paid"
-                                                span(class="p-1  fs-7 rounded bg-success-subtle text-dark") Đã xác nhận
-                                            when "shipping"
-                                                span(class="p-1  fs-7 rounded bg-primary text-dark") Đang giao
-                                            when "delivered"
-                                                span(class="p-1  fs-7 rounded bg-success text-dark ") Hoàn thành
-                                            when "cancelled"
-                                                span(class="p-1  fs-7 rounded bg-danger text-dark") Đã hủy
-                                            default
-                                                span(class='p-1  fs-7 rounded bg-secondary text-dark') #{item.status}
-                                    td #{moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
-                                    td
-                                        a(
-                                        href=`/admin/orders/detail/${item.id}`
-                                        class="btn btn-info btn-sm"
-                                        ) Chi tiết
+                                        td #{index + 1}
+                                        td
+                                            b #{item.id}
+                                            if item.isOverdue
+                                                span(class="badge bg-danger ml-2") Quá hạn
+                                        td #{item.userInfo.fullName}
+                                        td #{item.userInfo.phone}
+                                        td
+                                            b #{item.totalPrice.toLocaleString()}đ
+                                        td
+                                            form(action=""  method="POST" url-change= '/admin/orders/change-status') 
+                                                select(
+                                                    class="form-control form-control-sm select-status",
+                                                    name="status",
+                                                    select-status
+                                                    value=item.status,
+                                                    data-id=item.id
+                                                )
+                                                    option(value="initial", selected=(item.status === 'initial')) Chờ xác nhận
+                                                    option(value="paid", selected=(item.status === 'paid')) Đã xác nhận
+                                                    option(value="shipping", selected=(item.status === 'shipping')) Đang giao
+                                                    option(value="delivered", selected=(item.status === 'delivered')) Hoàn thành
+                                                    option(value="cancelled", selected=(item.status === 'cancelled')) Đã hủy
+                                        td #{moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+                                        td
+                                            a(
+                                            href=`/admin/orders/detail/${item.id}`
+                                            class="btn btn-info btn-sm"
+                                            ) Chi tiết
                             else
                                 tr
                                     td(colspan="8" class="text-center") Chưa có đơn hàng nào.
@@ -63,4 +138,6 @@ block main
         +pagination(pagination)
     else 
         h1 Bạn không có quyền truy cập vào trang này.
+    script(src="/admin/js/orders.js") 
     script(src="/admin/js/script.js")
+    

@@ -1,0 +1,69 @@
+extends ../../layout/default.pug
+include ../../mixins/moment.pug
+block main
+  if(rolesUser.permissions.includes("orders_view"))
+    h1(class="mb-4") Chi tiết đơn hàng
+    .row
+      .col-8
+        .card.mb-3
+          .card-header Thông tin người đặt
+          .card-body
+            p Tên người đặt: #{order.userInfo.fullName}
+            p Số điện thoại: #{order.userInfo.phone}
+            p Địa chỉ: #{order.userInfo.address}
+            p Email: #{order.userInfo.email}
+            p Ghi chú: #{order.note || "Không có ghi chú"}
+        .card.mb-3
+          .card-header Danh sách sản phẩm
+          .card-body
+            table(class="table table-sm")
+              thead
+                tr
+                  th STT
+                  th Hình ảnh
+                  th Tên sản phẩm
+                  th Giá
+                  th Số lượng
+                  th Tổng cộng
+              tbody
+                each item, index in order.products
+                  tr
+                    td #{index + 1}
+                    td
+                      img(src=item.thumbnail, alt="Product Image", width="100", height="auto")
+                    td #{item.title}
+                    td #{item.price.toLocaleString()}đ
+                    td #{item.quantity}
+                    td #{(item.price * item.quantity).toLocaleString()}đ
+            p(class="fw-bold text-danger text-end") Tổng tiền: #{totalPrice.toLocaleString()}đ
+      .col-4
+        .card.mb-3
+          .card-header Thông tin đơn hàng
+          .card-body
+            p Mã đơn hàng: #{order.id}
+            p Trạng thái: 
+              span(class=`p-1 fs-7 rounded bg-info`) #{statusOrder.name}
+            p Thời gian đặt: #{moment(order.createdAt).format("DD/MM/YYYY HH:mm")}
+        .card.mb-3
+          .card-header Lịch sử trạng thái
+          .card-body
+            ul.list-group
+              each item in order.statusHistory.reverse()
+                li.list-group-item
+                  div Trạng thái: 
+                    case item.status
+                        when "initial"
+                            span(class="p-1  fs-7 rounded bg-warning text-dark") Chờ xác nhận
+                        when "paid"
+                            span(class="p-1  fs-7 rounded bg-success-subtle text-dark") Đã xác nhận
+                        when "shipping"
+                            span(class="p-1  fs-7 rounded bg-primary text-dark") Đang giao
+                        when "delivered"
+                            span(class="p-1  fs-7 rounded bg-success text-dark ") Hoàn thành
+                        when "cancelled"
+                            span(class="p-1  fs-7 rounded bg-danger text-dark") Đã hủy
+                        default
+                            span(class='p-1  fs-7 rounded bg-secondary text-dark') #{item.status}
+                  div Thời gian: #{moment(item.timestamp).format("DD/MM/YYYY HH:mm")}
+  else
+    h1 Bạn không có quyền truy cập vào trang này.

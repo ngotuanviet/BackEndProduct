@@ -1,19 +1,25 @@
 const checkoutFormValidate = (req, res, next) => {
-  const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+  const regexPhoneNumber = /^(0|\+84)\d{9,10}$/;
+  const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
-  const { fullName, email, phone, address, note } = req.body;
+  const { fullName, email, phone, address } = req.body;
+
   if (!fullName || !email || !phone || !address) {
-    return (
-      req.flash("error", "Vui lòng điền đầy đủ thông tin"),
-      res.redirect("/checkout")
-    );
+    req.flash("error", "Vui lòng điền đầy đủ thông tin");
+    return res.redirect("back");
   }
+
   if (!regexPhoneNumber.test(phone)) {
-    return (
-      req.flash("error", "Số điện thoại không hợp lệ"),
-      res.redirect("/checkout")
-    );
+    req.flash("error", "Số điện thoại không hợp lệ");
+    return res.redirect("back");
   }
+
+  if (!regexEmail.test(email)) {
+    req.flash("error", "Email không hợp lệ");
+    return res.redirect("back");
+  }
+  console.log("t");
+
   next();
 };
 module.exports = {

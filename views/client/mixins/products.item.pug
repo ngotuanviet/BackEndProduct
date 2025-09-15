@@ -11,8 +11,9 @@ mixin product-item(product)
           a(href=`/products/detail/${product.slug}`) #{product.title}
         .inner-foot
           .inner-price
-            .inner-price-new #{product.priceNew}đ
+            .inner-price-new 
+                p #{parseInt(product.priceNew).toLocaleString()}đ
             if product.discountPercentage > 0
-              .inner-price-old #{product.price}đ
+              .inner-price-old #{parseInt(product.price).toLocaleString()}đ
               .inner-discount -#{product.discountPercentage}%
           a(href=`/products/detail/${product.slug}`, class="btn btn-outline-primary btn-sm") Xem chi tiết
