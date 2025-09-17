@@ -1,16 +1,18 @@
-const uploadToCloudinary = require('../../helper/uploadCloudinary');
+const uploadToCloudinary = require("../../helper/uploadCloudinary");
 
 module.exports.upload = async (req, res, next) => {
-
-    if (req.file) {
-        try {
-            const link = await uploadToCloudinary(req.file.buffer);
-            req.body[req.file.fieldname] = link; // Gán link ảnh vào req.body
-        } catch (error) {
-            console.log(error)
-            return next(error);
+  if (req.files) {
+    try {
+      for (const key in req.files) {
+        const files = req.files[key];
+        if (files && files.length > 0) {
+          const link = await uploadToCloudinary(files[0].buffer);
+          req.body[key] = link;
         }
+      }
+    } catch (error) {
+      console.log(error);
     }
-    next();
-
-}
+  }
+  next();
+};

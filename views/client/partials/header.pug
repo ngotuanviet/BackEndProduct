@@ -20,6 +20,8 @@ header.header
             - const patchProducts = "/products"
             a(href=patchProducts class="dropdown-toggle") Sản phẩm
             +sub-menu(Categories, patchProducts)
+          li 
+            a(href="/posts") Bài viết 
           li
             a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
           if user
@@ -30,6 +32,8 @@ header.header
                   a(href="/users/friends") Bạn bè
                 li
                   a(href="/rooms-chat") Phòng chat
+                li 
+                  a(href="/orders") Danh sách đơn hàng
                 li
                   a(href="/user/logout") Đăng xuất
           else

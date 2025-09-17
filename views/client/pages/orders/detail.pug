@@ -1,0 +1,67 @@
+extends ../../layout/default.pug
+
+block main
+  .container.my-4
+    a.btn.btn-secondary.mb-3(href="/orders") < Quay lại danh sách đơn hàng
+
+    h1.mb-4 Chi tiết đơn hàng
+
+    if order
+      .card
+        .card-header
+          .d-flex.justify-content-between
+            div
+              strong Mã đơn hàng:
+              | #{order.id}
+            div
+              strong Ngày đặt:
+              | #{moment(order.createdAt).format("DD/MM/YYYY HH:mm")}
+            div
+              strong Trạng thái:
+              span.badge.badge-success #{order.status}
+        .card-body
+          h5.card-title Thông tin người nhận
+          p
+            strong Họ và tên:
+            | #{order.userInfo.fullName}
+          p
+            strong Số điện thoại:
+            | #{order.userInfo.phone}
+          p
+            strong Địa chỉ:
+            | #{order.userInfo.address}
+          if order.userInfo.note
+            p
+              strong Ghi chú:
+              | #{order.userInfo.note}
+
+          hr
+
+          h5.card-title Chi tiết sản phẩm
+          table.table.table-bordered
+            thead
+              tr
+                th Sản phẩm
+                th Hình ảnh
+                th Giá
+                th Số lượng
+                th Tổng
+            tbody
+              each product in order.products
+                tr
+                  td #{product.title}
+                  td
+                    img(src=product.thumbnail, alt=product.title, width="80px")
+                  td #{product.priceNew.toLocaleString()} đ
+                  td #{product.quantity}
+                  td #{(product.priceNew * product.quantity).toLocaleString()} đ
+          
+          - let totalOrderPrice = 0
+          each product in order.products
+            - totalOrderPrice += product.priceNew * product.quantity
+          
+          .text-right
+            h5 Tổng cộng: #{totalOrderPrice.toLocaleString()} đ
+
+    else
+      .alert.alert-warning Không tìm thấy đơn hàng.

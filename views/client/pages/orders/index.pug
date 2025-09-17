@@ -1,0 +1,31 @@
+extends ../../layout/default.pug
+
+block main
+  .container.my-4
+    h1.mb-4 Đơn hàng của bạn
+
+    if orders && orders.length > 0
+      table.table.table-hover
+        thead
+          tr
+            th Mã đơn hàng
+            th Ngày đặt
+            th Trạng thái
+            th Tổng cộng
+            th Hành động
+        tbody
+          each order in orders
+            - let totalOrderPrice = 0
+            each product in order.products
+              - totalOrderPrice += product.priceNew * product.quantity
+            tr
+              td #{order.id}
+              td #{moment(order.createdAt).format("DD/MM/YYYY")}
+              td
+                span.badge.bg-warning.p-1 #{order.statusName}
+              
+              td #{totalOrderPrice.toLocaleString()} đ
+              td
+                a.btn.btn-primary.btn-sm(href=`/orders/detail/${order.id}`) Xem chi tiết
+    else
+      .alert.alert-info Bạn chưa có đơn hàng nào.

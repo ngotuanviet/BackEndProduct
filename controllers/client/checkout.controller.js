@@ -52,6 +52,7 @@ const order = async (req, res) => {
     products.push(objectProducts);
   }
   const orderInfo = {
+    user_id: res.locals.user.id,
     cart_id: cartID,
     userInfo: userOrder,
     products: products,
@@ -106,6 +107,7 @@ const success = async (req, res) => {
       }
 
       const orderInfo = {
+        user_id: res.locals.user.id,
         // _id: req.params.orderID,
         cart_id: cartID,
         userInfo: userInfo,
@@ -245,6 +247,7 @@ const payment = async (req, res) => {
     pay(req, res);
   }
 };
+
 module.exports = {
   index,
   order,

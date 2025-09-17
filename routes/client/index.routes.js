@@ -10,6 +10,7 @@ const authMiddleware = require("../../Middleware/client/auth.middleware");
 const settingMiddleware = require("../../Middleware/client/settings.midlleware");
 const checkoutMiddleware = require("../../Middleware/client/checkout.validates");
 const usersRouter = require("./users.routes");
+const ordersRouter = require("./orders.routes");
 const checkoutRouter = require("./checkout.routes");
 // const socketMiddleware = require("../../Middleware/client/socket.middleware"); // Removed: Socket.IO logic does not belong in Express middleware
 const roomChatRouter = require("./room-chat.routes");
@@ -28,5 +29,6 @@ module.exports = (app) => {
   app.use("/user", authRouter);
   app.use("/chat", authMiddleware.requireAuth, chatRouter);
   app.use("/users", authMiddleware.requireAuth, usersRouter);
+  app.use("/orders", authMiddleware.requireAuth, ordersRouter);
   app.use("/rooms-chat", authMiddleware.requireAuth, roomChatRouter);
 };

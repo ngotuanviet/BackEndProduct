@@ -44,6 +44,27 @@ block main
                     value=(settingsGeneral ? settingsGeneral.address : "")
                     id="address"
                     name="address")
+            div(class="form-group" upload-image)
+                label(for="slide") Ảnh slider 1
+                input(type="file"
+                    class="form-control"
+                    id="slide"
+                    name="slider1")
+                img(src=(settingsGeneral ? settingsGeneral.slider1 : ""), alt="" width="100px" height="100px" class="image-Preview" upload-image-Preview) 
+            div(class="form-group" upload-image)
+                label(for="slide") Ảnh slider 2
+                input(type="file"
+                    class="form-control"
+                    id="slide"
+                    name="slider2")
+                img(src=(settingsGeneral ? settingsGeneral.slider2 : ""), alt="" width="100px" height="100px" class="image-Preview" upload-image-Preview) 
+            div(class="form-group" upload-image)
+                label(for="slide") Ảnh slider 3
+                input(type="file"
+                    class="form-control"
+                    id="slide"
+                    name="slider3")
+                img(src=(settingsGeneral ? settingsGeneral.slider3 : ""), alt="" width="100px" height="100px" class="image-Preview" upload-image-Preview) 
             div(class="form-group")
                 label(for="copyright") Copyright
                 input(type="text"
