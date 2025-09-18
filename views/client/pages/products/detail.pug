@@ -8,7 +8,7 @@ block main
             .row
                 .col-6 
                     .inner-thumb 
-                        img(src=product.thumbnail, alt="Product Image" )
+                        img(src=product.thumbnail || 'img/no-image.png', alt="Product Image" )
                 .col-6
                     if (product.title)
                         h1(class="mb-4") #{product.title}
@@ -19,14 +19,14 @@ block main
                     if (product.priceNew)
                         div(class="inner-price-New") 
                             span #{product.priceNew.toLocaleString()}đ 
-                    if (product.price)
-                        div(class="inner-price-Old") 
-                            span #{product.price.toLocaleString()}đ  
-                
+
                     if (product.discountPercentage)
+                        div(class="inner-price-Old") 
+                            span #{product.price.toLocaleString()}đ
                         div(class="inner-discount") 
                             strong Giảm giá: 
                             span #{product.discountPercentage}%
+                        
                     if (product.stock >= 1)
                         div(class="inner-quantity") 
                             strong Số lượng: 

@@ -3,7 +3,7 @@ mixin product-item(product)
     .product-item
       a(href=`/products/detail/${product.slug}`)
         .inner-image
-          img(src=product.thumbnail, alt=product.title)
+          img(src=product.thumbnail || 'img/no-image.png', alt=product.title)
           if (product.featured == "1")
             .inner-featured Nổi bật
       .inner-content
