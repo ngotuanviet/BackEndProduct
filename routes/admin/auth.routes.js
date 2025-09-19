@@ -4,7 +4,7 @@ const uploadCloud = require("../../Middleware/admin/uploadCloud.middleware");
 const validates = require("../../Middleware/validates/admin/auth.validates");
 
 const multer = require("multer");
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 router.get("/login", controller.index);

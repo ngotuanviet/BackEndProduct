@@ -4,7 +4,7 @@ const Controller = require("../../controllers/admin/settings.controller");
 const multer = require("multer");
 const uploadCloud = require("../../Middleware/admin/uploadCloud.middleware");
 
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 router.get("/general", Controller.general);
 router.patch(
   "/general",

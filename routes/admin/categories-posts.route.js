@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 const uploadCloud = require("../../Middleware/admin/uploadCloud.middleware");
 const controller = require("../../controllers/admin/categories-post.controller");
 
@@ -28,7 +28,8 @@ router.get(
 router.post(
   "/create",
   checkPermission("posts-category_create"),
-  upload.single("thumbnail"),
+  upload.array("thumbnail", 5),
+
   uploadCloud.upload,
   controller.createPost
 );
@@ -40,7 +41,8 @@ router.get(
 router.patch(
   "/edit/:id",
   checkPermission("posts-category_edit"),
-  upload.single("thumbnail"),
+  upload.array("thumbnail", 5),
+
   uploadCloud.upload,
   controller.editPost
 );

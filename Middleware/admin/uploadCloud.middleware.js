@@ -1,18 +1,45 @@
 const uploadToCloudinary = require("../../helper/uploadCloudinary");
 
-module.exports.upload = async (req, res, next) => {
-  if (req.files) {
-    try {
-      for (const key in req.files) {
-        const files = req.files[key];
-        if (files && files.length > 0) {
-          const link = await uploadToCloudinary(files[0].buffer);
-          req.body[key] = link;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
+const collectFiles = (files) => {
+  if (!files) {
+    return [];
   }
-  next();
+  if (Array.isArray(files)) {
+    return files;
+  }
+  return Object.values(files).reduce((all, current) => all.concat(current), []);
+};
+
+module.exports.upload = async (req, res, next) => {
+  const files = collectFiles(req.files);
+
+  if (files.length === 0) {
+    return next();
+  }
+
+  try {
+    const uploads = await Promise.all(
+      files.map(async (file) => {
+        if (!file || !file.buffer) {
+          return null;
+        }
+
+        const url = await uploadToCloudinary(file.buffer);
+        return { fieldname: file.fieldname, url };
+      })
+    );
+
+    uploads.forEach((upload) => {
+      if (!upload || !upload.fieldname) {
+        return;
+      }
+
+      req.body[upload.fieldname] = upload.url;
+    });
+
+    next();
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error);
+    next(error);
+  }
 };

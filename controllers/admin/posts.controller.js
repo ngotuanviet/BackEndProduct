@@ -176,11 +176,6 @@ const createPost = async (req, res) => {
       req.body.position = (await Post.countDocuments()) + 1;
     }
 
-    if (!req.body.thumbnail) {
-      req.flash("error", "Vui lòng chọn ảnh bài viết!");
-      return res.redirect("back");
-    }
-
     const post = new Post(req.body);
     await post.save();
 
@@ -189,7 +184,7 @@ const createPost = async (req, res) => {
   } catch (error) {
     console.error("Error creating post:", error);
     req.flash("error", "Lỗi khi tạo bài viết: " + error.message);
-    res.redirect("back");
+    res.redirect("admin/posts/create");
   }
 };
 
