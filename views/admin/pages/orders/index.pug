@@ -112,19 +112,25 @@ block main
                                         td
                                             b #{item.totalPrice.toLocaleString()}đ
                                         td
-                                            form(action=""  method="POST" url-change= '/admin/orders/change-status') 
-                                                select(
-                                                    class="form-control form-control-sm select-status",
-                                                    name="status",
-                                                    select-status
-                                                    value=item.status,
-                                                    data-id=item.id
-                                                )
-                                                    option(value="initial", selected=(item.status === 'initial')) Chờ xác nhận
-                                                    option(value="paid", selected=(item.status === 'paid')) Đã xác nhận
-                                                    option(value="shipping", selected=(item.status === 'shipping')) Đang giao
-                                                    option(value="delivered", selected=(item.status === 'delivered')) Hoàn thành
-                                                    option(value="cancelled", selected=(item.status === 'cancelled')) Đã hủy
+                                            if(rolesUser.permissions.includes("orders_edit"))
+                                                form(action=""  method="POST" url-change= '/admin/orders/change-status') 
+                                                    select(
+                                                        
+                                                        class="form-control form-control-sm select-status",
+                                                        name="status",
+                                                        select-status
+                                                        value=item.status,
+                                                        data-id=item.id
+                                                    )
+                                                        option(value="initial", selected=(item.status === 'initial')) Chờ xác nhận
+                                                        option(value="paid", selected=(item.status === 'paid')) Đã xác nhận
+                                                        option(value="shipping", selected=(item.status === 'shipping')) Đang giao
+                                                        option(value="delivered", selected=(item.status === 'delivered')) Hoàn thành
+                                                        option(value="cancelled", selected=(item.status === 'cancelled')) Đã hủy
+                                            else 
+                                                p 
+                                                    strong #{item.statusName}
+                                        
                                         td #{moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
                                         td
                                             a(

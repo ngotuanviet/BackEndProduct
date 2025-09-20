@@ -1,3 +1,25 @@
-extend ../../layout/default.pug
+extends ../../layout/default
+include ../../mixins/alert.pug
+include ../../mixins/box-head.pug
+
 block main
-    
+    .container.my-3
+        +box-head(title)
+
+        if categories && categories.length
+            .post-filters
+                - const allActive = !activeCategorySlug
+                a.post-filter-btn(class=allActive ? 'active' : '', href='/posts') Tất cả
+                each category in categories
+                    a.post-filter-btn(class=activeCategorySlug === category.slug ? 'active' : '', href='/posts?category=' + category.slug) #{category.title}
+
+        if posts.length > 0
+            .post-grid
+                each post in posts
+                    a.post-card(href='/posts/' + post.slug)
+                        .post-card__thumb
+                            img(src=post.thumbnail, alt=post.title)
+                        .post-card__body
+                            h3.post-card__title #{post.title}
+        else
+            .post-empty Không có bài viết phù hợp

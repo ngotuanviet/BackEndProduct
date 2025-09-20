@@ -1,0 +1,46 @@
+extends ../../layout/default
+include ../../mixins/alert.pug
+
+block main
+    .post-detail
+        .container.post-detail__container
+            .post-detail__hero
+                if post.thumbnail
+                    .post-detail__thumb
+                        img(src=post.thumbnail, alt=post.title)
+                .post-detail__header
+                    if category
+                        a.post-detail__category(href='/posts?category=' + category.slug)= category.title
+                    h1.post-detail__title= post.title
+                    if meta && (meta.formattedDate || meta.readingTime)
+                        .post-detail__meta
+                            if meta.formattedDate
+                                span.post-detail__meta-item= meta.formattedDate
+                            if meta.readingTime
+                                span.post-detail__meta-item= meta.readingTime + ' phút đọc'
+                    if meta && meta.description
+                        p.post-detail__excerpt= meta.description
+
+            .post-detail__body
+                if post.body
+                    .post-detail__content !{post.body}
+                else
+                    .post-detail__content.post-detail__content--empty Bài viết hiện chưa có nội dung.
+
+            if relatedPosts && relatedPosts.length
+                .post-detail__related
+                    h2.post-detail__related-title Bài viết liên quan
+                    .post-detail__related-grid
+                        each item in relatedPosts
+                            a.post-related-card(href='/posts/' + item.slug)
+                                if item.thumbnail
+                                    .post-related-card__thumb
+                                        img(src=item.thumbnail, alt=item.title)
+                                else
+                                    .post-related-card__thumb.post-related-card__thumb--empty
+                                        span.post-related-card__thumb-text Không có ảnh
+                                .post-related-card__body
+                                    h3.post-related-card__title= item.title
+                                    - const relatedDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString('vi-VN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''
+                                    if relatedDate
+                                        span.post-related-card__meta= relatedDate

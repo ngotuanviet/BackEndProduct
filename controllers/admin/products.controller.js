@@ -188,7 +188,10 @@ const deleteProduct = async (req, res) => {
 // [GET] /admin/products/create
 const createProduct = async (req, res) => {
   console.log(res.locals.user);
-  const categories = await Category.find({ deleted: "false" });
+  const categories = await Category.find({
+    deleted: "false",
+    status: "active",
+  });
   const categoriesTree = await createTreeHelper.tree(categories);
   res.render(`admin/pages/products/create`, {
     title: "Thêm sản phẩm",
@@ -239,7 +242,10 @@ const editProduct = async (req, res) => {
       _id: id,
     };
 
-    const categories = await Category.find({ deleted: "false" });
+    const categories = await Category.find({
+      deleted: "false",
+      status: "active",
+    });
     const categoriesTree = await createTreeHelper.tree(categories);
     const product = await Product.findOne(find);
 

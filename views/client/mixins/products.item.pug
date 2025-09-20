@@ -6,6 +6,8 @@ mixin product-item(product)
           img(src=product.thumbnail || 'img/no-image.png', alt=product.title)
           if (product.featured == "1")
             .inner-featured Nổi bật
+          if (product.discountPercentage > 0)
+            .inner-discount -#{product.discountPercentage}%
       .inner-content
         h3.inner-title
           a(href=`/products/detail/${product.slug}`) #{product.title}
@@ -14,6 +16,7 @@ mixin product-item(product)
             .inner-price-new 
                 p #{parseInt(product.priceNew).toLocaleString()}đ
             if product.discountPercentage > 0
-              .inner-price-old #{parseInt(product.price).toLocaleString()}đ
-              .inner-discount -#{product.discountPercentage}%
+              .inner-price-old
+                  p #{parseInt(product.price).toLocaleString()}đ
+              
           a(href=`/products/detail/${product.slug}`, class="btn btn-outline-primary btn-sm") Xem chi tiết

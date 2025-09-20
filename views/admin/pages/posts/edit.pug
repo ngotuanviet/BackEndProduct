@@ -16,14 +16,14 @@ block main
                         input(type="text" class="form-control" name="title" id="title" value=post.title)
                 .col-md-12
                     .form-group
-                        label(for="category_id") Danh mục bài viết
-                        select(name="category_id" class="form-control" id="category_id")
+                        label(for="category_post_id") Danh mục bài viết
+                        select(name="category_post_id" class="form-control" id="category_post_id")
                             option(value="") Chọn danh mục bài viết
                             +select-tree(categories, post.category_id)
                 .col-md-12
                     .form-group
-                        label(for="description") Mô tả
-                        textarea(class="form-control" name="description" id="descriptionArea" rows="3" ) #{post.description}
+                        label(for="body") Mô tả
+                        textarea(class="form-control" name="body" id="descriptionArea" rows="3" ) #{post.body}
                 .col-md-12
                     .div(class="form-group" upload-image)
                         label(for="thumbnail") Ảnh bài viết

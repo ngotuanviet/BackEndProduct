@@ -9,6 +9,10 @@ block main
                 .col-6 
                     .inner-thumb 
                         img(src=product.thumbnail || 'img/no-image.png', alt="Product Image" )
+                        if(product.discountPercentage)
+                            div(class="inner-discount") 
+                                    strong Giảm giá: 
+                                    span #{product.discountPercentage}%
                 .col-6
                     if (product.title)
                         h1(class="mb-4") #{product.title}
@@ -16,6 +20,9 @@ block main
                         div(class="inner-category")
                             span Danh mục:
                             span(class="text-warning ms-2 fs-5") #{product.category.title}
+                    else
+                        div(class="inner-category")
+                            span Danh mục:
                     if (product.priceNew)
                         div(class="inner-price-New") 
                             span #{product.priceNew.toLocaleString()}đ 
@@ -23,9 +30,7 @@ block main
                     if (product.discountPercentage)
                         div(class="inner-price-Old") 
                             span #{product.price.toLocaleString()}đ
-                        div(class="inner-discount") 
-                            strong Giảm giá: 
-                            span #{product.discountPercentage}%
+                        
                         
                     if (product.stock >= 1)
                         div(class="inner-quantity") 

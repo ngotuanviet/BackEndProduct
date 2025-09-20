@@ -104,6 +104,14 @@ const index = async (req, res) => {
         return isMinOk && isMaxOk;
       });
     }
+    for (const order of orders) {
+      filtersStatus.forEach((item) => {
+        if (order.status === item.status) {
+          order.statusName = item.name;
+        }
+      });
+    }
+    console.log(orders);
 
     res.render("admin/pages/orders/index", {
       title: "Quản lý đơn hàng",

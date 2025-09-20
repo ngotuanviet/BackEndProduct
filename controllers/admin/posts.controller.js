@@ -156,7 +156,10 @@ const deletePost = async (req, res) => {
 
 // [GET] /admin/posts/create
 const create = async (req, res) => {
-  const categories = await Categories_posts.find({ deleted: false });
+  const categories = await Categories_posts.find({
+    deleted: false,
+    status: "active",
+  });
   const categoriesTree = createTreeHelper.tree(categories);
   res.render(`admin/pages/posts/create`, {
     title: "Thêm bài viết",
@@ -197,7 +200,10 @@ const edit = async (req, res) => {
       _id: id,
     };
 
-    const categories = await Categories_posts.find({ deleted: false });
+    const categories = await Categories_posts.find({
+      deleted: false,
+      status: "active",
+    });
     const categoriesTree = createTreeHelper.tree(categories);
     const post = await Post.findOne(find);
 
@@ -218,6 +224,9 @@ const editPost = async (req, res) => {
 
   req.body.position = parseInt(req.body.position);
   try {
+    console.log("====================================");
+    console.log(req.body);
+    console.log("====================================");
     const updatedBy = {
       account_id: res.locals.user._id,
       updatedAt: new Date(),
