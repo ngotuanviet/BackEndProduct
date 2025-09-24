@@ -28,14 +28,14 @@ block main
                                         td 
                                             img(src=item.productInfo.thumbnail, alt=item.productInfo.title width="80px")
                                         td #{item.productInfo.title}
-                                        td #{item.productInfo.priceNew}
+                                        td #{item.productInfo.priceNew.toLocaleString()}đ
                                         td #{item.quantity}
                                             
-                                        td #{item.productInfo.totalPrice}
+                                        td #{item.productInfo.totalPrice.toLocaleString()}đ
                     else 
                         p Không có sản phẩm nào trong giỏ hàng
 
-                h2(class="text-right") Tổng hoá đơn : #{dataCart.totalPrice}
+                h2(class="text-end") Tổng hoá đơn : #{dataCart.totalPrice.toLocaleString()}đ
             if (dataCart.products.length > 0)      
                 .row 
                     .col-12 
@@ -55,6 +55,17 @@ block main
                                     div(class="input-group")
                                         span(class="input-group-text") +84
                                         input(type="number" class="form-control" name="phone" required)
+                                div(class="row")
+                                    div(class="form-group col-6")
+                                        div(class="form-group")
+                                            label(for="city_name") Tỉnh / Thành Phố
+                                            select( class="form-control" name="city_name"  value=user ? user.fullName : "" required placeholder="Họ và tên")
+                                                option(value="" disabled selected) Chọn Tỉnh / Thành phố 
+                                    div(class="form-group col-6")
+                                        div(class="form-group")
+                                            label(for="state_name") Phường / Xã
+                                            select( class="form-control" name="state_name" value=user ? user.email : ""  required placeholder="email" )
+                                                option(value="" disabled selected) Chọn Phường / Xã
                                 div(class="form-group")
                                     label(for="address") Địa chỉ
                                     input(type="text" class="form-control" name="address" required)

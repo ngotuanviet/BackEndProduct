@@ -32,7 +32,18 @@ const index = async (req, res) => {
 const order = async (req, res) => {
   const cartID = req.cookies.cartID;
 
-  const userOrder = req.body;
+  let { fullName, phone, email, note, city_name, state_name, address } =
+    req.body;
+
+  address = `${address}, ${city_name}, ${state_name}`;
+
+  const userOrder = {
+    fullName,
+    phone,
+    email,
+    note,
+    address,
+  };
   const cart = await Cart.findOne({ _id: cartID });
 
   const products = [];
