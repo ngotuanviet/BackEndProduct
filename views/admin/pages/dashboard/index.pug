@@ -2,9 +2,9 @@ extends ../../layout/default.pug
 block main
     h1 Trang tổng quan
     p Đây là trang tổng quan của quản trị viên.
-
+    
     .row.mt-4 
-        .col-12 
+        .col-6 
             .card.mb-4
                 .card-header Thông tin tài khoản 
                 .card-body
@@ -19,6 +19,8 @@ block main
                         p Số điện thoại <b>#{user.phone}</b>
                     if (rolesUser.title)
                         p Chức vụ <b>#{rolesUser.title}</b>
+        .col-6 
+            canvas#myChart(width="400" height="200" labels=labels data=data)
         .col-6 
             .card.mb-4
                 .card-header Danh mục sản phẩm
@@ -47,3 +49,44 @@ block main
                     p Số lượng: <b>#{static.accountClient.total}</b>
                     p Hoạt động: <b>#{static.accountClient.active}</b>
                     p Dừng hoạt động: <b>#{static.accountClient.inactive}</b>
+    script.
+      const labels = !{JSON.stringify(labels)};
+      const data = !{JSON.stringify(data)};
+
+      new Chart(
+        document.getElementById('myChart'),
+        {
+        type: 'line',
+        data: {
+        labels: labels, // ví dụ ['2025-09-19', '2025-09-20', ...]
+        datasets: [{
+            label: 'Số hóa đơn',
+            data: data, // [0, 0, 2, 1, ...]
+            borderColor: 'blue',
+            tension: 0.3
+        }]
+        },
+        options: {
+        responsive: true,
+        scales: {
+            y: {
+            min: 0,              // Giá trị thấp nhất
+            max: 10,             // Giá trị cao nhất
+            ticks: {
+                stepSize: 1,       // Bước nhảy (ví dụ: 1, 2, 5…)
+                callback: function(value) {
+                return value + " đơn"; // Custom label
+                }
+            },
+            title: {
+                display: true,
+                text: 'Số lượng hóa đơn', // Tên trục Y
+            },
+            grid: {
+                color: 'rgba(200,200,200,0.3)' // màu grid
+            }
+            }
+        }
+        }
+            }
+      ); 

@@ -1,40 +1,59 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
 block main 
-    if (product.title)
-        h1(class="mb-4") #{product.title}
-    
-    if(product.price)
-        div(class="mb-4") 
-            strong Giá: 
-            span #{product.price}đ  
-    if(product.discountPercentage)
-        div(class="mb-4") 
-            strong Giảm giá: 
-            span #{product.discountPercentage}%
-    if(product.stock)
-        div(class="mb-4") 
-            strong Số lượng: 
-            span #{product.stock}
-    if(product.thumbnail)
-        div(class="mb-4") 
-            strong Ảnh sản phẩm: 
-            img(src=product.thumbnail, alt="Product Image" width="200" height="auto")
-    if(product.status)
-        div(class="mb-4") 
-            strong Trạng thái: 
-            if(product.status === 'active')
-                span(class="badge bg-success") Hoạt động
-            else if(product.status === 'inactive')
-                span(class="badge bg-warning") Không hoạt động
-    if(product.position)
-        div(class="mb-4") 
-            strong Vị trí hiển thị: 
-            span #{product.position}
-    if(product.description)
-        div(class="mb-4") 
-            strong Mô tả: 
-            p !{product.description}    
-    a(class="btn btn-primary" href=`${prefixAdmin}/products/edit/${product.id}`) Chỉnh sửa sản phẩm 
-    script(src="/admin/js/product.js") 
-    script(src="/admin/js/script.js") 
+    if (rolesUser.permissions.includes("products_view"))
+        +alert-error(5000)
+        .container-fluid
+            h1(class="mb-4") Chi tiết sản phẩm: #{product.title}
+
+            .card.mb-3
+                .card-header Thông tin sản phẩm
+                .card-body
+                    .row
+                        .col-md-4.text-center.mb-3
+                            if(product.thumbnail)
+                                img(src=product.thumbnail, alt="Product Image" class="img-fluid rounded" style="max-width: 250px; max-height: 250px; object-fit: cover; border: 1px solid #ddd; padding: 5px;")
+                            else
+                                img(src="/admin/images/no-image.png", alt="No Image" class="img-fluid rounded" style="max-width: 250px; max-height: 250px; object-fit: cover; border: 1px solid #ddd; padding: 5px;")
+                        .col-md-8
+                            dl.row
+                                dt.col-sm-4 Tên sản phẩm:
+                                dd.col-sm-8 #{product.title}
+
+                                if(product.price)
+                                    dt.col-sm-4 Giá:
+                                    dd.col-sm-8 #{product.price}đ
+                                
+                                if(product.discountPercentage)
+                                    dt.col-sm-4 Giảm giá:
+                                    dd.col-sm-8 #{product.discountPercentage}%
+                                
+                                if(product.stock)
+                                    dt.col-sm-4 Số lượng:
+                                    dd.col-sm-8 #{product.stock}
+                                
+                                if(product.status)
+                                    dt.col-sm-4 Trạng thái:
+                                    dd.col-sm-8
+                                        if(product.status === 'active')
+                                            span(class="badge bg-success") Hoạt động
+                                        else if(product.status === 'inactive')
+                                            span(class="badge bg-warning") Không hoạt động
+                                
+                                if(product.position)
+                                    dt.col-sm-4 Vị trí hiển thị:
+                                    dd.col-sm-8 #{product.position}
+            
+            if(product.description)
+                .card.mb-3
+                    .card-header Mô tả sản phẩm
+                    .card-body
+                        div !{product.description}
+            
+            .d-flex.gap-2.mt-4
+                if (rolesUser.permissions.includes("products_edit"))
+                    a(class="btn btn-warning" href=`${prefixAdmin}/products/edit/${product.id}`) Chỉnh sửa sản phẩm 
+                a(class="btn btn-secondary" href=`${prefixAdmin}/products`) Quay lại
+        
+        script(src="/admin/js/product.js") 
+        script(src="/admin/js/script.js")

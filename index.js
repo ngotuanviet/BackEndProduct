@@ -38,7 +38,8 @@ app.use(express.static(`${__dirname}/public/admin`));
 const server = http.createServer(app);
 const io = new Server(server);
 global._io = io;
-
+// chart.js
+app.use("/static", express.static("./node_modules/chart.js/dist"));
 // end socker.io
 app.use(
   "/tinymce",
