@@ -19,11 +19,11 @@ block main
                         label(for="category_post_id") Danh mục bài viết
                         select(name="category_post_id" class="form-control" id="category_post_id")
                             option(value="") Chọn danh mục bài viết
-                            +select-tree(categories, post.category_id)
+                            +select-tree(categories, 1, post.category_id)
                 .col-md-12
                     .form-group
                         label(for="body") Mô tả
-                        textarea(class="form-control" name="body" id="descriptionArea" rows="3" ) #{post.body}
+                        textarea(class="form-control" name="body" id="descriptionArea" rows="5" ) !{post.body}
                 .col-md-12
                     .div(class="form-group" upload-image)
                         label(for="thumbnail") Ảnh bài viết

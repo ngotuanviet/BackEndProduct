@@ -10,7 +10,7 @@ block main
                 input(type="text" class="form-control" id="title" value=post.title disabled)
             .form-group
                 label(for="description") Mô tả
-                textarea(class="form-control" id="description" rows="5" disabled) #{post.description}
+                textarea(class="form-control readonly" id="descriptionArea" rows="5" disabled) !{post.body}
             .form-group
                 label(for="thumbnail") Ảnh bài viết
                 br
